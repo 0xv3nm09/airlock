@@ -1,0 +1,15 @@
+# keep the build context small: node_modules alone is hundreds of MB
+.venv/
+.git/
+.env
+airlock-store.db
+airlock.db
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+web/node_modules/
+web/.next/
+web/out/
+docs/

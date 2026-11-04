@@ -1,5 +1,6 @@
-# HTTPS for the public demo URL (workbook: Deployment runbook §5).
-airlock.example.com {
+# Public entry. Serving on the raw VM IP for now (:80); swap the site address for a
+# domain (e.g. airlock.example.com) to get automatic HTTPS — keep the inner blocks.
+:80 {
 	encode gzip
 	@api path /v1/* /healthz /readyz /docs /openapi.json
 	reverse_proxy @api 127.0.0.1:8000 {

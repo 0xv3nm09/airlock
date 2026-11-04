@@ -4,9 +4,14 @@ services:
   api:
     build: ..
     env_file: ../.env
+    environment:
+      # persist runs/traces/keys and benchmark results across container rebuilds
+      AIRLOCK_DB_PATH: /app/data/airlock-store.db
     ports: ["127.0.0.1:8000:8000"]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - airlock-data:/app/data
+      - airlock-eval:/app/eval_results
       # sandbox images are built on the host; the API talks to Docker through the socket
     depends_on: [db, egress-proxy]
     restart: always
@@ -19,7 +24,10 @@ services:
     restart: always
   db:
     image: postgres:16
-    environment: {POSTGRES_DB: airlock, POSTGRES_USER: airlock, POSTGRES_PASSWORD: ${DB_PASSWORD}}
+    environment:
+      POSTGRES_DB: airlock
+      POSTGRES_USER: airlock
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes: [pgdata:/var/lib/postgresql/data]
     restart: always
   egress-proxy:
@@ -38,3 +46,5 @@ networks:
 volumes:
   pgdata: {}
   squidlogs: {}
+  airlock-data: {}
+  airlock-eval: {}
