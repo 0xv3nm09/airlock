@@ -14,7 +14,7 @@ SSH_KEY="$HOME/.ssh/airlock_deploy"
 REGION="del"                 # Delhi NCR — closest to Lahore
 PLAN="vc2-4c-8gb"            # 4 vCPU / 8 GB — the workbook's pick
 OS_ID="2284"                 # Ubuntu 24.04 LTS x64
-SSH_KEY_ID="909a2a60-d6d2-4c40-af91-648862ae2b27"  # airlock-deploy (uploaded once)
+SSH_KEY_ID="5479b6f4-3886-401d-8bb2-175f57f0ea6b"  # airlock-deploy (uploaded to the coo@magnusmage account)
 FW_GROUP="airlock-fw"
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
