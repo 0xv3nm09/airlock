@@ -27,8 +27,28 @@ stage_infra() {
   set -e
   ID="$(instance_id)"
   if [ -z "$ID" ]; then
+    # cloud-init AT CREATE (user_data is a native create field per the official SDK):
+    # writes the deploy pubkey into root's authorized_keys on first boot. ssh_key_id
+    # alone failed to inject on this account (verified live); reinstall accepts ONLY
+    # hostname/backups (SDK-verified), so user_data is the reliable mechanism.
+    CLOUDINIT=$(python3 - "$SSH_KEY.pub" <<'PY'
+import base64, sys
+pub = open(sys.argv[1]).read().strip()
+cfg = f"""#cloud-config
+disable_root: false
+ssh_pwauth: false
+write_files:
+  - path: /root/.ssh/authorized_keys
+    permissions: '0600'
+    defer: false
+    content: |
+      {pub}
+"""
+print(base64.b64encode(cfg.encode()).decode())
+PY
+)
     echo ">> creating instance ($REGION / $PLAN)…"
-    api -X POST "https://api.vultr.com/v2/instances" -d "{\"region\":\"$REGION\",\"plan\":\"$PLAN\",\"os_id\":$OS_ID,\"ssh_key_id\":[\"$SSH_KEY_ID\"],\"hostname\":\"airlock\",\"label\":\"airlock-control\",\"tag\":\"airlock\",\"enable_ipv6\":true,\"backups\":\"disabled\"}" | python3 -c "import json,sys;d=json.load(sys.stdin);print(d.get('instance',{}).get('id') or d)"
+    api -X POST "https://api.vultr.com/v2/instances" -d "{\"region\":\"$REGION\",\"plan\":\"$PLAN\",\"os_id\":$OS_ID,\"ssh_key_id\":[\"$SSH_KEY_ID\"],\"user_data\":\"$CLOUDINIT\",\"hostname\":\"airlock\",\"label\":\"airlock-control\",\"tag\":\"airlock\",\"enable_ipv6\":true,\"backups\":\"disabled\"}" | python3 -c "import json,sys;d=json.load(sys.stdin);print(d.get('instance',{}).get('id') or d)"
     ID="$(instance_id)"
   fi
   echo ">> waiting for instance to go active…"
@@ -38,13 +58,16 @@ stage_infra() {
   done
   echo ">> instance $ID active at $(instance_ip)"
 
-  # firewall: only 22/80/443 open; the app stays behind Caddy
+  # firewall: only 22/80/443 open; the app stays behind Caddy. Rule body per the
+  # official SDK schema: subnet is REQUIRED ("source" silently fails validation).
   FW=$(api "https://api.vultr.com/v2/firewalls" | python3 -c "import json,sys;print(next((g['id'] for g in json.load(sys.stdin)['firewall_groups'] if g['description']=='$FW_GROUP'),''))")
   if [ -z "$FW" ]; then
     FW=$(api -X POST "https://api.vultr.com/v2/firewalls" -d "{\"description\":\"$FW_GROUP\"}" | python3 -c "import json,sys;print(json.load(sys.stdin)['firewall_group']['id'])")
-    for RULE in '{"protocol":"tcp","port":"22","source":"0.0.0.0/0","subnet_size":0}' '{"protocol":"tcp","port":"80","source":"0.0.0.0/0","subnet_size":0}' '{"protocol":"tcp","port":"443","source":"0.0.0.0/0","subnet_size":0}' '{"protocol":"icmp","source":"0.0.0.0/0","subnet_size":0}'; do
-      api -X POST "https://api.vultr.com/v2/firewalls/$FW/rules" -d "{\"ip_type\":\"v4\",$RULE}" > /dev/null
+    for RULE in '{"protocol":"tcp","port":"22","subnet":"0.0.0.0","subnet_size":0}' '{"protocol":"tcp","port":"80","subnet":"0.0.0.0","subnet_size":0}' '{"protocol":"tcp","port":"443","subnet":"0.0.0.0","subnet_size":0}' '{"protocol":"icmp","subnet":"0.0.0.0","subnet_size":0}'; do
+      RES=$(api -X POST "https://api.vultr.com/v2/firewalls/$FW/rules" -d "{\"ip_type\":\"v4\",$RULE}")
+      echo "$RES" | grep -q "error" && echo "!! rule failed: $RES"
     done
+    echo ">> firewall rules created for $FW"
   fi
   api -X POST "https://api.vultr.com/v2/firewall-group-update" -d "{\"instance_id\":\"$ID\",\"firewall_group_id\":\"$FW\"}" > /dev/null && echo ">> firewall $FW attached (22/80/443 only)"
 
