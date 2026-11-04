@@ -120,24 +120,31 @@ class GitHubSource:
                         Dep(ecosystem="PyPI", name=name, version=m.group(1) if m else None, is_new=True)
                     )
             elif f.path.endswith("package.json"):
+                container_keys = {
+                    *SKIP_DEP_KEYS,
+                    "dependencies",
+                    "devDependencies",
+                    "peerDependencies",
+                    "optionalDependencies",
+                }
                 for line in f.patch.splitlines():
                     if not line.startswith("+"):
                         continue
-                    m = re.search(r'\+\s*"([^"]+)"\s*:\s*"([^"]*)"', line)
-                    if not m:
-                        continue
-                    key, value = m.group(1), m.group(2)
-                    if key in SKIP_DEP_KEYS:
-                        continue
-                    vm = re.match(r"[\^>=~]*v?(\d[\w.\-]*)", value)
-                    deps.append(
-                        Dep(
-                            ecosystem="npm",
-                            name=key,
-                            version=vm.group(1) if vm else None,
-                            is_new=True,
+                    # every "name": "version" pair on the line — inline objects
+                    # ("dependencies": {"a": "1.0"}) and multi-line style both work
+                    for m in re.finditer(r'"([^"]+)"\s*:\s*"([^"]*)"', line):
+                        key, value = m.group(1), m.group(2)
+                        if key in container_keys or key == value:
+                            continue
+                        vm = re.match(r"[\^>=~*]*v?(\d[\w.\-]*)", value)
+                        deps.append(
+                            Dep(
+                                ecosystem="npm",
+                                name=key,
+                                version=vm.group(1) if vm else None,
+                                is_new=True,
+                            )
                         )
-                    )
         seen: set[str] = set()
         unique: list[Dep] = []
         for d in deps:

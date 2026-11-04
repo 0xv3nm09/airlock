@@ -275,6 +275,13 @@ class _Orchestrator:
                         await self.trace.log(
                             "install", ref=session.which, tail="fixer command denied by policy"
                         )
+            if installed and plan.language == "python" and setup_cmd:
+                # A fixer that retried with its own plain `python -m venv` rewrote the
+                # venv's pyvenv.cfg and silently dropped --system-site-packages — the
+                # preinstalled pytest toolchain disappears and every later test phase
+                # reads "No module named pytest". Re-running the FIXED venv step is
+                # idempotent and restores the flag (installed packages are untouched).
+                await self._exec(session, setup_cmd, "install")
             if not installed:
                 all_installed = False
                 findings.append(

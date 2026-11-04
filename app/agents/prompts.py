@@ -32,8 +32,11 @@ def fence(label: str, content: str) -> str:
 def planner_task() -> str:
     return (
         "You plan a review. Choose the install command and test command for this {language} repo "
-        "from the allowed list. Pick up to 3 target files most likely to hide a bug or unsafe "
-        "behaviour, using the risk reasons given. One-sentence hypothesis per target."
+        "from the allowed list. The test command must collect on BOTH the base branch and the "
+        "PR — never name a test file that only exists on the PR side (the baseline would fail "
+        "for the wrong reason); prefer the whole-suite command. Pick up to 3 target files most "
+        "likely to hide a bug or unsafe behaviour, using the risk reasons given. "
+        "One-sentence hypothesis per target."
     )
 
 
