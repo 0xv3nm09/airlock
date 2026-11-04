@@ -9,6 +9,9 @@ This folder is the working backend skeleton, built and verified in **dummy mode*
 pipeline runs offline with a scripted LLM and sandbox, so the demo, benchmark and CI work
 before a single Vultr credit is spent.
 
+**Docs:** [Architecture & use case](docs/ARCHITECTURE.md) · [Judging map](docs/JUDGING.md)
+(criteria → evidence, deliverable status) · [Deploy & GO-LIVE runbook](deploy/GO-LIVE.md)
+
 ## Quickstart
 
 ```bash
@@ -18,7 +21,7 @@ pip install -r requirements.txt -r requirements-dev.txt
 cp .env.example .env          # dev defaults: dummy LLM, dummy sandbox, offline
 make check                    # ruff + pytest
 make dev                      # API on :8000 (prints a dev admin API key)
-make bench                    # 17-case seeded benchmark in dummy mode
+make bench                    # 19-case seeded benchmark in dummy mode
 ```
 
 Try it:
@@ -42,6 +45,10 @@ curl -N localhost:8000/v1/runs/<run_id>/events   # live SSE timeline
 - Live SSE timeline, replayable trace events, containment counters, receipts on findings.
 - Demo endpoint (`POST /v1/demo/runs`) with no login; owner-filtered API for real runs.
 - Deterministic rule-table verdict; the LLM never decides the verdict.
+- Run records persist across backend restarts (SQLite write-through: runs, findings,
+  traces, API keys) — the trace outlives the sandbox.
+- Team API keys: scoped (`runs:read/write/approve/admin`), hashed, revocable, per-owner
+  isolated; a leaked key sees nothing but its own runs.
 
 ## Integrate with your team
 
@@ -67,11 +74,12 @@ nothing but its own runs, and revocation is instant from the Dashboard.
 
 ## Not yet (build week, Nov 3–8)
 
-- Real Docker + gVisor backend on the Vultr VM (T11/T12 — `app/sandbox/docker_backend.py` is
-  written but validated only on the VM).
+- Real Docker + gVisor backend validated on the Vultr VM (T11/T12 — `app/sandbox/docker_backend.py`
+  is written but validated only on the VM).
 - `VultrLLM` end-to-end against the live model catalog (T07 — pick models from
   `GET /v1/models`; never hardcode: the catalog rotates).
-- SQL storage, session JWTs, admin/kill-switch endpoints (T08/T09/T24), frontend (T21–T24).
+- Submission items: public repo flip, live demo URL on the VM, containment-moment video
+  (checklist in [`docs/JUDGING.md`](docs/JUDGING.md)).
 
 ## Public demo site (GitHub Pages)
 
@@ -92,12 +100,12 @@ app/
   scoring/      verdict rule table + routing
   sandbox/      base + dummy + docker(runsc) + vultr_vm stub
   sources/      dummy scenarios + GitHub PR fetch
-  store/        in-memory repository (owner-filtered)
+  store/        repository (owner-filtered; SQLite write-through persistence)
   workers/      in-process queue
   eval/         benchmark runner
 policies/       policy_v1.yaml (versioned; stamped on every run)
-eval_cases/     17 seeded cases with expected verdicts
+eval_cases/     19 seeded cases with expected verdicts
+docs/           architecture + judging map
 ```
 
-Plan of record: `../Airlock Engineering Workbook.md` · verification:
-`../Research Verification — Oct 27 2026.md` · build log: `../BUILD-LOG.md`.
+Full architecture and data flow: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
