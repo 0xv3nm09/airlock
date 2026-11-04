@@ -33,17 +33,17 @@ stage_infra() {
   fi
   echo ">> waiting for instance to go active…"
   for i in $(seq 1 60); do
-    STATE=$(api "https://api.vultr.com/v2/instances/$ID" | python3 -c "import json,sys;i=json.load(sys.stdin)['instance'];print(i['state'],i['power_status'])")
+    STATE=$(api "https://api.vultr.com/v2/instances/$ID" | python3 -c "import json,sys;i=json.load(sys.stdin)['instance'];print(i['status'],i['power_status'])")
     [ "$STATE" = "active running" ] && break; sleep 10
   done
   echo ">> instance $ID active at $(instance_ip)"
 
   # firewall: only 22/80/443 open; the app stays behind Caddy
-  FW=$(api "https://api.vultr.com/v2/firewall-groups" | python3 -c "import json,sys;print(next((g['id'] for g in json.load(sys.stdin)['firewall_groups'] if g['description']=='$FW_GROUP'),''))")
+  FW=$(api "https://api.vultr.com/v2/firewalls" | python3 -c "import json,sys;print(next((g['id'] for g in json.load(sys.stdin)['firewall_groups'] if g['description']=='$FW_GROUP'),''))")
   if [ -z "$FW" ]; then
-    FW=$(api -X POST "https://api.vultr.com/v2/firewall-groups" -d "{\"description\":\"$FW_GROUP\"}" | python3 -c "import json,sys;print(json.load(sys.stdin)['firewall_group']['id'])")
+    FW=$(api -X POST "https://api.vultr.com/v2/firewalls" -d "{\"description\":\"$FW_GROUP\"}" | python3 -c "import json,sys;print(json.load(sys.stdin)['firewall_group']['id'])")
     for RULE in '{"protocol":"tcp","port":"22","source":"0.0.0.0/0","subnet_size":0}' '{"protocol":"tcp","port":"80","source":"0.0.0.0/0","subnet_size":0}' '{"protocol":"tcp","port":"443","source":"0.0.0.0/0","subnet_size":0}' '{"protocol":"icmp","source":"0.0.0.0/0","subnet_size":0}'; do
-      api -X POST "https://api.vultr.com/v2/firewall-groups/$FW/rules" -d "{\"ip_type\":\"v4\",$RULE}" > /dev/null
+      api -X POST "https://api.vultr.com/v2/firewalls/$FW/rules" -d "{\"ip_type\":\"v4\",$RULE}" > /dev/null
     done
   fi
   api -X POST "https://api.vultr.com/v2/firewall-group-update" -d "{\"instance_id\":\"$ID\",\"firewall_group_id\":\"$FW\"}" > /dev/null && echo ">> firewall $FW attached (22/80/443 only)"
