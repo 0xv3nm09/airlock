@@ -49,12 +49,16 @@ stage_infra() {
   api -X POST "https://api.vultr.com/v2/firewall-group-update" -d "{\"instance_id\":\"$ID\",\"firewall_group_id\":\"$FW\"}" > /dev/null && echo ">> firewall $FW attached (22/80/443 only)"
 
   # Serverless Inference: subscription + key (raw responses printed — endpoint shapes
-  # evolve; adapt here if the API answers differently)
+  # evolve; adapt here if the API answers differently). Guarded so retries never create
+  # duplicate subscriptions.
   if [ ! -s "$INF_KEY_FILE" ]; then
-    echo ">> creating inference subscription…"
-    api -X POST "https://api.vultr.com/v2/inference" -d '{"label":"airlock"}'
-    echo
-    SUB=$(api "https://api.vultr.com/v2/inference" | python3 -c "import json,sys;s=json.load(sys.stdin)['subscriptions'];print(s[0]['id'] if s else '')")
+    SUB=$(api "https://api.vultr.com/v2/inference" | python3 -c "import json,sys;s=json.load(sys.stdin).get('subscriptions',[]);print(s[0]['id'] if s else '')")
+    if [ -z "$SUB" ]; then
+      echo ">> creating inference subscription…"
+      api -X POST "https://api.vultr.com/v2/inference" -d '{"label":"airlock"}'
+      echo
+      SUB=$(api "https://api.vultr.com/v2/inference" | python3 -c "import json,sys;s=json.load(sys.stdin).get('subscriptions',[]);print(s[0]['id'] if s else '')")
+    fi
     echo ">> subscription: ${SUB:-<none>} — creating API key…"
     api -X POST "https://api.vultr.com/v2/inference/$SUB/api-keys" -d '{"label":"airlock-agents"}'
     echo
