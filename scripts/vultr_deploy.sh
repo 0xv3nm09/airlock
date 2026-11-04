@@ -78,7 +78,7 @@ stage_server() {
   echo ">> installing docker + gVisor (runsc)…"
   ssh_vm 'apt-get update -q && apt-get install -yq ca-certificates curl gnupg && curl -fsSL https://get.docker.com | sh && \
     curl -fsSL https://gvisor.dev/archive.key | gpg --dearmor -o /usr/share/keyrings/gvisor-archive-keyring.gpg && \
-    echo "deb [signed-by=/usr/share/keyrings/gvisor-archive-keyring.gpg] https://storage.googleapis.com/gvisor/releases release/main" > /etc/apt/sources.list.d/gvisor.list && \
+    echo "deb [signed-by=/usr/share/keyrings/gvisor-archive-keyring.gpg] https://storage.googleapis.com/gvisor/releases release/main main" > /etc/apt/sources.list.d/gvisor.list && \
     apt-get update -q && apt-get install -yq runsc && \
     python3 - <<PY
 import json

@@ -1,10 +1,11 @@
 # Public entry. Serving on the raw VM IP for now (:80); swap the site address for a
 # domain (e.g. airlock.example.com) to get automatic HTTPS — keep the inner blocks.
+# Proxy targets are compose service names (caddy runs as a container in the same network).
 :80 {
 	encode gzip
 	@api path /v1/* /healthz /readyz /docs /openapi.json
-	reverse_proxy @api 127.0.0.1:8000 {
+	reverse_proxy @api api:8000 {
 		flush_interval -1 # stream SSE immediately
 	}
-	reverse_proxy 127.0.0.1:3000
+	reverse_proxy web:3000
 }

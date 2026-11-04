@@ -23,6 +23,7 @@ import asyncio
 import io
 import logging
 import re
+import socket as socket_mod
 import tarfile
 import time
 from typing import Literal
@@ -55,7 +56,7 @@ class DockerSandboxSession:
         self._canaries = canaries
         self._on_destroy = on_destroy
         self._outputs: list[ExecResult] = []
-        self._egress_attached = False
+        self._egress_attached = True  # created on the egress network (see create())
         self._destroyed = False
 
     async def exec(self, command: str, *, phase: Phase, timeout_s: int) -> ExecResult:
@@ -97,10 +98,55 @@ class DockerSandboxSession:
             info = tarfile.TarInfo(name="inject.tar")
             info.size = len(tarball)
             tf.addfile(info, io.BytesIO(tarball))
+        payload = wrapper.getvalue()
+        log.debug(
+            "materialize %s: payload %d bytes checksum=%d",
+            self.which, len(payload), sum(payload),
+        )
+        # Transport note: the daemon REJECTS put_archive/docker-cp outright for any
+        # container whose rootfs is read-only (it never even considers the tmpfs
+        # mounts), so the wrapper tarball is streamed through an exec's stdin into
+        # `tar -x` instead — the exec runs as the sandbox user and writes only into
+        # the tmpfs workspace.
         try:
-            await asyncio.to_thread(self._container.put_archive, "/workspace", wrapper.getvalue())
+            exec_id = await asyncio.to_thread(
+                self._client.api.exec_create,
+                self._container.id,
+                ["sh", "-c", "tar -x -C /workspace"],
+                stdin=True, stdout=True, stderr=True,  # stdin must be attached or the stream write lands nowhere
+                user="1000:1000",
+            )
+            sock = await asyncio.to_thread(
+                self._client.api.exec_start, exec_id, socket=True, demux=False
+            )
+            # docker-py hands back its SocketIO in read mode ("rb"); write via the
+            # underlying raw socket and half-close so tar sees EOF on stdin.
+            raw = getattr(sock, "_sock", sock)
+            try:
+                await asyncio.to_thread(raw.sendall, wrapper.getvalue())
+                await asyncio.to_thread(raw.shutdown, socket_mod.SHUT_WR)
+            finally:
+                await asyncio.to_thread(sock.close)
+            # exec_inspect reports ExitCode None while the process is still running —
+            # wait it out, or the extraction step below races an unfinished tar.
+            status = {"ExitCode": None}
+            for _ in range(200):
+                status = await asyncio.to_thread(self._client.api.exec_inspect, exec_id)
+                if not status.get("Running") and status.get("ExitCode") is not None:
+                    break
+                await asyncio.sleep(0.05)
+            if int(status.get("ExitCode") or 0) != 0:
+                try:
+                    raw.settimeout(1.0)
+                    leftover = raw.recv(65536)
+                    log.warning("materialize %s: tar stream tail %r", self.which, leftover[:400])
+                except Exception as e:  # noqa: BLE001 — diagnostics only
+                    log.warning("materialize %s: stream read failed: %s", self.which, e)
+                raise RuntimeError(f"tar exited {status.get('ExitCode')} while unpacking")
+        except RuntimeError:
+            raise
         except Exception as e:  # noqa: BLE001 — surfaced, never silent
-            raise RuntimeError(f"put_archive into /workspace failed: {e}") from e
+            raise RuntimeError(f"materialize into /workspace failed: {e}") from e
         res = await asyncio.to_thread(
             self._container.exec_run,
             [
@@ -110,6 +156,7 @@ class DockerSandboxSession:
                 " && rm -f /workspace/inject.tar",
             ],
             user="1000:1000",
+            demux=True,
         )
         if int(res.exit_code or 0) != 0:
             stderr = (res.output[1] or b"").decode(errors="replace")[:300]
@@ -230,7 +277,12 @@ class DockerSandbox:
             command=["sleep", "infinity"],
             detach=True,
             runtime=s.sandbox_runtime,  # runsc (gVisor); falls back to runc if missing
-            network_mode="none",  # default-deny; egress attaches only for install
+            # Egress attaches at CREATE, not live: Docker rejects connecting a second
+            # network to a running none-mode container ("cannot be connected to multiple
+            # networks with one of the networks in private (none) mode"). The registries-
+            # only policy is enforced by the squid proxy, and use_network(False) drops the
+            # container off the network entirely after install — same end state as none.
+            network_mode=s.egress_network,
             user="1000:1000",
             cap_drop=["ALL"],
             security_opt=["no-new-privileges"],

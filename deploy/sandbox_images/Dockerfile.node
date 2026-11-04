@@ -8,6 +8,6 @@ RUN apt-get update \
 
 RUN npm install -g jest@29 && npm cache clean --force
 
-RUN useradd -m -u 1000 sandbox
+RUN useradd -m -u 1001 sandbox
 USER 1000
 WORKDIR /workspace
