@@ -1,0 +1,16 @@
+# Sandbox image for Python PRs (pinned base; rebuild on the VM with `make images`).
+# Deps install into a per-run venv on the writable /workspace tmpfs — the root
+# filesystem stays read-only. `--system-site-packages` lets the venv see the
+# preinstalled pytest toolchain while package installs land in the venv.
+FROM python:3.12-slim
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends coreutils git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --no-cache-dir \
+    pytest pytest-json-report pytest-timeout hypothesis coverage
+
+RUN useradd -m -u 1000 sandbox
+USER 1000
+WORKDIR /workspace

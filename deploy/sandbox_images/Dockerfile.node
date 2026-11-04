@@ -1,0 +1,13 @@
+# Sandbox image for Node PRs. Deps install into /workspace/node_modules (writable
+# tmpfs); jest is preinstalled globally in the image (read-only is fine).
+FROM node:20-slim
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends coreutils git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN npm install -g jest@29 && npm cache clean --force
+
+RUN useradd -m -u 1000 sandbox
+USER 1000
+WORKDIR /workspace

@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+airlock.db
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+airlock-store.db

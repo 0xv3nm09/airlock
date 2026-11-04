@@ -1,0 +1,40 @@
+# Airlock on one Vultr VM (workbook: Deployment runbook). The API container gets the
+# Docker socket because it runs OUR code, never PR code — say this in the README.
+services:
+  api:
+    build: ..
+    env_file: ../.env
+    ports: ["127.0.0.1:8000:8000"]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # sandbox images are built on the host; the API talks to Docker through the socket
+    depends_on: [db, egress-proxy]
+    restart: always
+  web:
+    build: ../web
+    ports: ["127.0.0.1:3000:3000"]
+    environment:
+      AIRLOCK_API_URL: http://api:8000
+    depends_on: [api]
+    restart: always
+  db:
+    image: postgres:16
+    environment: {POSTGRES_DB: airlock, POSTGRES_USER: airlock, POSTGRES_PASSWORD: ${DB_PASSWORD}}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    restart: always
+  egress-proxy:
+    image: ubuntu/squid:latest
+    volumes:
+      - ./squid.conf:/etc/squid/squid.conf:ro
+      - squidlogs:/var/log/squid
+    networks: [default, airlock-egress]
+    restart: always
+
+networks:
+  airlock-egress:
+    name: airlock-egress
+    internal: true # no route to the internet except via the proxy
+
+volumes:
+  pgdata: {}
+  squidlogs: {}

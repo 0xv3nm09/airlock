@@ -1,0 +1,41 @@
+version: "2026-11-01.v1"
+effective_from: 2026-11-01
+auto_verdict_threshold: 0.80
+always_escalate: [suspicious]
+
+allowed_commands:
+  python: ["pip install", "python -m pip install", "python -m pytest", "pytest", "python -m venv"]
+  node: ["npm ci", "npm install", "npm test"]
+
+denied_patterns:
+  - '\bcurl\b'
+  - '\bwget\b'
+  - '\bssh\b'
+  - '\bsudo\b'
+  - '\bdocker\b'
+  - 'rm\s+-rf'
+  - '>\s*/'
+  - '://'
+  - 'git\+'
+  - '169\.254\.169\.254'
+
+egress:
+  install_allow: [pypi.org, files.pythonhosted.org, registry.npmjs.org]
+  test_phase: none
+
+generated_tests:
+  max_per_run: 3
+  max_chars: 6000
+  keep_only_if: runs_on_base
+
+sandbox:
+  install_timeout_s: 180
+  test_timeout_s: 120
+
+llm:
+  max_concurrent: 4
+  token_budget_per_run: 120000
+
+analyst:
+  run_only_when: [behaviour_alert, static_high, preflight_warning]
+  may_change_verdict: false

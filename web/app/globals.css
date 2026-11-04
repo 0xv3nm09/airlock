@@ -1,0 +1,337 @@
+@import "tailwindcss";
+
+/*
+ * Airlock design tokens.
+ *
+ * Strategy (per WCAG 2.2):
+ *  - Every text pair is built to clear 4.5:1 by default (AA 1.4.3); we never rely on the
+ *    large-text 3:1 exemption.
+ *  - Focus rings (2.4.13) and interactive boundaries clear 3:1 against adjacent colors
+ *    (non-text contrast, 1.4.11).
+ *  - Status is never color alone (1.4.1): every tone pairs with an icon + text label.
+ *  - All pairs are machine-verified by scripts/contrast-audit.mjs (run in the audit).
+ */
+:root {
+  --bg: #f7f8fc;
+  --surface: #ffffff;
+  --surface-2: #eef2f7;
+  --fg: #0f172a;
+  --muted: #46556b;
+  --line: #dfe5ef;
+  --line-strong: #64748b;
+  --primary: #4338ca;
+  --primary-fg: #ffffff;
+  --focus: #1d4ed8;
+  --success: #15803d;
+  --success-text: #14532d;
+  --success-badge: #d3f8df;
+  --success-line: #6fcf97;
+  --warning: #b45309;
+  --warning-text: #71310b;
+  --warning-badge: #fdeeca;
+  --warning-line: #e0a33c;
+  --danger: #b91c1c;
+  --danger-text: #7f1d1d;
+  --danger-badge: #fee2e2;
+  --danger-line: #ef8a8a;
+  --info: #1d4ed8;
+  --info-text: #1e3a8a;
+  --info-badge: #dbeafe;
+  --info-line: #93b4f5;
+  /* gradient + console accents (light) — every text pair verified ≥ 4.5:1 */
+  --grad-a: #4f46e5;
+  --grad-b: #0e7490;
+  --grad-c: #a21caf;
+  --c-net: #0e7490;
+  --c-canary: #be185d;
+  --c-write: #c2410c;
+  --c-limit: #854d0e;
+}
+
+.dark {
+  --bg: #0a0f1c;
+  --surface: #0f1729;
+  --surface-2: #16223a;
+  --fg: #e6edf6;
+  --muted: #9fb0c3;
+  --line: #22304a;
+  --line-strong: #5c6f8c;
+  --primary: #a5b4fc;
+  --primary-fg: #10132e;
+  --focus: #60a5fa;
+  --success: #4ade80;
+  --success-text: #86efac;
+  --success-badge: #0f2a1c;
+  --success-line: #166534;
+  --warning: #fbbf24;
+  --warning-text: #fbbf24;
+  --warning-badge: #2a1f05;
+  --warning-line: #92610c;
+  --danger: #f87171;
+  --danger-text: #fca5a5;
+  --danger-badge: #2c1212;
+  --danger-line: #7f1d1d;
+  --info: #60a5fa;
+  --info-text: #93c5fd;
+  --info-badge: #0f1d33;
+  --info-line: #1e40af;
+  /* gradient + console accents (dark) */
+  --grad-a: #a5b4fc;
+  --grad-b: #67e8f9;
+  --grad-c: #f0abfc;
+  --c-net: #67e8f9;
+  --c-canary: #f9a8d4;
+  --c-write: #fdba74;
+  --c-limit: #fcd34d;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-primary: var(--primary);
+  --color-primary-fg: var(--primary-fg);
+  --color-focus: var(--focus);
+  --color-success: var(--success);
+  --color-success-text: var(--success-text);
+  --color-success-badge: var(--success-badge);
+  --color-success-line: var(--success-line);
+  --color-warning: var(--warning);
+  --color-warning-text: var(--warning-text);
+  --color-warning-badge: var(--warning-badge);
+  --color-warning-line: var(--warning-line);
+  --color-danger: var(--danger);
+  --color-danger-text: var(--danger-text);
+  --color-danger-badge: var(--danger-badge);
+  --color-danger-line: var(--danger-line);
+  --color-info: var(--info);
+  --color-info-text: var(--info-text);
+  --color-info-badge: var(--info-badge);
+  --color-info-line: var(--info-line);
+  --color-grad-a: var(--grad-a);
+  --color-grad-b: var(--grad-b);
+  --color-grad-c: var(--grad-c);
+  --color-c-net: var(--c-net);
+  --color-c-canary: var(--c-canary);
+  --color-c-write: var(--c-write);
+  --color-c-limit: var(--c-limit);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    /* reserve the scrollbar lane so the nav doesn't shift between short and long pages */
+    scrollbar-gutter: stable;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-size: 16px; /* workbook UI rule: 16 px minimum body text, readable in a video */
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  /* Status is never conveyed by motion or color alone; we also kill motion on request. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* --- motion (all gated by the reduced-motion rule above) --- */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.reveal {
+  opacity: 0;
+}
+.reveal-in {
+  animation: fade-up 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.live-dot {
+  animation: pulse-soft 1.6s ease-in-out infinite;
+}
+.lift {
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -14px rgb(15 23 42 / 0.28);
+}
+.dark .lift:hover {
+  box-shadow: 0 10px 28px -14px rgb(0 0 0 / 0.7);
+}
+
+/* --- colorful dark experience: gradient text, gradient borders, aurora glow --- */
+.grad-text {
+  background: linear-gradient(92deg, var(--grad-a) 0%, var(--grad-b) 55%, var(--grad-c) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.grad-border {
+  position: relative;
+}
+.grad-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(130deg, var(--grad-a), var(--grad-b) 55%, var(--grad-c));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.aurora::before,
+.aurora::after {
+  content: "";
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  filter: blur(90px);
+}
+.aurora::before {
+  background: #6366f1;
+  top: -200px;
+  left: -100px;
+  opacity: 0.07;
+}
+.aurora::after {
+  background: #06b6d4;
+  top: -140px;
+  right: -140px;
+  opacity: 0.06;
+}
+.dark .aurora::before {
+  opacity: 0.2;
+}
+.dark .aurora::after {
+  opacity: 0.16;
+}
+.console-line {
+  border-left: 2px solid var(--line);
+  padding-left: 0.75rem;
+}
+
+/* --- crisp & modern refresh --- */
+.card-shadow {
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 0.04),
+    0 8px 24px -14px rgb(15 23 42 / 0.12);
+}
+.dark .card-shadow {
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.03) inset,
+    0 10px 30px -18px rgb(0 0 0 / 0.8);
+}
+.btn-grad {
+  color: #fff;
+  background-image: linear-gradient(110deg, var(--grad-a), var(--grad-b));
+  background-size: 160% 100%;
+  background-position: 0% 0;
+  transition:
+    background-position 0.4s ease,
+    box-shadow 0.2s ease,
+    transform 0.1s ease;
+}
+.btn-grad:hover:not(:disabled) {
+  background-position: 100% 0;
+  box-shadow: 0 6px 18px -8px color-mix(in srgb, var(--grad-a) 70%, transparent);
+}
+.dark .btn-grad {
+  color: var(--primary-fg);
+}
+/* faint dot grid behind the hero, fading out at the edges */
+.dot-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background-image: radial-gradient(color-mix(in srgb, var(--fg) 14%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 75% at 50% 40%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 75% at 50% 40%, #000 30%, transparent 75%);
+}
+.dark .dot-grid {
+  background-image: radial-gradient(color-mix(in srgb, var(--fg) 10%, transparent) 1px, transparent 1px);
+}
+
+/* --- dashboard redesign --- */
+.logo-tile {
+  color: #fff;
+  background-image: linear-gradient(135deg, var(--grad-a), var(--grad-b));
+  box-shadow: 0 4px 14px -6px color-mix(in srgb, var(--grad-a) 70%, transparent);
+}
+.dark .logo-tile {
+  color: var(--primary-fg);
+}
+@layer components {
+/* tinted square behind a KPI / card icon; colour comes from the parent's text colour */
+  .icon-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.6rem;
+    background: color-mix(in srgb, currentColor 12%, transparent);
+  }
+}
+.bar-grow {
+  transform-origin: left center;
+  animation: bar-grow 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: none;
+  }
+}

@@ -1,0 +1,54 @@
+# Public demo site on GitHub Pages — the same pattern as blind-run: a static build of
+# the web app with the committed snapshot of real recorded runs (web/demo/), so the
+# site never goes empty and never shows "backend offline".
+# Set AIRLOCK_BASE_PATH to the repo name (0xv3nm09.github.io/<repo>/), and enable
+# Settings → Pages → Source: GitHub Actions once, after the repo goes public.
+name: Pages demo
+
+on:
+  push:
+    branches: [main]
+    paths: ["web/**", "scripts/export_demo_snapshot.py", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_DEMO_MODE: "1"
+          AIRLOCK_STATIC_BUILD: "1"
+          AIRLOCK_BASE_PATH: /airlock # must match the repo name
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

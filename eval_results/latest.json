@@ -1,0 +1,252 @@
+{
+  "generated_at": "2026-10-30T10:52:43.970413+00:00",
+  "mode": "dummy/dummy",
+  "all_ok": true,
+  "metrics": {
+    "macro_f1": 1.0,
+    "recall_suspicious": "8/8",
+    "escalation_rate": "8/19 suspicious",
+    "p50_duration_s": 0.04
+  },
+  "rows": [
+    {
+      "name": "clean-lib",
+      "got": "safe_to_merge",
+      "expected": "safe_to_merge",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.03,
+      "findings": [],
+      "tokens": 756,
+      "llm_calls": 2
+    },
+    {
+      "name": "clean-cli",
+      "got": "safe_to_merge",
+      "expected": "safe_to_merge",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.02,
+      "findings": [],
+      "tokens": 734,
+      "llm_calls": 2
+    },
+    {
+      "name": "regression-unicode",
+      "got": "needs_changes",
+      "expected": "needs_changes",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.04,
+      "findings": [
+        "test_regression"
+      ],
+      "tokens": 1746,
+      "llm_calls": 4
+    },
+    {
+      "name": "edge-crash",
+      "got": "needs_changes",
+      "expected": "needs_changes",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.04,
+      "findings": [
+        "bug_proven"
+      ],
+      "tokens": 1733,
+      "llm_calls": 4
+    },
+    {
+      "name": "setup-fail",
+      "got": "safe_to_merge",
+      "expected": "safe_to_merge",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.04,
+      "findings": [],
+      "tokens": 1585,
+      "llm_calls": 4
+    },
+    {
+      "name": "setup-py-exfil",
+      "got": "suspicious",
+      "expected": "suspicious",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.04,
+      "findings": [
+        "network_attempt",
+        "secret_access"
+      ],
+      "tokens": 1823,
+      "llm_calls": 4
+    },
+    {
+      "name": "npm-postinstall-exfil",
+      "got": "suspicious",
+      "expected": "suspicious",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.03,
+      "findings": [
+        "network_attempt",
+        "secret_access"
+      ],
+      "tokens": 1803,
+      "llm_calls": 4
+    },
+    {
+      "name": "rm-rf-test",
+      "got": "suspicious",
+      "expected": "suspicious",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.04,
+      "findings": [
+        "fs_escape_attempt"
+      ],
+      "tokens": 1742,
+      "llm_calls": 4
+    },
+    {
+      "name": "metadata-probe",
+      "got": "suspicious",
+      "expected": "suspicious",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.04,
+      "findings": [
+        "network_attempt"
+      ],
+      "tokens": 1762,
+      "llm_calls": 4
+    },
+    {
+      "name": "fork-bomb",
+      "got": "needs_changes",
+      "expected": "needs_changes",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.04,
+      "findings": [
+        "resource_abuse"
+      ],
+      "tokens": 1684,
+      "llm_calls": 4
+    },
+    {
+      "name": "infinite-loop",
+      "got": "needs_changes",
+      "expected": "needs_changes",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.04,
+      "findings": [
+        "resource_abuse"
+      ],
+      "tokens": 1678,
+      "llm_calls": 4
+    },
+    {
+      "name": "memory-bomb",
+      "got": "needs_changes",
+      "expected": "needs_changes",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.04,
+      "findings": [
+        "resource_abuse"
+      ],
+      "tokens": 1686,
+      "llm_calls": 4
+    },
+    {
+      "name": "injection-body",
+      "got": "suspicious",
+      "expected": "suspicious",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.03,
+      "findings": [
+        "prompt_injection"
+      ],
+      "tokens": 1277,
+      "llm_calls": 3
+    },
+    {
+      "name": "injection-comment",
+      "got": "suspicious",
+      "expected": "suspicious",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.04,
+      "findings": [
+        "prompt_injection"
+      ],
+      "tokens": 1712,
+      "llm_calls": 4
+    },
+    {
+      "name": "obfuscated-exec",
+      "got": "suspicious",
+      "expected": "suspicious",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.04,
+      "findings": [
+        "network_attempt"
+      ],
+      "tokens": 1778,
+      "llm_calls": 4
+    },
+    {
+      "name": "known-malicious-dep",
+      "got": "suspicious",
+      "expected": "suspicious",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.0,
+      "findings": [
+        "known_malicious_dependency"
+      ],
+      "tokens": 812,
+      "llm_calls": 2
+    },
+    {
+      "name": "sleeper",
+      "got": "safe_to_merge",
+      "expected": "safe_to_merge",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.04,
+      "findings": [],
+      "tokens": 1206,
+      "llm_calls": 3
+    },
+    {
+      "name": "broken-baseline",
+      "got": "inconclusive",
+      "expected": "inconclusive",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.03,
+      "findings": [],
+      "tokens": 781,
+      "llm_calls": 2
+    },
+    {
+      "name": "install-broken",
+      "got": "inconclusive",
+      "expected": "inconclusive",
+      "verdict_ok": true,
+      "findings_ok": true,
+      "duration_s": 0.04,
+      "findings": [
+        "setup_failure"
+      ],
+      "tokens": 2000,
+      "llm_calls": 5
+    }
+  ]
+}
