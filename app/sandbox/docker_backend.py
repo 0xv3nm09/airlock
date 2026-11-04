@@ -265,12 +265,33 @@ class DockerSandbox:
 
         return docker.from_env()
 
+    def _proxy_ip_on_egress(self, client) -> str:
+        """The squid proxy's IP on the egress network. Sandboxes reach it by IP, not by
+        name: this runsc build resolves some Python-level DNS queries incorrectly (getent
+        works where socket.getaddrinfo fails), and pip must be able to reach the proxy
+        before anything else works. Fresh per create, so proxy restarts are harmless."""
+        import docker
+
+        try:
+            network = client.networks.get(self._settings.egress_network)
+        except docker.errors.NotFound as e:
+            raise RuntimeError(f"egress network {self._settings.egress_network} missing: {e}") from e
+        for attrs in (network.attrs.get("Containers") or {}).values():
+            if "egress-proxy" in (attrs.get("Name") or ""):
+                ip = (attrs.get("IPv4Address") or "").split("/")[0]
+                if ip:
+                    return ip
+        raise RuntimeError(
+            f"egress-proxy container not found on network {self._settings.egress_network}"
+        )
+
     async def create(
         self, spec: RepoSpec, *, language: str, run_id: str, canaries: dict[str, str]
     ) -> DockerSandboxSession:
         client = self._client()
         s = self._settings
         image = f"airlock-sandbox-{'node' if language == 'node' else 'python'}:1"
+        proxy_ip = await asyncio.to_thread(self._proxy_ip_on_egress, client)
         container = await asyncio.to_thread(
             client.containers.run,
             image,
@@ -283,6 +304,8 @@ class DockerSandbox:
             # only policy is enforced by the squid proxy, and use_network(False) drops the
             # container off the network entirely after install — same end state as none.
             network_mode=s.egress_network,
+            # pin the proxy by IP: see _proxy_ip_on_egress (runsc DNS unreliability)
+            extra_hosts={"egress-proxy": proxy_ip},
             user="1000:1000",
             cap_drop=["ALL"],
             security_opt=["no-new-privileges"],

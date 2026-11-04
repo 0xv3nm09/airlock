@@ -60,7 +60,7 @@ def test_owner_isolation_returns_404():
     with TestClient(create_app()) as client:
         key = client.app.state.services.dev_admin_key
         resp = client.post(
-            "/v1/runs", json={"pr_url": "https://github.com/airlock-demo/clean-lib/pull/1"}, headers={"X-API-Key": key}
+            "/v1/runs", json={"pr_url": "https://github.com/0xv3nm09/clean-lib/pull/1"}, headers={"X-API-Key": key}
         )
         assert resp.status_code == 202
         run_id = resp.json()["id"]
@@ -134,7 +134,7 @@ def test_session_cookie_unlocks_sse_for_owner_runs():
         assert "airlock_session" in resp.cookies
         run_id = client.post(
             "/v1/runs",
-            json={"pr_url": "https://github.com/airlock-demo/clean-lib/pull/1"},
+            json={"pr_url": "https://github.com/0xv3nm09/clean-lib/pull/1"},
             headers={"X-API-Key": key},
         ).json()["id"]
         deadline = time.monotonic() + 15
@@ -183,7 +183,7 @@ def test_cancelled_before_start_is_not_stuck_queued():
         key = client.app.state.services.dev_admin_key
         run_id = client.post(
             "/v1/runs",
-            json={"pr_url": "https://github.com/airlock-demo/clean-lib/pull/1"},
+            json={"pr_url": "https://github.com/0xv3nm09/clean-lib/pull/1"},
             headers={"X-API-Key": key},
         ).json()["id"]
         client.post(f"/v1/runs/{run_id}/cancel", headers={"X-API-Key": key})
@@ -219,7 +219,7 @@ def test_public_stats_and_recent_feed():
         key = client.app.state.services.dev_admin_key
         own_id = client.post(
             "/v1/runs",
-            json={"pr_url": "https://github.com/airlock-demo/clean-lib/pull/1"},
+            json={"pr_url": "https://github.com/0xv3nm09/clean-lib/pull/1"},
             headers={"X-API-Key": key},
         ).json()["id"]
         recent_ids = {r["id"] for r in client.get("/v1/runs/recent").json()}
@@ -300,7 +300,7 @@ def test_team_api_key_lifecycle():
         # the team key can create runs under its own owner
         resp = client.post(
             "/v1/runs",
-            json={"pr_url": "https://github.com/airlock-demo/clean-lib/pull/1"},
+            json={"pr_url": "https://github.com/0xv3nm09/clean-lib/pull/1"},
             headers={"X-API-Key": body["key"]},
         )
         assert resp.status_code == 202
@@ -324,7 +324,7 @@ def test_team_api_key_lifecycle():
         assert (
             client.post(
                 "/v1/runs",
-                json={"pr_url": "https://github.com/airlock-demo/clean-lib/pull/1"},
+                json={"pr_url": "https://github.com/0xv3nm09/clean-lib/pull/1"},
                 headers={"X-API-Key": ro["key"]},
             ).status_code
             == 403

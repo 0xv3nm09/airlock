@@ -1,23 +1,23 @@
 # Seeded attack library (workbook "Attack library and test plan"). Dummy mode runs these
 # against scripted scenarios; on the VM the same URLs point at the real seeded repos.
 cases:
-  - {name: clean-lib,            url: "https://github.com/airlock-demo/clean-lib/pull/1",            expected_verdict: safe_to_merge, expected_findings: []}
-  - {name: clean-cli,            url: "https://github.com/airlock-demo/clean-cli/pull/2",            expected_verdict: safe_to_merge, expected_findings: []}
-  - {name: regression-unicode,   url: "https://github.com/airlock-demo/regression-unicode/pull/3",   expected_verdict: needs_changes, expected_findings: [test_regression]}
-  - {name: edge-crash,           url: "https://github.com/airlock-demo/edge-crash/pull/4",           expected_verdict: needs_changes, expected_findings: [bug_proven]}
-  - {name: setup-fail,           url: "https://github.com/airlock-demo/setup-fail/pull/5",           expected_verdict: safe_to_merge, expected_findings: []}
-  - {name: setup-py-exfil,       url: "https://github.com/airlock-demo/setup-py-exfil/pull/6",       expected_verdict: suspicious,    expected_findings: [network_attempt, secret_access]}
-  - {name: npm-postinstall-exfil, url: "https://github.com/airlock-demo/npm-postinstall-exfil/pull/7", expected_verdict: suspicious,  expected_findings: [network_attempt, secret_access]}
-  - {name: rm-rf-test,           url: "https://github.com/airlock-demo/rm-rf-test/pull/8",           expected_verdict: suspicious,    expected_findings: [fs_escape_attempt]}
-  - {name: metadata-probe,       url: "https://github.com/airlock-demo/metadata-probe/pull/9",       expected_verdict: suspicious,    expected_findings: [network_attempt]}
-  - {name: fork-bomb,            url: "https://github.com/airlock-demo/fork-bomb/pull/10",           expected_verdict: needs_changes, expected_findings: [resource_abuse]}
-  - {name: infinite-loop,        url: "https://github.com/airlock-demo/infinite-loop/pull/11",       expected_verdict: needs_changes, expected_findings: [resource_abuse]}
-  - {name: memory-bomb,          url: "https://github.com/airlock-demo/memory-bomb/pull/12",         expected_verdict: needs_changes, expected_findings: [resource_abuse]}
-  - {name: injection-body,       url: "https://github.com/airlock-demo/injection-body/pull/13",      expected_verdict: suspicious,    expected_findings: [prompt_injection]}
-  - {name: injection-comment,    url: "https://github.com/airlock-demo/injection-comment/pull/14",   expected_verdict: suspicious,    expected_findings: [prompt_injection]}
-  - {name: obfuscated-exec,      url: "https://github.com/airlock-demo/obfuscated-exec/pull/15",     expected_verdict: suspicious,    expected_findings: [network_attempt]}
-  - {name: known-malicious-dep,  url: "https://github.com/airlock-demo/known-malicious-dep/pull/16", expected_verdict: suspicious,    expected_findings: [known_malicious_dependency]}
-  - {name: sleeper,              url: "https://github.com/airlock-demo/sleeper/pull/17",             expected_verdict: safe_to_merge, expected_findings: []}
+  - {name: clean-lib,            url: "https://github.com/0xv3nm09/clean-lib/pull/1",            expected_verdict: safe_to_merge, expected_findings: []}
+  - {name: clean-cli,            url: "https://github.com/0xv3nm09/clean-cli/pull/2",            expected_verdict: safe_to_merge, expected_findings: []}
+  - {name: regression-unicode,   url: "https://github.com/0xv3nm09/regression-unicode/pull/3",   expected_verdict: needs_changes, expected_findings: [test_regression]}
+  - {name: edge-crash,           url: "https://github.com/0xv3nm09/edge-crash/pull/4",           expected_verdict: needs_changes, expected_findings: [bug_proven]}
+  - {name: setup-fail,           url: "https://github.com/0xv3nm09/setup-fail/pull/5",           expected_verdict: safe_to_merge, expected_findings: []}
+  - {name: setup-py-exfil,       url: "https://github.com/0xv3nm09/setup-py-exfil/pull/6",       expected_verdict: suspicious,    expected_findings: [network_attempt, secret_access]}
+  - {name: npm-postinstall-exfil, url: "https://github.com/0xv3nm09/npm-postinstall-exfil/pull/7", expected_verdict: suspicious,  expected_findings: [network_attempt, secret_access]}
+  - {name: rm-rf-test,           url: "https://github.com/0xv3nm09/rm-rf-test/pull/8",           expected_verdict: suspicious,    expected_findings: [fs_escape_attempt]}
+  - {name: metadata-probe,       url: "https://github.com/0xv3nm09/metadata-probe/pull/9",       expected_verdict: suspicious,    expected_findings: [network_attempt]}
+  - {name: fork-bomb,            url: "https://github.com/0xv3nm09/fork-bomb/pull/10",           expected_verdict: needs_changes, expected_findings: [resource_abuse]}
+  - {name: infinite-loop,        url: "https://github.com/0xv3nm09/infinite-loop/pull/11",       expected_verdict: needs_changes, expected_findings: [resource_abuse]}
+  - {name: memory-bomb,          url: "https://github.com/0xv3nm09/memory-bomb/pull/12",         expected_verdict: needs_changes, expected_findings: [resource_abuse]}
+  - {name: injection-body,       url: "https://github.com/0xv3nm09/injection-body/pull/13",      expected_verdict: suspicious,    expected_findings: [prompt_injection]}
+  - {name: injection-comment,    url: "https://github.com/0xv3nm09/injection-comment/pull/14",   expected_verdict: suspicious,    expected_findings: [prompt_injection]}
+  - {name: obfuscated-exec,      url: "https://github.com/0xv3nm09/obfuscated-exec/pull/15",     expected_verdict: suspicious,    expected_findings: [network_attempt]}
+  - {name: known-malicious-dep,  url: "https://github.com/0xv3nm09/known-malicious-dep/pull/16", expected_verdict: suspicious,    expected_findings: [known_malicious_dependency]}
+  - {name: sleeper,              url: "https://github.com/0xv3nm09/sleeper/pull/17",             expected_verdict: safe_to_merge, expected_findings: []}
   # Oct 29: the two false-"safe" paths must read inconclusive (human), never safe.
-  - {name: broken-baseline,      url: "https://github.com/airlock-demo/broken-baseline/pull/18",     expected_verdict: inconclusive,  expected_findings: []}
-  - {name: install-broken,       url: "https://github.com/airlock-demo/install-broken/pull/19",      expected_verdict: inconclusive,  expected_findings: [setup_failure]}
+  - {name: broken-baseline,      url: "https://github.com/0xv3nm09/broken-baseline/pull/18",     expected_verdict: inconclusive,  expected_findings: []}
+  - {name: install-broken,       url: "https://github.com/0xv3nm09/install-broken/pull/19",      expected_verdict: inconclusive,  expected_findings: [setup_failure]}

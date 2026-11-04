@@ -24,7 +24,7 @@ async def _run(svc, url: str):
 
 async def test_malicious_exfil_is_suspicious_with_canary(svc):
     before = DummySandbox.alive
-    record = await _run(svc, "https://github.com/airlock-demo/setup-py-exfil/pull/6")
+    record = await _run(svc, "https://github.com/0xv3nm09/setup-py-exfil/pull/6")
     out = record.out
     assert out.status is RunStatus.completed
     assert out.verdict is not None and out.verdict.label is VerdictLabel.suspicious
@@ -37,14 +37,14 @@ async def test_malicious_exfil_is_suspicious_with_canary(svc):
 
 
 async def test_clean_repo_is_safe(svc):
-    record = await _run(svc, "https://github.com/airlock-demo/clean-lib/pull/1")
+    record = await _run(svc, "https://github.com/0xv3nm09/clean-lib/pull/1")
     assert record.out.verdict is not None
     assert record.out.verdict.label is VerdictLabel.safe_to_merge
     assert record.out.findings == []
 
 
 async def test_regression_is_needs_changes(svc):
-    record = await _run(svc, "https://github.com/airlock-demo/regression-unicode/pull/3")
+    record = await _run(svc, "https://github.com/0xv3nm09/regression-unicode/pull/3")
     assert record.out.verdict is not None
     assert record.out.verdict.label is VerdictLabel.needs_changes
     assert record.out.verdict.route.value == "auto"
@@ -54,7 +54,7 @@ async def test_regression_is_needs_changes(svc):
 
 async def test_known_malicious_dep_stops_before_sandbox(svc):
     created_before = DummySandbox.created
-    record = await _run(svc, "https://github.com/airlock-demo/known-malicious-dep/pull/16")
+    record = await _run(svc, "https://github.com/0xv3nm09/known-malicious-dep/pull/16")
     assert record.out.verdict is not None
     assert record.out.verdict.label is VerdictLabel.suspicious
     cats = {f.category.value for f in record.out.findings}
@@ -64,7 +64,7 @@ async def test_known_malicious_dep_stops_before_sandbox(svc):
 
 
 async def test_setup_fail_self_heals(svc):
-    record = await _run(svc, "https://github.com/airlock-demo/setup-fail/pull/5")
+    record = await _run(svc, "https://github.com/0xv3nm09/setup-fail/pull/5")
     assert record.out.verdict is not None
     assert record.out.verdict.label is VerdictLabel.safe_to_merge
     span_names = {e.name for e in record.events}
@@ -72,7 +72,7 @@ async def test_setup_fail_self_heals(svc):
 
 
 async def test_rm_rf_is_denied_and_flagged(svc):
-    record = await _run(svc, "https://github.com/airlock-demo/rm-rf-test/pull/8")
+    record = await _run(svc, "https://github.com/0xv3nm09/rm-rf-test/pull/8")
     assert record.out.verdict is not None
     assert record.out.verdict.label is VerdictLabel.suspicious
     cats = {f.category.value for f in record.out.findings}
@@ -81,7 +81,7 @@ async def test_rm_rf_is_denied_and_flagged(svc):
 
 
 async def test_edge_crash_proves_bug_with_generated_test(svc):
-    record = await _run(svc, "https://github.com/airlock-demo/edge-crash/pull/4")
+    record = await _run(svc, "https://github.com/0xv3nm09/edge-crash/pull/4")
     assert record.out.verdict is not None
     assert record.out.verdict.label is VerdictLabel.needs_changes
     cats = {f.category.value for f in record.out.findings}
@@ -89,7 +89,7 @@ async def test_edge_crash_proves_bug_with_generated_test(svc):
 
 
 async def test_metadata_probe_is_critical(svc):
-    record = await _run(svc, "https://github.com/airlock-demo/metadata-probe/pull/9")
+    record = await _run(svc, "https://github.com/0xv3nm09/metadata-probe/pull/9")
     assert record.out.verdict is not None
     assert record.out.verdict.label is VerdictLabel.suspicious
     critical = [f for f in record.out.findings if f.category.value == "network_attempt"]
@@ -97,7 +97,7 @@ async def test_metadata_probe_is_critical(svc):
 
 
 async def test_fork_bomb_hits_limit(svc):
-    record = await _run(svc, "https://github.com/airlock-demo/fork-bomb/pull/10")
+    record = await _run(svc, "https://github.com/0xv3nm09/fork-bomb/pull/10")
     assert record.out.verdict is not None
     assert record.out.verdict.label is VerdictLabel.needs_changes
     cats = {f.category.value for f in record.out.findings}
@@ -105,13 +105,13 @@ async def test_fork_bomb_hits_limit(svc):
 
 
 async def test_sleeper_is_the_expected_miss(svc):
-    record = await _run(svc, "https://github.com/airlock-demo/sleeper/pull/17")
+    record = await _run(svc, "https://github.com/0xv3nm09/sleeper/pull/17")
     assert record.out.verdict is not None
     assert record.out.verdict.label is VerdictLabel.safe_to_merge, "honest limit: sleepers are missed"
 
 
 async def test_events_form_a_replayable_trace(svc):
-    record = await _run(svc, "https://github.com/airlock-demo/setup-py-exfil/pull/6")
+    record = await _run(svc, "https://github.com/0xv3nm09/setup-py-exfil/pull/6")
     types = [e.type for e in record.events]
     assert types[0] == "status"
     assert types[-1] == "status"
@@ -123,7 +123,7 @@ async def test_events_form_a_replayable_trace(svc):
 
 async def test_broken_baseline_is_inconclusive_not_safe(svc):
     """Oct 29 audit regression: tests failing on BOTH base and PR must never read safe."""
-    record = await _run(svc, "https://github.com/airlock-demo/broken-baseline/pull/18")
+    record = await _run(svc, "https://github.com/0xv3nm09/broken-baseline/pull/18")
     assert record.out.verdict is not None
     assert record.out.verdict.label is VerdictLabel.inconclusive
     assert record.out.verdict.route.value == "human_review"
@@ -131,7 +131,7 @@ async def test_broken_baseline_is_inconclusive_not_safe(svc):
 
 async def test_unfixable_install_is_inconclusive_not_safe(svc):
     """Install that self-heal can't fix -> setup_failure -> tests skipped -> inconclusive."""
-    record = await _run(svc, "https://github.com/airlock-demo/install-broken/pull/19")
+    record = await _run(svc, "https://github.com/0xv3nm09/install-broken/pull/19")
     assert record.out.verdict is not None
     assert record.out.verdict.label is VerdictLabel.inconclusive
     assert record.out.verdict.route.value == "human_review"
@@ -141,6 +141,6 @@ async def test_unfixable_install_is_inconclusive_not_safe(svc):
 
 async def test_base_branch_signals_are_not_blamed_on_the_pr(svc):
     """Base-sandbox signals are logged, never turned into PR findings."""
-    record = await _run(svc, "https://github.com/airlock-demo/clean-lib/pull/1")
+    record = await _run(svc, "https://github.com/0xv3nm09/clean-lib/pull/1")
     cats = {f.category.value for f in record.out.findings}
     assert "network_attempt" not in cats and "fs_escape_attempt" not in cats
