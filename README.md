@@ -98,14 +98,21 @@ For auto-run on every push, add the workflow from [`deploy/examples/`](deploy/ex
 to the consuming repo — team keys are owner-scoped and owner-isolated, a leaked key sees
 nothing but its own runs, and revocation is instant from the Dashboard.
 
-## Not yet (build week, Nov 3–8)
+## Shipped during build week
 
-- Real Docker + gVisor backend validated on the Vultr VM (T11/T12 — `app/sandbox/docker_backend.py`
-  is written but validated only on the VM).
-- `VultrLLM` end-to-end against the live model catalog (T07 — pick models from
-  `GET /v1/models`; never hardcode: the catalog rotates).
-- Submission items: public repo flip, live demo URL on the VM, containment-moment video
-  (checklist in [`docs/JUDGING.md`](docs/JUDGING.md)).
+- Vultr VM deployment: FastAPI + web + Postgres + squid egress + Caddy behind compose;
+  Docker + gVisor (`runsc`) sandboxes validated live (T11/T12).
+- `VultrLLM` end-to-end against the live model catalog — models picked by testing
+  (`minimax-m3.1-flash` for every agent role), never hardcoded (T07).
+- SQLite write-through persistence, team API keys, static Pages demo, 18/19 live benchmark.
+
+## Remaining before submission (Nov 8)
+
+- Repo goes public + Pages enabled (the static demo deploys on the flip — workflow ready).
+- Containment-moment video, recorded on the live deployment (checklist in
+  [`docs/JUDGING.md`](docs/JUDGING.md)).
+- Cloud firewall rule verification needs the account's API IP allowlist updated; host-level
+  exposure is already minimal (only sshd :22 and Caddy :80/:443 are reachable).
 
 ## Public demo site (GitHub Pages)
 
