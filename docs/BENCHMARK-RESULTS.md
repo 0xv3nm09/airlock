@@ -118,6 +118,8 @@ Destroy sandboxes ──── on every path; the trace + SQLite record survive
 
 **Verdict mix:** {"safe_to_merge": 5, "needs_changes": 5, "suspicious": 7, "inconclusive": 2} · **Totals:** 159,067 tokens · 103 real LLM calls across 19 runs
 
+![Suspicious verdict with canary finding — the run page for `run_3049b41544ff`](screenshots/run-suspicious.png)
+
 ## Per-case evidence (real API output)
 
 ### clean-lib — safe_to_merge → **safe_to_merge** ✓
