@@ -219,6 +219,38 @@ Destroy sandboxes ──── on every path; the trace + SQLite record survive"
         add(trace_excerpt(row=r, kinds={"span_end", "containment", "verdict", "status"}))
         add("")
 
+    # ---- known gaps (honest limitations, same posture as the product) ----
+    add("## Known gaps — documented, not hidden")
+    add("")
+    add("| case | observed | expected | what we know |")
+    add("| --- | --- | --- | --- |")
+    for name in EXPECTED:
+        r = rows.get(name)
+        if not r:
+            continue
+        exp = EXPECTED[name][0]
+        got = r.get("verdict") or f"none({r['status']})"
+        if got == exp:
+            continue
+        add(f"| {name} | {got} | {exp} | see below |")
+    add("")
+    add("**rm-rf-test (the one miss).** The attack *does* fail inside the sandbox — the"
+        " read-only rootfs denies every `rm -rf` — but the denial text never reaches the"
+        " evidence pipeline: pytest captures test output even with `-s` configured, and"
+        " under gVisor the per-run venv's python resolves with the system prefix, so the"
+        " install/`-e .` path behaves differently than on stock Docker. The run therefore"
+        " reports `safe_to_merge` — a false negative for this crafted case. Root cause"
+        " chain is understood and the fix is scheduled with the per-run proxy attribution"
+        " work (workbook T12): fs-denial evidence belongs in the sandbox record, not in"
+        " pytest's capture. We ship the miss in the results rather than quietly editing"
+        " the expectation.")
+    add("")
+    add("**Static demo scope.** The GitHub Pages demo serves this recorded snapshot —"
+        " runs, traces, verdicts and counters are real, but the live deployment"
+        " (http://139.84.176.16) is the product: every button there executes a fresh run"
+        " on real infrastructure.")
+    add("")
+
     OUT.write_text("\n".join(lines) + "\n")
     print(f"wrote {OUT.relative_to(REPO_ROOT)} ({OUT.stat().st_size // 1024} KB) — {matches}/{len(rows)} matched")
 

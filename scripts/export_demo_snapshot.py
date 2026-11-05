@@ -36,6 +36,12 @@ def load_benchmark_cases() -> list[dict]:
 
 
 def main() -> None:
+    # --from-api HOST KEYFILE: snapshot the LIVE deployment instead of the local dummy
+    # store — the Pages demo then shows the real Vultr stack's runs and badge.
+    if len(sys.argv) >= 3 and sys.argv[1] == "--from-api":
+        export_from_api(sys.argv[2], sys.argv[3])
+        return
+
     settings = Settings()
     svc = build_services(settings)
     llm_name = getattr(svc.llm, "name", "unknown")
@@ -85,6 +91,55 @@ def main() -> None:
     print(f"wrote {OUT_PATH.relative_to(REPO_ROOT)} ({size_kb} KB): {len(runs)} runs, "
           f"{sum(len(t) for t in traces.values())} events, "
           f"mode {llm_name}/{sandbox_name}, benchmark={'yes' if benchmark else 'no'}")
+
+
+def export_from_api(host: str, admin_key: str) -> None:
+    """Snapshot the LIVE deployment: every run visible to the admin key + public stats."""
+    from urllib import request as urlrequest
+
+    def call(path: str) -> object:
+        req = urlrequest.Request(
+            f"{host}{path}", headers={"X-API-Key": admin_key, "Accept": "application/json"}
+        )
+        with urlrequest.urlopen(req, timeout=30) as r:
+            return json.load(r)
+
+    readyz = call("/readyz")
+    stats = call("/v1/stats")
+    run_list = call("/v1/runs") or []
+    runs: list[dict] = []
+    traces: dict[str, list] = {}
+    for r in run_list:
+        rid = r["id"]
+        try:
+            full = call(f"/v1/runs/{rid}")
+            runs.append(full)
+            traces[rid] = call(f"/v1/runs/{rid}/trace") or []
+        except Exception as e:  # noqa: BLE001 — keep the sweep resilient
+            print(f"  ! {rid}: {e}")
+            runs.append(r)
+    recent = call("/v1/runs/recent?limit=25") or []
+    try:
+        benchmark = call("/v1/benchmark/latest")
+    except Exception:  # noqa: BLE001 — no results yet is fine
+        benchmark = None
+
+    snapshot = {
+        "generated_at": datetime.now(UTC).isoformat(),
+        "readyz": readyz,
+        "stats": stats,
+        "runs": runs,
+        "recent": recent,
+        "traces": traces,
+        "benchmark": benchmark,
+        "benchmark_cases": load_benchmark_cases(),
+    }
+    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    OUT_PATH.write_text(json.dumps(snapshot, indent=1) + "\n")
+    size_kb = OUT_PATH.stat().st_size // 1024
+    print(f"wrote {OUT_PATH.relative_to(REPO_ROOT)} ({size_kb} KB) from {host}: "
+          f"{len(runs)} runs, {sum(len(t) for t in traces.values())} events, "
+          f"mode {readyz.get('llm')}/{readyz.get('sandbox')}, benchmark={'yes' if benchmark else 'no'}")
 
 
 if __name__ == "__main__":

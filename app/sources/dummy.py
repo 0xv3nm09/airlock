@@ -163,9 +163,9 @@ SCENARIOS: dict[str, Scenario] = {
 }
 
 DEMO_SCENARIOS: dict[str, str] = {
-    "clean": "https://github.com/0xv3nm09/clean-lib/pull/1",
-    "buggy": "https://github.com/0xv3nm09/regression-unicode/pull/3",
-    "malicious": "https://github.com/0xv3nm09/setup-py-exfil/pull/6",
+    "clean": "https://github.com/0xv3nm09/clean-lib/pull/2",
+    "buggy": "https://github.com/0xv3nm09/regression-unicode/pull/4",
+    "malicious": "https://github.com/0xv3nm09/setup-py-exfil/pull/7",
 }
 
 
