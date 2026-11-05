@@ -15,7 +15,6 @@ Fixes applied (matches the payload definitions in publish_demo_repos.py):
 from __future__ import annotations
 
 import subprocess
-import sys
 import tempfile
 from pathlib import Path
 
@@ -71,8 +70,6 @@ def main() -> None:
             applied: set[str] = set()
             for path, edits_pair in edits.items():
                 real = path.rstrip(":")
-                if real in applied:
-                    f_path = real
                 f = tmp / real
                 if not f.exists():
                     print(f"  ! {repo}/{real}: missing on pr branch — clone/inspect")
