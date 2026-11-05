@@ -468,7 +468,8 @@ export default function DashboardPage() {
               <h2 className="text-base font-semibold">
                 Runs{" "}
                 <span className="ml-1 text-sm font-normal text-muted">
-                  {shown.length} of {(rows ?? []).length}
+                  {shown.length} shown · {(rows ?? []).length} stored
+                  {stats ? ` · ${stats.runs_total.toLocaleString("en-US")} lifetime` : ""}
                 </span>
               </h2>
               <div className="flex flex-wrap gap-1" role="group" aria-label="Filter runs">
@@ -565,7 +566,7 @@ export default function DashboardPage() {
                             )}
                           </td>
                           <td className="px-3 py-3 font-mono text-xs text-muted tabular-nums">
-                            {r.usage.prompt_tokens + r.usage.completion_tokens}
+                            {(r.usage.prompt_tokens + r.usage.completion_tokens).toLocaleString("en-US")}
                           </td>
                           <td className="whitespace-nowrap px-5 py-3 text-right text-xs text-muted">
                             {timeOf(r.created_at)}
