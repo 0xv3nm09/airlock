@@ -5,12 +5,38 @@ sandbox on Vultr, watches what it does, and reports only what it proved. Entry f
 Vultr: Agent Rush Hackathon, Challenge 01 "Blast Radius Zero", Pattern A (sandboxed code
 execution).
 
-This folder is the working backend skeleton, built and verified in **dummy mode**: the whole
-pipeline runs offline with a scripted LLM and sandbox, so the demo, benchmark and CI work
-before a single Vultr credit is spent.
+**Live now:** the full stack runs on a Vultr VM (vc2-4c-8gb, Delhi NCR) — all agent LLM calls
+via Vultr Serverless Inference (`minimax-m3.1-flash`), PR execution in Docker + gVisor
+(`runsc`) sandboxes behind a registry-only egress proxy. Demo buttons on the live site
+execute fresh runs on that stack; offline **dummy mode** remains the zero-credit fallback
+and what CI tests.
 
-**Docs:** [Architecture & use case](docs/ARCHITECTURE.md) · [Judging map](docs/JUDGING.md)
+**Docs:** [Live benchmark results](docs/BENCHMARK-RESULTS.md) ·
+[Architecture & use case](docs/ARCHITECTURE.md) · [Judging map](docs/JUDGING.md)
 (criteria → evidence, deliverable status) · [Deploy & GO-LIVE runbook](deploy/GO-LIVE.md)
+
+## Results — 19-case attack library, executed live (Nov 2026)
+
+**18/19 expected verdicts matched (94.7%)**, machine-collected from the running deployment
+by [`scripts/collect_live_results.py`](scripts/collect_live_results.py) — expected verdicts
+come from [`eval_cases/cases.yaml`](eval_cases/cases.yaml), observed ones from the runs'
+actual API records. 159,067 tokens · 103 real LLM calls across the sweep.
+
+| verdict | cases | what that means |
+| --- | --- | --- |
+| **suspicious** | 7 | every exfil, injection and probe caught with receipts: blocked egress, canary-key touches, denied writes, OSV malware stop in 12.1 s (no sandbox created) |
+| **needs_changes** | 5 | regressions and resource bombs (fork / infinite-loop / memory) proven by execution, killed by sandbox limits |
+| **safe_to_merge** | 5 | clean baselines pass honestly; the sleeping payload is a documented blind spot, not a guess |
+| **inconclusive** | 2 | unrunnable repos routed to a human — the rule table refuses to guess; **zero false "safe to merge" on any attack** |
+
+The one miss (`rm-rf-test`, containment held but the denial never reached the evidence
+pipeline) is documented, not hidden: [known gaps](docs/BENCHMARK-RESULTS.md#known-gaps--documented-not-hidden).
+
+Per-case evidence in [docs/BENCHMARK-RESULTS.md](docs/BENCHMARK-RESULTS.md): expected-vs-got
+table with PR links, verdict JSON for every case, containment counters, trace excerpts, the
+pipeline and containment diagrams, and the exact stack facts the runs executed on. Raw
+machine bundle: [eval_results/live-benchmark.json](eval_results/live-benchmark.json).
+Reproduce with `make bench` (offline) or the collector script (live).
 
 ## Quickstart
 
@@ -35,12 +61,12 @@ curl -s localhost:8000/v1/runs/<run_id>
 curl -N localhost:8000/v1/runs/<run_id>/events   # live SSE timeline
 ```
 
-## What works today (dummy mode)
+## What works today (verified offline in dummy mode, live on Vultr)
 
 - Full review pipeline: screen → pre-flight (OSV MAL- check, injection scan, static risk) →
   plan → two sandboxes (base vs PR) → install with self-heal → tests → generated tests →
   behaviour scan → deterministic verdict → summary with cite-check → guaranteed cleanup.
-- 17 scripted scenarios mirroring the seeded attack library (`eval_cases/cases.yaml`),
+- 19 scripted scenarios mirroring the seeded attack library (`eval_cases/cases.yaml`),
   including the containment moments: blocked egress, canary theft, denied `rm -rf`, limits.
 - Live SSE timeline, replayable trace events, containment counters, receipts on findings.
 - Demo endpoint (`POST /v1/demo/runs`) with no login; owner-filtered API for real runs.
@@ -109,3 +135,21 @@ docs/           architecture + judging map
 ```
 
 Full architecture and data flow: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+## Documentation map
+
+| Document | What it covers |
+| --- | --- |
+| [`docs/BENCHMARK-RESULTS.md`](docs/BENCHMARK-RESULTS.md) | **Live results** — expected-vs-got table, per-case verdict JSON, containment counters, trace excerpts, pipeline + containment diagrams, known gaps. Rendered from `eval_results/live-benchmark.json` by `scripts/render_results_md.py`. |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Use case, full data-flow diagram, twin-sandbox rationale, trust boundaries, challenge stack mapping. |
+| [`docs/JUDGING.md`](docs/JUDGING.md) | The four judging criteria mapped to evidence, deliverables checklist with status, containment focus areas → mechanisms, the 60-second judge path. |
+| [`deploy/GO-LIVE.md`](deploy/GO-LIVE.md) | Dummy→Vultr switch-over runbook (env vars, model selection, verification) + GitHub Pages demo setup (§7). |
+| [`deploy/README.md`](deploy/README.md) | Compose stack, Caddy, squid egress proxy, sandbox images — how the VM deployment fits together. |
+| [`deploy/examples/README.md`](deploy/examples/README.md) | GitHub Actions workflow to review every push to your own repo (team-key integration). |
+| [`web/README.md`](web/README.md) | Frontend: pages, demo mode (static Pages build), env vars. |
+| [`eval_cases/cases.yaml`](eval_cases/cases.yaml) | The 19-case seeded attack library: URL + expected verdict per case — the benchmark's source of truth. |
+| [`eval_results/live-benchmark.json`](eval_results/live-benchmark.json) | Raw machine bundle of the live sweep (runs, verdicts, counters, usage, full traces). |
+| [`policies/policy_v1.yaml`](policies/policy_v1.yaml) | Versioned runtime policy — egress allow-list, command policy, limits; stamped on every run. |
+
+Reference repos (same builder, same demo pattern): [blind-run](https://github.com/0xv3nm09/blind-run)
+(Nebius × NVIDIA hackathon winner entry — the static-demo pattern Airlock's Pages site follows).
