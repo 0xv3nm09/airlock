@@ -1,5 +1,9 @@
 # Airlock
 
+<p align="center">
+  <img src="docs/screenshots/demo.gif" alt="Airlock live demo: the dashboard's real numbers and containment feed, a malicious PR caught red-handed (suspicious, 90% confidence, canary finding), and the full trace inspector" width="820">
+</p>
+
 **Run the PR before you trust it.** Airlock runs a stranger's pull request inside a throwaway
 sandbox on Vultr, watches what it does, and reports only what it proved. Entry for the
 Vultr: Agent Rush Hackathon, Challenge 01 "Blast Radius Zero", Pattern A (sandboxed code
