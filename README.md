@@ -154,6 +154,8 @@ Full architecture and data flow: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 | [`docs/BENCHMARK-RESULTS.md`](docs/BENCHMARK-RESULTS.md) | **Live results** — expected-vs-got table, per-case verdict JSON, containment counters, trace excerpts, pipeline + containment diagrams, known gaps. Rendered from `eval_results/live-benchmark.json` by `scripts/render_results_md.py`. |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Use case, full data-flow diagram, twin-sandbox rationale, trust boundaries, challenge stack mapping. |
 | [`docs/JUDGING.md`](docs/JUDGING.md) | The four judging criteria mapped to evidence, deliverables checklist with status, containment focus areas → mechanisms, the 60-second judge path. |
+| [`docs/MODEL_CARD.md`](docs/MODEL_CARD.md) | Which models the five agents use, what each may/may not do, evaluation + limitations. |
+| [`docs/SUBMISSION.md`](docs/SUBMISSION.md) | Paste-ready lablab.ai form fields: title, short/long description, tags. |
 | [`deploy/GO-LIVE.md`](deploy/GO-LIVE.md) | Dummy→Vultr switch-over runbook (env vars, model selection, verification) + GitHub Pages demo setup (§7). |
 | [`deploy/README.md`](deploy/README.md) | Compose stack, Caddy, squid egress proxy, sandbox images — how the VM deployment fits together. |
 | [`deploy/examples/README.md`](deploy/examples/README.md) | GitHub Actions workflow to review every push to your own repo (team-key integration). |
