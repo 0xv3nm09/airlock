@@ -30,6 +30,9 @@ import sys
 import tempfile
 from pathlib import Path
 
+# Demo repos live under the maintainer account and are PRIVATE: the VM authenticates
+# every GitHub fetch with AIRLOCK_GITHUB_TOKEN, so public visibility is not required.
+# Flip public only if judges should browse the raw PRs (payloads also live in THIS file).
 ORG = "airlock-demo"
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
