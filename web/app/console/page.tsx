@@ -139,7 +139,9 @@ export default function DashboardPage() {
     setBusy(scenario);
     try {
       const { id } = await api.demoRun(scenario);
-      router.push(`/runs/${id}`);
+      // full navigation, not router.push: the run screen must open even if the client
+      // router hiccups — a stuck "Starting…" next to a running feed reads as broken
+      window.location.assign(`/runs/${id}`);
     } catch (e) {
       setError(e instanceof ApiError ? e.message : "could not start the run");
       setBusy(null);

@@ -45,6 +45,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const key = getKey();
   const res = await fetch(`/api${path}`, {
     ...init,
+    // no JSON endpoint is slow by design; a hung proxy must surface as an error
+    // (the button resets, the page recovers) instead of pending forever
+    signal: AbortSignal.timeout(30_000),
     headers: {
       "Content-Type": "application/json",
       ...(key ? { "X-API-Key": key } : {}),

@@ -32,7 +32,7 @@ export default function BenchmarkPage() {
       setStarting(name);
       try {
         const { id } = await api.benchmarkRun(name);
-        router.push(`/runs/${id}`);
+        window.location.assign(`/runs/${id}`);
       } catch {
         setError(`Could not start "${name}" — try again in a moment.`);
         setStarting(null);
