@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-07T18:29:13.671872+00:00",
+ "generated_at": "2026-11-07T19:14:18.059968+00:00",
  "readyz": {
   "status": "ok",
   "llm": "vultr",
@@ -9,21 +9,21 @@
   "kill_switch": false
  },
  "stats": {
-  "runs_total": 21,
-  "runs_completed": 20,
-  "suspicious": 8,
-  "needs_changes": 5,
+  "runs_total": 26,
+  "runs_completed": 25,
+  "suspicious": 9,
+  "needs_changes": 6,
   "safe_to_merge": 5,
-  "inconclusive": 2,
-  "attacks_contained": 7,
-  "tokens_total": 172070,
-  "llm_calls_total": 112,
-  "avg_tokens_per_run": 8194,
+  "inconclusive": 5,
+  "attacks_contained": 8,
+  "tokens_total": 255409,
+  "llm_calls_total": 159,
+  "avg_tokens_per_run": 9823,
   "policy_version": "2026-11-01.v1",
   "llm": "vultr",
   "sandbox": "docker",
-  "sandboxes_created": 38,
-  "uptime_s": 216174
+  "sandboxes_created": 6,
+  "uptime_s": 736
  },
  "runs": [
   {
@@ -1281,9 +1281,455 @@
    "decided_at": null,
    "created_at": "2026-11-06T08:14:28.157525Z",
    "finished_at": "2026-11-06T08:15:18.306048Z"
+  },
+  {
+   "id": "run_37609adbd0a2",
+   "owner_id": "demo",
+   "is_demo": true,
+   "status": "completed",
+   "pr_url": "https://github.com/0xv3nm09/regression-unicode/pull/4",
+   "policy_version": "2026-11-01.v1",
+   "verdict": {
+    "label": "needs_changes",
+    "confidence": 0.85,
+    "route": "auto",
+    "summary": "Verdict: needs changes (confidence 0.85, auto route). [F1] A test that passes on base fails on the PR (high severity).",
+    "reasons": [
+     "test_regression proven (F1)"
+    ],
+    "cited_findings": [
+     "F1"
+    ]
+   },
+   "intent": {
+    "intent": "unclear",
+    "explanation": "The only evidence is F1, which reports a test regression: a test passes on the base but fails on the pull request. This establishes a behavioral difference but provides no code, execution trace, or indicators of malicious intent. The flagged code's intent is therefore unclear; the regression alone does not establish data theft, backdoor behavior, sabotage, or cryptomining.",
+    "cited_evidence": [
+     "F1"
+    ],
+    "confidence": 0.95
+   },
+   "findings": [
+    {
+     "id": "F1",
+     "category": "test_regression",
+     "severity": "high",
+     "title": "A test that passes on base fails on the PR",
+     "proven": true,
+     "confidence": 0.85,
+     "evidence": [
+      {
+       "kind": "exec",
+       "step_id": "sandbox.exec.tests.pr",
+       "excerpt": "",
+       "command": "python -m pytest",
+       "exit_code": 1
+      }
+     ]
+    }
+   ],
+   "counters": {
+    "network_blocked": 0,
+    "canary_hits": 0,
+    "writes_denied": 0,
+    "limits_hit": 0
+   },
+   "usage": {
+    "prompt_tokens": 3610,
+    "completion_tokens": 5570,
+    "llm_calls": 6
+   },
+   "error": null,
+   "human_decision": null,
+   "human_note": "",
+   "decided_by": null,
+   "decided_at": null,
+   "created_at": "2026-11-07T18:35:33.922312Z",
+   "finished_at": "2026-11-07T18:36:18.900684Z"
+  },
+  {
+   "id": "run_348186133eab",
+   "owner_id": "demo",
+   "is_demo": true,
+   "status": "completed",
+   "pr_url": "https://github.com/0xv3nm09/setup-py-exfil/pull/7",
+   "policy_version": "2026-11-01.v1",
+   "verdict": {
+    "label": "inconclusive",
+    "confidence": 0.3,
+    "route": "human_review",
+    "summary": "Verdict: inconclusive (confidence 0.3; routed to human review). [F1] Install failed on base after self-heal attempts. [F2] Install failed on pr after self-heal attempts.",
+    "reasons": [
+     "tests could not be executed"
+    ],
+    "cited_findings": [
+     "F1",
+     "F2"
+    ]
+   },
+   "intent": {
+    "intent": "unclear",
+    "explanation": "The only evidence shows installation failures on the base and pull-request branches after self-heal attempts (F1, F2). Generic static signals mention network access and input handling in setup.py, but no code snippets or observed behavior establish malicious intent. The flagged code's purpose cannot be determined from the available evidence.",
+    "cited_evidence": [
+     "F1",
+     "F2"
+    ],
+    "confidence": 0.2
+   },
+   "findings": [
+    {
+     "id": "F1",
+     "category": "setup_failure",
+     "severity": "low",
+     "title": "Install failed on base after self-heal attempts",
+     "proven": true,
+     "confidence": 0.9,
+     "evidence": [
+      {
+       "kind": "exec",
+       "step_id": null,
+       "excerpt": "non-zero exit",
+       "command": "python -m pip install --no-index --no-deps --no-build-isolation .",
+       "exit_code": null
+      }
+     ]
+    },
+    {
+     "id": "F2",
+     "category": "setup_failure",
+     "severity": "low",
+     "title": "Install failed on pr after self-heal attempts",
+     "proven": true,
+     "confidence": 0.9,
+     "evidence": [
+      {
+       "kind": "exec",
+       "step_id": null,
+       "excerpt": "non-zero exit",
+       "command": "python -m pip install --no-index --no-deps --no-build-isolation .",
+       "exit_code": null
+      }
+     ]
+    }
+   ],
+   "counters": {
+    "network_blocked": 0,
+    "canary_hits": 0,
+    "writes_denied": 0,
+    "limits_hit": 0
+   },
+   "usage": {
+    "prompt_tokens": 11018,
+    "completion_tokens": 20143,
+    "llm_calls": 16
+   },
+   "error": null,
+   "human_decision": null,
+   "human_note": "",
+   "decided_by": null,
+   "decided_at": null,
+   "created_at": "2026-11-07T18:47:31.880204Z",
+   "finished_at": "2026-11-07T18:48:40.373729Z"
+  },
+  {
+   "id": "run_5eb9ab2de300",
+   "owner_id": "demo",
+   "is_demo": true,
+   "status": "completed",
+   "pr_url": "https://github.com/0xv3nm09/setup-py-exfil/pull/7",
+   "policy_version": "2026-11-01.v1",
+   "verdict": {
+    "label": "inconclusive",
+    "confidence": 0.3,
+    "route": "human_review",
+    "summary": "Verdict: inconclusive (confidence 0.3; routed to human review). No findings were reported, and no execution results were provided to verify.",
+    "reasons": [
+     "tests could not be executed"
+    ],
+    "cited_findings": []
+   },
+   "intent": null,
+   "findings": [],
+   "counters": {
+    "network_blocked": 0,
+    "canary_hits": 0,
+    "writes_denied": 0,
+    "limits_hit": 0
+   },
+   "usage": {
+    "prompt_tokens": 3284,
+    "completion_tokens": 3706,
+    "llm_calls": 5
+   },
+   "error": null,
+   "human_decision": null,
+   "human_note": "",
+   "decided_by": null,
+   "decided_at": null,
+   "created_at": "2026-11-07T19:05:38.440601Z",
+   "finished_at": "2026-11-07T19:06:14.217313Z"
+  },
+  {
+   "id": "run_af5b801e88ec",
+   "owner_id": "demo",
+   "is_demo": true,
+   "status": "completed",
+   "pr_url": "https://github.com/0xv3nm09/setup-py-exfil/pull/7",
+   "policy_version": "2026-11-01.v1",
+   "verdict": {
+    "label": "inconclusive",
+    "confidence": 0.3,
+    "route": "human_review",
+    "summary": "Verdict: inconclusive (confidence 0.3; routed to human review). [F1] Install failed on PR after self-heal attempts (low severity).",
+    "reasons": [
+     "tests could not be executed"
+    ],
+    "cited_findings": [
+     "F1"
+    ]
+   },
+   "intent": {
+    "intent": "unclear",
+    "explanation": "F1 reports only an install failure after self-heal attempts, which does not establish malicious intent. Static analysis flags network access and input handling in setup.py, but no snippets or execution evidence show how these capabilities are used or whether they support harmful behavior. The evidence is therefore insufficient to distinguish benign packaging logic from data theft, a backdoor, sabotage, or cryptomining.",
+    "cited_evidence": [
+     "F1",
+     "static_signals: setup.py network access (+3)",
+     "static_signals: setup.py input handling (+2)"
+    ],
+    "confidence": 0.9
+   },
+   "findings": [
+    {
+     "id": "F1",
+     "category": "setup_failure",
+     "severity": "low",
+     "title": "Install failed on pr after self-heal attempts",
+     "proven": true,
+     "confidence": 0.9,
+     "evidence": [
+      {
+       "kind": "exec",
+       "step_id": null,
+       "excerpt": "non-zero exit",
+       "command": "python -m pip install --no-index --no-deps --no-build-isolation .",
+       "exit_code": null
+      }
+     ]
+    }
+   ],
+   "counters": {
+    "network_blocked": 0,
+    "canary_hits": 0,
+    "writes_denied": 0,
+    "limits_hit": 0
+   },
+   "usage": {
+    "prompt_tokens": 8006,
+    "completion_tokens": 14557,
+    "llm_calls": 12
+   },
+   "error": null,
+   "human_decision": null,
+   "human_note": "",
+   "decided_by": null,
+   "decided_at": null,
+   "created_at": "2026-11-07T19:06:50.280836Z",
+   "finished_at": "2026-11-07T19:07:47.567714Z"
+  },
+  {
+   "id": "run_a61c29564b61",
+   "owner_id": "demo",
+   "is_demo": true,
+   "status": "completed",
+   "pr_url": "https://github.com/0xv3nm09/setup-py-exfil/pull/7",
+   "policy_version": "2026-11-01.v1",
+   "verdict": {
+    "label": "suspicious",
+    "confidence": 0.9,
+    "route": "human_review",
+    "summary": "Verdict: suspicious (confidence 0.9; route: human_review). [F1] Install failed on PR after self-heal attempts (low severity). [F2] Code read or leaked planted canary secrets (critical severity).",
+    "reasons": [
+     "secret_access found (F2)"
+    ],
+    "cited_findings": [
+     "F1",
+     "F2"
+    ]
+   },
+   "intent": {
+    "intent": "data_theft",
+    "explanation": "F2 reports that the code read or leaked planted canary secrets, and the static signal identifies network access in setup.py, providing a plausible exfiltration path. F1 also reports an installation failure after self-heal attempts, suggesting abnormal setup behavior. These indicators most strongly align with data theft. Direct secret transmission and the precise implementation are not verified because no code snippet or packet-level evidence was provided.",
+    "cited_evidence": [
+     "F1",
+     "F2",
+     "static_signals: setup.py: network access (+3)",
+     "static_signals: setup.py: input handling (+2)"
+    ],
+    "confidence": 0.78
+   },
+   "findings": [
+    {
+     "id": "F1",
+     "category": "setup_failure",
+     "severity": "low",
+     "title": "Install failed on pr after self-heal attempts",
+     "proven": true,
+     "confidence": 0.9,
+     "evidence": [
+      {
+       "kind": "exec",
+       "step_id": null,
+       "excerpt": "non-zero exit",
+       "command": "python -m pip install --no-deps .",
+       "exit_code": null
+      }
+     ]
+    },
+    {
+     "id": "F2",
+     "category": "secret_access",
+     "severity": "critical",
+     "title": "Code read or leaked planted canary secrets",
+     "proven": true,
+     "confidence": 0.9,
+     "evidence": [
+      {
+       "kind": "behaviour",
+       "step_id": "sandbox.behaviour",
+       "excerpt": "canary AWS_ACCESS_KEY_ID seen",
+       "command": null,
+       "exit_code": null
+      }
+     ]
+    }
+   ],
+   "counters": {
+    "network_blocked": 0,
+    "canary_hits": 1,
+    "writes_denied": 0,
+    "limits_hit": 0
+   },
+   "usage": {
+    "prompt_tokens": 5358,
+    "completion_tokens": 8087,
+    "llm_calls": 8
+   },
+   "error": null,
+   "human_decision": null,
+   "human_note": "",
+   "decided_by": null,
+   "decided_at": null,
+   "created_at": "2026-11-07T19:11:41.902755Z",
+   "finished_at": "2026-11-07T19:12:29.802436Z"
   }
  ],
  "recent": [
+  {
+   "id": "run_a61c29564b61",
+   "pr_url": "https://github.com/0xv3nm09/setup-py-exfil/pull/7",
+   "status": "completed",
+   "verdict": "suspicious",
+   "confidence": 0.9,
+   "counters": {
+    "network_blocked": 0,
+    "canary_hits": 1,
+    "writes_denied": 0,
+    "limits_hit": 0
+   },
+   "usage": {
+    "prompt_tokens": 5358,
+    "completion_tokens": 8087,
+    "llm_calls": 8
+   },
+   "created_at": "2026-11-07T19:11:41.902755+00:00",
+   "containment": [
+    {
+     "name": "canary_hit",
+     "detail": "AWS_ACCESS_KEY_ID",
+     "ts": "2026-11-07T19:12:26.920708+00:00"
+    }
+   ]
+  },
+  {
+   "id": "run_af5b801e88ec",
+   "pr_url": "https://github.com/0xv3nm09/setup-py-exfil/pull/7",
+   "status": "completed",
+   "verdict": "inconclusive",
+   "confidence": 0.3,
+   "counters": {
+    "network_blocked": 0,
+    "canary_hits": 0,
+    "writes_denied": 0,
+    "limits_hit": 0
+   },
+   "usage": {
+    "prompt_tokens": 8006,
+    "completion_tokens": 14557,
+    "llm_calls": 12
+   },
+   "created_at": "2026-11-07T19:06:50.280836+00:00",
+   "containment": []
+  },
+  {
+   "id": "run_5eb9ab2de300",
+   "pr_url": "https://github.com/0xv3nm09/setup-py-exfil/pull/7",
+   "status": "completed",
+   "verdict": "inconclusive",
+   "confidence": 0.3,
+   "counters": {
+    "network_blocked": 0,
+    "canary_hits": 0,
+    "writes_denied": 0,
+    "limits_hit": 0
+   },
+   "usage": {
+    "prompt_tokens": 3284,
+    "completion_tokens": 3706,
+    "llm_calls": 5
+   },
+   "created_at": "2026-11-07T19:05:38.440601+00:00",
+   "containment": []
+  },
+  {
+   "id": "run_348186133eab",
+   "pr_url": "https://github.com/0xv3nm09/setup-py-exfil/pull/7",
+   "status": "completed",
+   "verdict": "inconclusive",
+   "confidence": 0.3,
+   "counters": {
+    "network_blocked": 0,
+    "canary_hits": 0,
+    "writes_denied": 0,
+    "limits_hit": 0
+   },
+   "usage": {
+    "prompt_tokens": 11018,
+    "completion_tokens": 20143,
+    "llm_calls": 16
+   },
+   "created_at": "2026-11-07T18:47:31.880204+00:00",
+   "containment": []
+  },
+  {
+   "id": "run_37609adbd0a2",
+   "pr_url": "https://github.com/0xv3nm09/regression-unicode/pull/4",
+   "status": "completed",
+   "verdict": "needs_changes",
+   "confidence": 0.85,
+   "counters": {
+    "network_blocked": 0,
+    "canary_hits": 0,
+    "writes_denied": 0,
+    "limits_hit": 0
+   },
+   "usage": {
+    "prompt_tokens": 3610,
+    "completion_tokens": 5570,
+    "llm_calls": 6
+   },
+   "created_at": "2026-11-07T18:35:33.922312+00:00",
+   "containment": []
+  },
   {
    "id": "run_3b0be3337fdb",
    "pr_url": "https://github.com/0xv3nm09/setup-py-exfil/pull/7",
@@ -1730,26 +2176,6 @@
     "llm_calls": 5
    },
    "created_at": "2026-11-05T06:27:03.303640+00:00",
-   "containment": []
-  },
-  {
-   "id": "run_056f7933ceaf",
-   "pr_url": "https://github.com/0xv3nm09/clean-lib/pull/2",
-   "status": "completed",
-   "verdict": "safe_to_merge",
-   "confidence": 0.82,
-   "counters": {
-    "network_blocked": 0,
-    "canary_hits": 0,
-    "writes_denied": 0,
-    "limits_hit": 0
-   },
-   "usage": {
-    "prompt_tokens": 2974,
-    "completion_tokens": 5341,
-    "llm_calls": 5
-   },
-   "created_at": "2026-11-05T06:26:17.916300+00:00",
    "containment": []
   }
  ],
@@ -12316,6 +12742,3106 @@
     "run_id": "run_3b0be3337fdb",
     "seq": 58,
     "ts": "2026-11-06T08:15:18.306063Z",
+    "type": "status",
+    "name": "completed",
+    "data": {}
+   }
+  ],
+  "run_37609adbd0a2": [
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 1,
+    "ts": "2026-11-07T18:35:33.922858Z",
+    "type": "status",
+    "name": "running",
+    "data": {}
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 2,
+    "ts": "2026-11-07T18:35:33.922893Z",
+    "type": "span_start",
+    "name": "github.fetch_pr",
+    "data": {}
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 3,
+    "ts": "2026-11-07T18:35:35.112900Z",
+    "type": "span_end",
+    "name": "github.fetch_pr",
+    "data": {
+     "duration_ms": 1190.0,
+     "error": null,
+     "language": "python",
+     "files": 2
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 4,
+    "ts": "2026-11-07T18:35:35.112962Z",
+    "type": "span_start",
+    "name": "preflight.static",
+    "data": {}
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 5,
+    "ts": "2026-11-07T18:35:35.113140Z",
+    "type": "span_end",
+    "name": "preflight.static",
+    "data": {
+     "duration_ms": 0.2,
+     "error": null,
+     "signals": 0,
+     "ranked": [
+      "src/regunicode/__init__.py",
+      "tests/test_unicode.py"
+     ]
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 6,
+    "ts": "2026-11-07T18:35:35.113150Z",
+    "type": "span_start",
+    "name": "preflight.osv",
+    "data": {}
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 7,
+    "ts": "2026-11-07T18:35:35.113164Z",
+    "type": "span_end",
+    "name": "preflight.osv",
+    "data": {
+     "duration_ms": 0.0,
+     "error": null,
+     "mal_hits": 0,
+     "young": 0
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 8,
+    "ts": "2026-11-07T18:35:35.113177Z",
+    "type": "span_start",
+    "name": "agent.planner",
+    "data": {}
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 9,
+    "ts": "2026-11-07T18:35:37.701899Z",
+    "type": "span_end",
+    "name": "agent.planner",
+    "data": {
+     "duration_ms": 2588.7,
+     "error": null,
+     "model": "vultr",
+     "fallback": false,
+     "targets": [
+      "src/regunicode/__init__.py",
+      "tests/test_unicode.py"
+     ],
+     "language": "python"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 10,
+    "ts": "2026-11-07T18:35:37.701967Z",
+    "type": "span_start",
+    "name": "sandbox.create",
+    "data": {}
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 11,
+    "ts": "2026-11-07T18:35:38.011498Z",
+    "type": "span_end",
+    "name": "sandbox.create",
+    "data": {
+     "duration_ms": 309.5,
+     "error": null,
+     "sandboxes": 2,
+     "backend": "docker"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 12,
+    "ts": "2026-11-07T18:35:40.279407Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:1",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 13,
+    "ts": "2026-11-07T18:35:43.842265Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3562.8,
+     "error": null,
+     "span_key": "base:install:1",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 14,
+    "ts": "2026-11-07T18:35:43.842338Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 15,
+    "ts": "2026-11-07T18:35:43.842360Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:2",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 16,
+    "ts": "2026-11-07T18:35:48.956896Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 5114.5,
+     "error": null,
+     "span_key": "base:install:2",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m pip install -e .",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 17,
+    "ts": "2026-11-07T18:35:48.956954Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": "not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.\n\n[notice] A new release of pip is available: 25.0.1 -> 26.3\n[notice] To update, run: pip install --upgrade pip\n"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 18,
+    "ts": "2026-11-07T18:35:48.956975Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:3",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 19,
+    "ts": "2026-11-07T18:35:51.336090Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 2379.1,
+     "error": null,
+     "span_key": "base:install:3",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 20,
+    "ts": "2026-11-07T18:35:51.336141Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 21,
+    "ts": "2026-11-07T18:35:51.336158Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:4",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 22,
+    "ts": "2026-11-07T18:35:54.915061Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3578.9,
+     "error": null,
+     "span_key": "pr:install:4",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 23,
+    "ts": "2026-11-07T18:35:54.915113Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 24,
+    "ts": "2026-11-07T18:35:54.915132Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:5",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 25,
+    "ts": "2026-11-07T18:35:59.739428Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 4824.3,
+     "error": null,
+     "span_key": "pr:install:5",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m pip install -e .",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 26,
+    "ts": "2026-11-07T18:35:59.739498Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": "not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.\n\n[notice] A new release of pip is available: 25.0.1 -> 26.3\n[notice] To update, run: pip install --upgrade pip\n"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 27,
+    "ts": "2026-11-07T18:35:59.739521Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:6",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 28,
+    "ts": "2026-11-07T18:36:02.012966Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 2273.4,
+     "error": null,
+     "span_key": "pr:install:6",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 29,
+    "ts": "2026-11-07T18:36:02.013020Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 30,
+    "ts": "2026-11-07T18:36:02.091461Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:tests:7",
+     "ref": "base",
+     "step": "tests"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 31,
+    "ts": "2026-11-07T18:36:02.091689Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:tests:8",
+     "ref": "pr",
+     "step": "tests"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 32,
+    "ts": "2026-11-07T18:36:03.777773Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 1686.1,
+     "error": null,
+     "span_key": "pr:tests:8",
+     "ref": "pr",
+     "step": "tests",
+     "cmd": "python -m pytest",
+     "exit_code": 1,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 33,
+    "ts": "2026-11-07T18:36:03.777830Z",
+    "type": "log",
+    "name": "tests",
+    "data": {
+     "ref": "pr",
+     "tail": "e(128)\n\nsrc/regunicode/__init__.py:2: UnicodeDecodeError\n=========================== short test summary info ============================\nFAILED tests/test_unicode.py::test_unicode - UnicodeDecodeError: 'ascii' code...\n============================== 1 failed in 0.91s ===============================\n"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 34,
+    "ts": "2026-11-07T18:36:03.811289Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 1719.8,
+     "error": null,
+     "span_key": "base:tests:7",
+     "ref": "base",
+     "step": "tests",
+     "cmd": "python -m pytest",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 35,
+    "ts": "2026-11-07T18:36:03.811328Z",
+    "type": "log",
+    "name": "tests",
+    "data": {
+     "ref": "base",
+     "tail": "r: /workspace\nconfigfile: pyproject.toml\nplugins: json-report-1.5.0, timeout-2.4.0, hypothesis-6.170.14, metadata-3.1.1\ncollected 1 item\n\ntests/test_unicode.py .                                                  [100%]\n\n============================== 1 passed in 0.92s ===============================\n"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 36,
+    "ts": "2026-11-07T18:36:03.811592Z",
+    "type": "finding",
+    "name": "test_regression",
+    "data": {
+     "id": "F1",
+     "title": "A test that passes on base fails on the PR",
+     "confidence": 0.85,
+     "severity": "high",
+     "evidence": [
+      {
+       "kind": "exec",
+       "step_id": "sandbox.exec.tests.pr",
+       "excerpt": "",
+       "command": "python -m pytest",
+       "exit_code": 1
+      }
+     ]
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 37,
+    "ts": "2026-11-07T18:36:03.811641Z",
+    "type": "span_start",
+    "name": "agent.test_writer",
+    "data": {}
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 38,
+    "ts": "2026-11-07T18:36:16.019574Z",
+    "type": "span_end",
+    "name": "agent.test_writer",
+    "data": {
+     "duration_ms": 12207.9,
+     "error": "structured output failed"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 39,
+    "ts": "2026-11-07T18:36:16.824114Z",
+    "type": "span_end",
+    "name": "sandbox.destroy",
+    "data": {
+     "duration_ms": 0.0,
+     "error": null,
+     "sandboxes_alive": 0
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 40,
+    "ts": "2026-11-07T18:36:16.825742Z",
+    "type": "span_start",
+    "name": "agent.analyst",
+    "data": {}
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 41,
+    "ts": "2026-11-07T18:36:17.985023Z",
+    "type": "span_end",
+    "name": "agent.analyst",
+    "data": {
+     "duration_ms": 1159.3,
+     "error": null,
+     "intent": "unclear"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 42,
+    "ts": "2026-11-07T18:36:17.985089Z",
+    "type": "span_start",
+    "name": "agent.reporter",
+    "data": {}
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 43,
+    "ts": "2026-11-07T18:36:18.900581Z",
+    "type": "span_end",
+    "name": "agent.reporter",
+    "data": {
+     "duration_ms": 915.5,
+     "error": null,
+     "model": "vultr"
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 44,
+    "ts": "2026-11-07T18:36:18.900693Z",
+    "type": "verdict",
+    "name": "needs_changes",
+    "data": {
+     "confidence": 0.85,
+     "route": "auto",
+     "summary": "Verdict: needs changes (confidence 0.85, auto route). [F1] A test that passes on base fails on the PR (high severity).",
+     "reasons": [
+      "test_regression proven (F1)"
+     ],
+     "cited": [
+      "F1"
+     ]
+    }
+   },
+   {
+    "run_id": "run_37609adbd0a2",
+    "seq": 45,
+    "ts": "2026-11-07T18:36:18.900700Z",
+    "type": "status",
+    "name": "completed",
+    "data": {}
+   }
+  ],
+  "run_348186133eab": [
+   {
+    "run_id": "run_348186133eab",
+    "seq": 1,
+    "ts": "2026-11-07T18:47:31.880662Z",
+    "type": "status",
+    "name": "running",
+    "data": {}
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 2,
+    "ts": "2026-11-07T18:47:31.880692Z",
+    "type": "span_start",
+    "name": "github.fetch_pr",
+    "data": {}
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 3,
+    "ts": "2026-11-07T18:47:33.029226Z",
+    "type": "span_end",
+    "name": "github.fetch_pr",
+    "data": {
+     "duration_ms": 1148.5,
+     "error": null,
+     "language": "python",
+     "files": 1
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 4,
+    "ts": "2026-11-07T18:47:33.029275Z",
+    "type": "span_start",
+    "name": "preflight.static",
+    "data": {}
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 5,
+    "ts": "2026-11-07T18:47:33.029492Z",
+    "type": "span_end",
+    "name": "preflight.static",
+    "data": {
+     "duration_ms": 0.2,
+     "error": null,
+     "signals": 2,
+     "ranked": [
+      "setup.py"
+     ]
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 6,
+    "ts": "2026-11-07T18:47:33.029502Z",
+    "type": "span_start",
+    "name": "preflight.osv",
+    "data": {}
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 7,
+    "ts": "2026-11-07T18:47:33.029514Z",
+    "type": "span_end",
+    "name": "preflight.osv",
+    "data": {
+     "duration_ms": 0.0,
+     "error": null,
+     "mal_hits": 0,
+     "young": 0
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 8,
+    "ts": "2026-11-07T18:47:33.029525Z",
+    "type": "span_start",
+    "name": "agent.planner",
+    "data": {}
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 9,
+    "ts": "2026-11-07T18:47:38.308660Z",
+    "type": "span_end",
+    "name": "agent.planner",
+    "data": {
+     "duration_ms": 5279.1,
+     "error": null,
+     "model": "vultr",
+     "fallback": false,
+     "targets": [
+      "setup.py"
+     ],
+     "language": "python"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 10,
+    "ts": "2026-11-07T18:47:38.308714Z",
+    "type": "span_start",
+    "name": "sandbox.create",
+    "data": {}
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 11,
+    "ts": "2026-11-07T18:47:38.570404Z",
+    "type": "span_end",
+    "name": "sandbox.create",
+    "data": {
+     "duration_ms": 261.7,
+     "error": null,
+     "sandboxes": 2,
+     "backend": "docker"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 12,
+    "ts": "2026-11-07T18:47:41.087404Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:1",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 13,
+    "ts": "2026-11-07T18:47:44.382374Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3295.0,
+     "error": null,
+     "span_key": "base:install:1",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 14,
+    "ts": "2026-11-07T18:47:44.382419Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 15,
+    "ts": "2026-11-07T18:47:44.382434Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:2",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 16,
+    "ts": "2026-11-07T18:47:45.247010Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 864.6,
+     "error": null,
+     "span_key": "base:install:2",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m pip install --no-index --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 17,
+    "ts": "2026-11-07T18:47:45.247059Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 18,
+    "ts": "2026-11-07T18:47:45.247075Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 19,
+    "ts": "2026-11-07T18:47:56.734406Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 11487.3,
+     "error": null,
+     "command": "python -m pip install --no-index --no-deps --no-build-isolation ."
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 20,
+    "ts": "2026-11-07T18:47:56.734482Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:3",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 21,
+    "ts": "2026-11-07T18:47:57.592804Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 858.3,
+     "error": null,
+     "span_key": "base:install:3",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m pip install --no-index --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 22,
+    "ts": "2026-11-07T18:47:57.592851Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 23,
+    "ts": "2026-11-07T18:47:57.592868Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 24,
+    "ts": "2026-11-07T18:48:08.295646Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 10702.8,
+     "error": null,
+     "command": "python -m pip install --no-index --no-deps --no-build-isolation ."
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 25,
+    "ts": "2026-11-07T18:48:08.295723Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:4",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 26,
+    "ts": "2026-11-07T18:48:09.159462Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 863.7,
+     "error": null,
+     "span_key": "base:install:4",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m pip install --no-index --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 27,
+    "ts": "2026-11-07T18:48:09.159510Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 28,
+    "ts": "2026-11-07T18:48:09.159580Z",
+    "type": "finding",
+    "name": "setup_failure",
+    "data": {
+     "id": "F1",
+     "title": "Install failed on base after self-heal attempts",
+     "confidence": 0.9,
+     "severity": "low",
+     "evidence": [
+      {
+       "kind": "exec",
+       "step_id": null,
+       "excerpt": "non-zero exit",
+       "command": "python -m pip install --no-index --no-deps --no-build-isolation .",
+       "exit_code": null
+      }
+     ]
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 29,
+    "ts": "2026-11-07T18:48:09.159592Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:5",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 30,
+    "ts": "2026-11-07T18:48:12.452051Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3292.4,
+     "error": null,
+     "span_key": "pr:install:5",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 31,
+    "ts": "2026-11-07T18:48:12.452096Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 32,
+    "ts": "2026-11-07T18:48:12.452113Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:6",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 33,
+    "ts": "2026-11-07T18:48:13.306419Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 854.3,
+     "error": null,
+     "span_key": "pr:install:6",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m pip install --no-index --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 34,
+    "ts": "2026-11-07T18:48:13.306467Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 35,
+    "ts": "2026-11-07T18:48:13.306483Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 36,
+    "ts": "2026-11-07T18:48:24.856953Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 11550.5,
+     "error": null,
+     "command": "python -m pip install --no-index --no-deps --no-build-isolation ."
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 37,
+    "ts": "2026-11-07T18:48:24.857031Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:7",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 38,
+    "ts": "2026-11-07T18:48:25.732604Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 875.6,
+     "error": null,
+     "span_key": "pr:install:7",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m pip install --no-index --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 39,
+    "ts": "2026-11-07T18:48:25.732664Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 40,
+    "ts": "2026-11-07T18:48:25.732680Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 41,
+    "ts": "2026-11-07T18:48:36.609327Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 10876.6,
+     "error": null,
+     "command": "python -m pip install --no-index --no-deps --no-build-isolation ."
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 42,
+    "ts": "2026-11-07T18:48:36.609414Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:8",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 43,
+    "ts": "2026-11-07T18:48:37.441958Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 832.5,
+     "error": null,
+     "span_key": "pr:install:8",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m pip install --no-index --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 44,
+    "ts": "2026-11-07T18:48:37.442005Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 45,
+    "ts": "2026-11-07T18:48:37.442076Z",
+    "type": "finding",
+    "name": "setup_failure",
+    "data": {
+     "id": "F2",
+     "title": "Install failed on pr after self-heal attempts",
+     "confidence": 0.9,
+     "severity": "low",
+     "evidence": [
+      {
+       "kind": "exec",
+       "step_id": null,
+       "excerpt": "non-zero exit",
+       "command": "python -m pip install --no-index --no-deps --no-build-isolation .",
+       "exit_code": null
+      }
+     ]
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 46,
+    "ts": "2026-11-07T18:48:37.506197Z",
+    "type": "log",
+    "name": "tests",
+    "data": {
+     "tail": "install failed; skipping tests so the run cannot read as safe"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 47,
+    "ts": "2026-11-07T18:48:38.385166Z",
+    "type": "span_end",
+    "name": "sandbox.destroy",
+    "data": {
+     "duration_ms": 0.0,
+     "error": null,
+     "sandboxes_alive": 0
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 48,
+    "ts": "2026-11-07T18:48:38.386708Z",
+    "type": "span_start",
+    "name": "agent.analyst",
+    "data": {}
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 49,
+    "ts": "2026-11-07T18:48:39.530790Z",
+    "type": "span_end",
+    "name": "agent.analyst",
+    "data": {
+     "duration_ms": 1144.1,
+     "error": null,
+     "intent": "unclear"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 50,
+    "ts": "2026-11-07T18:48:39.530860Z",
+    "type": "span_start",
+    "name": "agent.reporter",
+    "data": {}
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 51,
+    "ts": "2026-11-07T18:48:40.373649Z",
+    "type": "span_end",
+    "name": "agent.reporter",
+    "data": {
+     "duration_ms": 842.8,
+     "error": null,
+     "model": "vultr"
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 52,
+    "ts": "2026-11-07T18:48:40.373736Z",
+    "type": "verdict",
+    "name": "inconclusive",
+    "data": {
+     "confidence": 0.3,
+     "route": "human_review",
+     "summary": "Verdict: inconclusive (confidence 0.3; routed to human review). [F1] Install failed on base after self-heal attempts. [F2] Install failed on pr after self-heal attempts.",
+     "reasons": [
+      "tests could not be executed"
+     ],
+     "cited": [
+      "F1",
+      "F2"
+     ]
+    }
+   },
+   {
+    "run_id": "run_348186133eab",
+    "seq": 53,
+    "ts": "2026-11-07T18:48:40.373743Z",
+    "type": "status",
+    "name": "completed",
+    "data": {}
+   }
+  ],
+  "run_5eb9ab2de300": [
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 1,
+    "ts": "2026-11-07T19:05:38.440955Z",
+    "type": "status",
+    "name": "running",
+    "data": {}
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 2,
+    "ts": "2026-11-07T19:05:38.441025Z",
+    "type": "span_start",
+    "name": "github.fetch_pr",
+    "data": {}
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 3,
+    "ts": "2026-11-07T19:05:39.445941Z",
+    "type": "span_end",
+    "name": "github.fetch_pr",
+    "data": {
+     "duration_ms": 1004.9,
+     "error": null,
+     "language": "python",
+     "files": 1
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 4,
+    "ts": "2026-11-07T19:05:39.446002Z",
+    "type": "span_start",
+    "name": "preflight.static",
+    "data": {}
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 5,
+    "ts": "2026-11-07T19:05:39.446231Z",
+    "type": "span_end",
+    "name": "preflight.static",
+    "data": {
+     "duration_ms": 0.2,
+     "error": null,
+     "signals": 2,
+     "ranked": [
+      "setup.py"
+     ]
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 6,
+    "ts": "2026-11-07T19:05:39.446240Z",
+    "type": "span_start",
+    "name": "preflight.osv",
+    "data": {}
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 7,
+    "ts": "2026-11-07T19:05:39.446251Z",
+    "type": "span_end",
+    "name": "preflight.osv",
+    "data": {
+     "duration_ms": 0.0,
+     "error": null,
+     "mal_hits": 0,
+     "young": 0
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 8,
+    "ts": "2026-11-07T19:05:39.446262Z",
+    "type": "span_start",
+    "name": "agent.planner",
+    "data": {}
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 9,
+    "ts": "2026-11-07T19:05:45.460689Z",
+    "type": "span_end",
+    "name": "agent.planner",
+    "data": {
+     "duration_ms": 6014.4,
+     "error": null,
+     "model": "vultr",
+     "fallback": false,
+     "targets": [
+      "setup.py"
+     ],
+     "language": "python"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 10,
+    "ts": "2026-11-07T19:05:45.460769Z",
+    "type": "span_start",
+    "name": "sandbox.create",
+    "data": {}
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 11,
+    "ts": "2026-11-07T19:05:45.807907Z",
+    "type": "span_end",
+    "name": "sandbox.create",
+    "data": {
+     "duration_ms": 347.1,
+     "error": null,
+     "sandboxes": 2,
+     "backend": "docker"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 12,
+    "ts": "2026-11-07T19:05:48.017799Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:1",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 13,
+    "ts": "2026-11-07T19:05:51.352059Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3334.3,
+     "error": null,
+     "span_key": "base:install:1",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 14,
+    "ts": "2026-11-07T19:05:51.352107Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 15,
+    "ts": "2026-11-07T19:05:51.352127Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:2",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 16,
+    "ts": "2026-11-07T19:05:52.299995Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 947.8,
+     "error": null,
+     "span_key": "base:install:2",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m pip install --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 17,
+    "ts": "2026-11-07T19:05:52.300043Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 18,
+    "ts": "2026-11-07T19:05:52.300063Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 19,
+    "ts": "2026-11-07T19:05:54.296120Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 1996.0,
+     "error": null,
+     "command": "python -m pip install setuptools"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 20,
+    "ts": "2026-11-07T19:05:54.296202Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:3",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 21,
+    "ts": "2026-11-07T19:05:56.183456Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 1887.2,
+     "error": null,
+     "span_key": "base:install:3",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m pip install setuptools",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 22,
+    "ts": "2026-11-07T19:05:56.183505Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": "not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.\n\n[notice] A new release of pip is available: 25.0.1 -> 26.3\n[notice] To update, run: pip install --upgrade pip\n"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 23,
+    "ts": "2026-11-07T19:05:56.183526Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:4",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 24,
+    "ts": "2026-11-07T19:05:58.303921Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 2120.4,
+     "error": null,
+     "span_key": "base:install:4",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 25,
+    "ts": "2026-11-07T19:05:58.303967Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 26,
+    "ts": "2026-11-07T19:05:58.303985Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:5",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 27,
+    "ts": "2026-11-07T19:06:01.613730Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3309.7,
+     "error": null,
+     "span_key": "pr:install:5",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 28,
+    "ts": "2026-11-07T19:06:01.613775Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 29,
+    "ts": "2026-11-07T19:06:01.613795Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:6",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 30,
+    "ts": "2026-11-07T19:06:02.580585Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 966.8,
+     "error": null,
+     "span_key": "pr:install:6",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m pip install --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 31,
+    "ts": "2026-11-07T19:06:02.580679Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 32,
+    "ts": "2026-11-07T19:06:02.580701Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 33,
+    "ts": "2026-11-07T19:06:05.839732Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 3259.0,
+     "error": null,
+     "command": "python -m pip install setuptools"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 34,
+    "ts": "2026-11-07T19:06:05.839819Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:7",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 35,
+    "ts": "2026-11-07T19:06:07.733109Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 1893.3,
+     "error": null,
+     "span_key": "pr:install:7",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m pip install setuptools",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 36,
+    "ts": "2026-11-07T19:06:07.733157Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": "not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.\n\n[notice] A new release of pip is available: 25.0.1 -> 26.3\n[notice] To update, run: pip install --upgrade pip\n"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 37,
+    "ts": "2026-11-07T19:06:07.733179Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:8",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 38,
+    "ts": "2026-11-07T19:06:09.798195Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 2065.0,
+     "error": null,
+     "span_key": "pr:install:8",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 39,
+    "ts": "2026-11-07T19:06:09.798240Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 40,
+    "ts": "2026-11-07T19:06:09.886257Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:tests:9",
+     "ref": "base",
+     "step": "tests"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 41,
+    "ts": "2026-11-07T19:06:09.886433Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:tests:10",
+     "ref": "pr",
+     "step": "tests"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 42,
+    "ts": "2026-11-07T19:06:11.595507Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 1709.2,
+     "error": null,
+     "span_key": "base:tests:9",
+     "ref": "base",
+     "step": "tests",
+     "cmd": "python -m pytest",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 43,
+    "ts": "2026-11-07T19:06:11.595553Z",
+    "type": "log",
+    "name": "tests",
+    "data": {
+     "ref": "base",
+     "tail": "or: No module named 'exfilpkg'\n=========================== short test summary info ============================\nERROR tests/test_greet.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n=============================== 1 error in 0.98s ===============================\n"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 44,
+    "ts": "2026-11-07T19:06:11.607742Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 1721.3,
+     "error": null,
+     "span_key": "pr:tests:10",
+     "ref": "pr",
+     "step": "tests",
+     "cmd": "python -m pytest",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 45,
+    "ts": "2026-11-07T19:06:11.607772Z",
+    "type": "log",
+    "name": "tests",
+    "data": {
+     "ref": "pr",
+     "tail": "or: No module named 'exfilpkg'\n=========================== short test summary info ============================\nERROR tests/test_greet.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n=============================== 1 error in 0.99s ===============================\n"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 46,
+    "ts": "2026-11-07T19:06:11.607816Z",
+    "type": "log",
+    "name": "tests",
+    "data": {
+     "ref": "base",
+     "tail": "test suite fails on the base branch; cannot establish a baseline"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 47,
+    "ts": "2026-11-07T19:06:12.623110Z",
+    "type": "span_end",
+    "name": "sandbox.destroy",
+    "data": {
+     "duration_ms": 0.0,
+     "error": null,
+     "sandboxes_alive": 0
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 48,
+    "ts": "2026-11-07T19:06:12.624680Z",
+    "type": "span_start",
+    "name": "agent.reporter",
+    "data": {}
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 49,
+    "ts": "2026-11-07T19:06:14.217173Z",
+    "type": "span_end",
+    "name": "agent.reporter",
+    "data": {
+     "duration_ms": 1592.5,
+     "error": null,
+     "model": "vultr"
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 50,
+    "ts": "2026-11-07T19:06:14.217329Z",
+    "type": "verdict",
+    "name": "inconclusive",
+    "data": {
+     "confidence": 0.3,
+     "route": "human_review",
+     "summary": "Verdict: inconclusive (confidence 0.3; routed to human review). No findings were reported, and no execution results were provided to verify.",
+     "reasons": [
+      "tests could not be executed"
+     ],
+     "cited": []
+    }
+   },
+   {
+    "run_id": "run_5eb9ab2de300",
+    "seq": 51,
+    "ts": "2026-11-07T19:06:14.217337Z",
+    "type": "status",
+    "name": "completed",
+    "data": {}
+   }
+  ],
+  "run_af5b801e88ec": [
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 1,
+    "ts": "2026-11-07T19:06:50.281242Z",
+    "type": "status",
+    "name": "running",
+    "data": {}
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 2,
+    "ts": "2026-11-07T19:06:50.281273Z",
+    "type": "span_start",
+    "name": "github.fetch_pr",
+    "data": {}
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 3,
+    "ts": "2026-11-07T19:06:51.244010Z",
+    "type": "span_end",
+    "name": "github.fetch_pr",
+    "data": {
+     "duration_ms": 962.7,
+     "error": null,
+     "language": "python",
+     "files": 1
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 4,
+    "ts": "2026-11-07T19:06:51.244074Z",
+    "type": "span_start",
+    "name": "preflight.static",
+    "data": {}
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 5,
+    "ts": "2026-11-07T19:06:51.244471Z",
+    "type": "span_end",
+    "name": "preflight.static",
+    "data": {
+     "duration_ms": 0.4,
+     "error": null,
+     "signals": 2,
+     "ranked": [
+      "setup.py"
+     ]
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 6,
+    "ts": "2026-11-07T19:06:51.244486Z",
+    "type": "span_start",
+    "name": "preflight.osv",
+    "data": {}
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 7,
+    "ts": "2026-11-07T19:06:51.244507Z",
+    "type": "span_end",
+    "name": "preflight.osv",
+    "data": {
+     "duration_ms": 0.0,
+     "error": null,
+     "mal_hits": 0,
+     "young": 0
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 8,
+    "ts": "2026-11-07T19:06:51.244525Z",
+    "type": "span_start",
+    "name": "agent.planner",
+    "data": {}
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 9,
+    "ts": "2026-11-07T19:06:54.408923Z",
+    "type": "span_end",
+    "name": "agent.planner",
+    "data": {
+     "duration_ms": 3164.4,
+     "error": null,
+     "model": "vultr",
+     "fallback": false,
+     "targets": [
+      "setup.py"
+     ],
+     "language": "python"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 10,
+    "ts": "2026-11-07T19:06:54.408981Z",
+    "type": "span_start",
+    "name": "sandbox.create",
+    "data": {}
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 11,
+    "ts": "2026-11-07T19:06:54.644369Z",
+    "type": "span_end",
+    "name": "sandbox.create",
+    "data": {
+     "duration_ms": 235.4,
+     "error": null,
+     "sandboxes": 2,
+     "backend": "docker"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 12,
+    "ts": "2026-11-07T19:06:56.725121Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:1",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 13,
+    "ts": "2026-11-07T19:07:00.197079Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3472.0,
+     "error": null,
+     "span_key": "base:install:1",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 14,
+    "ts": "2026-11-07T19:07:00.197124Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 15,
+    "ts": "2026-11-07T19:07:00.197142Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:2",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 16,
+    "ts": "2026-11-07T19:07:01.128083Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 930.9,
+     "error": null,
+     "span_key": "base:install:2",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m pip install --no-index --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 17,
+    "ts": "2026-11-07T19:07:01.128130Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 18,
+    "ts": "2026-11-07T19:07:01.128147Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 19,
+    "ts": "2026-11-07T19:07:11.590804Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 10462.6,
+     "error": null,
+     "command": "python -m pip install setuptools"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 20,
+    "ts": "2026-11-07T19:07:11.590884Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:3",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 21,
+    "ts": "2026-11-07T19:07:13.487480Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 1896.6,
+     "error": null,
+     "span_key": "base:install:3",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m pip install setuptools",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 22,
+    "ts": "2026-11-07T19:07:13.487529Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": "not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.\n\n[notice] A new release of pip is available: 25.0.1 -> 26.3\n[notice] To update, run: pip install --upgrade pip\n"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 23,
+    "ts": "2026-11-07T19:07:13.487550Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:4",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 24,
+    "ts": "2026-11-07T19:07:15.667219Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 2179.7,
+     "error": null,
+     "span_key": "base:install:4",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 25,
+    "ts": "2026-11-07T19:07:15.667265Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 26,
+    "ts": "2026-11-07T19:07:15.667281Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:5",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 27,
+    "ts": "2026-11-07T19:07:19.068760Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3401.5,
+     "error": null,
+     "span_key": "pr:install:5",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 28,
+    "ts": "2026-11-07T19:07:19.068805Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 29,
+    "ts": "2026-11-07T19:07:19.068824Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:6",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 30,
+    "ts": "2026-11-07T19:07:19.956833Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 888.0,
+     "error": null,
+     "span_key": "pr:install:6",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m pip install --no-index --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 31,
+    "ts": "2026-11-07T19:07:19.956881Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 32,
+    "ts": "2026-11-07T19:07:19.956897Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 33,
+    "ts": "2026-11-07T19:07:31.180293Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 11223.4,
+     "error": null,
+     "command": "python -m pip install --no-index --no-deps --no-build-isolation ."
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 34,
+    "ts": "2026-11-07T19:07:31.180395Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:7",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 35,
+    "ts": "2026-11-07T19:07:32.045175Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 864.8,
+     "error": null,
+     "span_key": "pr:install:7",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m pip install --no-index --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 36,
+    "ts": "2026-11-07T19:07:32.045221Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 37,
+    "ts": "2026-11-07T19:07:32.045237Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 38,
+    "ts": "2026-11-07T19:07:42.875608Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 10830.4,
+     "error": null,
+     "command": "python -m pip install --no-index --no-deps --no-build-isolation ."
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 39,
+    "ts": "2026-11-07T19:07:42.875704Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:8",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 40,
+    "ts": "2026-11-07T19:07:43.766772Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 891.1,
+     "error": null,
+     "span_key": "pr:install:8",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m pip install --no-index --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 41,
+    "ts": "2026-11-07T19:07:43.766819Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 42,
+    "ts": "2026-11-07T19:07:43.766926Z",
+    "type": "finding",
+    "name": "setup_failure",
+    "data": {
+     "id": "F1",
+     "title": "Install failed on pr after self-heal attempts",
+     "confidence": 0.9,
+     "severity": "low",
+     "evidence": [
+      {
+       "kind": "exec",
+       "step_id": null,
+       "excerpt": "non-zero exit",
+       "command": "python -m pip install --no-index --no-deps --no-build-isolation .",
+       "exit_code": null
+      }
+     ]
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 43,
+    "ts": "2026-11-07T19:07:43.852511Z",
+    "type": "log",
+    "name": "tests",
+    "data": {
+     "tail": "install failed; skipping tests so the run cannot read as safe"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 44,
+    "ts": "2026-11-07T19:07:44.813694Z",
+    "type": "span_end",
+    "name": "sandbox.destroy",
+    "data": {
+     "duration_ms": 0.0,
+     "error": null,
+     "sandboxes_alive": 0
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 45,
+    "ts": "2026-11-07T19:07:44.815286Z",
+    "type": "span_start",
+    "name": "agent.analyst",
+    "data": {}
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 46,
+    "ts": "2026-11-07T19:07:46.754884Z",
+    "type": "span_end",
+    "name": "agent.analyst",
+    "data": {
+     "duration_ms": 1939.6,
+     "error": null,
+     "intent": "unclear"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 47,
+    "ts": "2026-11-07T19:07:46.754960Z",
+    "type": "span_start",
+    "name": "agent.reporter",
+    "data": {}
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 48,
+    "ts": "2026-11-07T19:07:47.567606Z",
+    "type": "span_end",
+    "name": "agent.reporter",
+    "data": {
+     "duration_ms": 812.6,
+     "error": null,
+     "model": "vultr"
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 49,
+    "ts": "2026-11-07T19:07:47.567726Z",
+    "type": "verdict",
+    "name": "inconclusive",
+    "data": {
+     "confidence": 0.3,
+     "route": "human_review",
+     "summary": "Verdict: inconclusive (confidence 0.3; routed to human review). [F1] Install failed on PR after self-heal attempts (low severity).",
+     "reasons": [
+      "tests could not be executed"
+     ],
+     "cited": [
+      "F1"
+     ]
+    }
+   },
+   {
+    "run_id": "run_af5b801e88ec",
+    "seq": 50,
+    "ts": "2026-11-07T19:07:47.567734Z",
+    "type": "status",
+    "name": "completed",
+    "data": {}
+   }
+  ],
+  "run_a61c29564b61": [
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 1,
+    "ts": "2026-11-07T19:11:41.903186Z",
+    "type": "status",
+    "name": "running",
+    "data": {}
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 2,
+    "ts": "2026-11-07T19:11:41.903218Z",
+    "type": "span_start",
+    "name": "github.fetch_pr",
+    "data": {}
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 3,
+    "ts": "2026-11-07T19:11:42.901397Z",
+    "type": "span_end",
+    "name": "github.fetch_pr",
+    "data": {
+     "duration_ms": 998.2,
+     "error": null,
+     "language": "python",
+     "files": 1
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 4,
+    "ts": "2026-11-07T19:11:42.901437Z",
+    "type": "span_start",
+    "name": "preflight.static",
+    "data": {}
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 5,
+    "ts": "2026-11-07T19:11:42.901684Z",
+    "type": "span_end",
+    "name": "preflight.static",
+    "data": {
+     "duration_ms": 0.2,
+     "error": null,
+     "signals": 2,
+     "ranked": [
+      "setup.py"
+     ]
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 6,
+    "ts": "2026-11-07T19:11:42.901693Z",
+    "type": "span_start",
+    "name": "preflight.osv",
+    "data": {}
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 7,
+    "ts": "2026-11-07T19:11:42.901704Z",
+    "type": "span_end",
+    "name": "preflight.osv",
+    "data": {
+     "duration_ms": 0.0,
+     "error": null,
+     "mal_hits": 0,
+     "young": 0
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 8,
+    "ts": "2026-11-07T19:11:42.901714Z",
+    "type": "span_start",
+    "name": "agent.planner",
+    "data": {}
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 9,
+    "ts": "2026-11-07T19:11:49.669764Z",
+    "type": "span_end",
+    "name": "agent.planner",
+    "data": {
+     "duration_ms": 6768.0,
+     "error": null,
+     "model": "vultr",
+     "fallback": false,
+     "targets": [
+      "setup.py"
+     ],
+     "language": "python"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 10,
+    "ts": "2026-11-07T19:11:49.669819Z",
+    "type": "span_start",
+    "name": "sandbox.create",
+    "data": {}
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 11,
+    "ts": "2026-11-07T19:11:49.939707Z",
+    "type": "span_end",
+    "name": "sandbox.create",
+    "data": {
+     "duration_ms": 269.9,
+     "error": null,
+     "sandboxes": 2,
+     "backend": "docker"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 12,
+    "ts": "2026-11-07T19:11:52.486039Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:1",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 13,
+    "ts": "2026-11-07T19:11:56.111522Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3625.5,
+     "error": null,
+     "span_key": "base:install:1",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 14,
+    "ts": "2026-11-07T19:11:56.111571Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 15,
+    "ts": "2026-11-07T19:11:56.111591Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:2",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 16,
+    "ts": "2026-11-07T19:11:57.250969Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 1139.4,
+     "error": null,
+     "span_key": "base:install:2",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m pip install --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 17,
+    "ts": "2026-11-07T19:11:57.251034Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 18,
+    "ts": "2026-11-07T19:11:57.251057Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 19,
+    "ts": "2026-11-07T19:12:00.646955Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 3395.9,
+     "error": null,
+     "command": "python -m pip install setuptools"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 20,
+    "ts": "2026-11-07T19:12:00.647046Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:3",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 21,
+    "ts": "2026-11-07T19:12:02.757377Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 2110.3,
+     "error": null,
+     "span_key": "base:install:3",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m pip install setuptools",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 22,
+    "ts": "2026-11-07T19:12:02.757432Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": "not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.\n\n[notice] A new release of pip is available: 25.0.1 -> 26.3\n[notice] To update, run: pip install --upgrade pip\n"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 23,
+    "ts": "2026-11-07T19:12:02.757453Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:4",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 24,
+    "ts": "2026-11-07T19:12:05.039649Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 2282.2,
+     "error": null,
+     "span_key": "base:install:4",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 25,
+    "ts": "2026-11-07T19:12:05.039710Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 26,
+    "ts": "2026-11-07T19:12:05.039730Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:5",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 27,
+    "ts": "2026-11-07T19:12:08.653413Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3613.7,
+     "error": null,
+     "span_key": "pr:install:5",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 28,
+    "ts": "2026-11-07T19:12:08.653461Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 29,
+    "ts": "2026-11-07T19:12:08.653480Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:6",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 30,
+    "ts": "2026-11-07T19:12:09.673816Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 1020.3,
+     "error": null,
+     "span_key": "pr:install:6",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m pip install --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 31,
+    "ts": "2026-11-07T19:12:09.673864Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 32,
+    "ts": "2026-11-07T19:12:09.673882Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 33,
+    "ts": "2026-11-07T19:12:16.410840Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 6736.9,
+     "error": null,
+     "command": "python -m pip install --no-deps ."
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 34,
+    "ts": "2026-11-07T19:12:16.410919Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:7",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 35,
+    "ts": "2026-11-07T19:12:19.547379Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3136.4,
+     "error": null,
+     "span_key": "pr:install:7",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m pip install --no-deps .",
+     "exit_code": 1,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 36,
+    "ts": "2026-11-07T19:12:19.547426Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": "able: 25.0.1 -> 26.3\n[notice] To update, run: pip install --upgrade pip\nerror: subprocess-exited-with-error\n\n\u00d7 Getting requirements to build wheel did not run successfully.\n\u2502 exit code: 1\n\u2570\u2500> See above for output.\n\nnote: This error originates from a subprocess, and is likely not a problem with pip.\n"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 37,
+    "ts": "2026-11-07T19:12:19.547442Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 38,
+    "ts": "2026-11-07T19:12:22.931961Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 3384.5,
+     "error": null,
+     "command": "python -m pip install --no-deps ."
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 39,
+    "ts": "2026-11-07T19:12:22.932044Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:8",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 40,
+    "ts": "2026-11-07T19:12:26.112238Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3180.2,
+     "error": null,
+     "span_key": "pr:install:8",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m pip install --no-deps .",
+     "exit_code": 1,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 41,
+    "ts": "2026-11-07T19:12:26.112286Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": "able: 25.0.1 -> 26.3\n[notice] To update, run: pip install --upgrade pip\nerror: subprocess-exited-with-error\n\n\u00d7 Getting requirements to build wheel did not run successfully.\n\u2502 exit code: 1\n\u2570\u2500> See above for output.\n\nnote: This error originates from a subprocess, and is likely not a problem with pip.\n"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 42,
+    "ts": "2026-11-07T19:12:26.112371Z",
+    "type": "finding",
+    "name": "setup_failure",
+    "data": {
+     "id": "F1",
+     "title": "Install failed on pr after self-heal attempts",
+     "confidence": 0.9,
+     "severity": "low",
+     "evidence": [
+      {
+       "kind": "exec",
+       "step_id": null,
+       "excerpt": "non-zero exit",
+       "command": "python -m pip install --no-deps .",
+       "exit_code": null
+      }
+     ]
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 43,
+    "ts": "2026-11-07T19:12:26.173371Z",
+    "type": "log",
+    "name": "tests",
+    "data": {
+     "tail": "install failed; skipping tests so the run cannot read as safe"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 44,
+    "ts": "2026-11-07T19:12:26.920608Z",
+    "type": "finding",
+    "name": "secret_access",
+    "data": {
+     "id": "F2",
+     "title": "Code read or leaked planted canary secrets",
+     "confidence": 0.9,
+     "severity": "critical",
+     "evidence": [
+      {
+       "kind": "behaviour",
+       "step_id": "sandbox.behaviour",
+       "excerpt": "canary AWS_ACCESS_KEY_ID seen",
+       "command": null,
+       "exit_code": null
+      }
+     ]
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 45,
+    "ts": "2026-11-07T19:12:26.920708Z",
+    "type": "containment",
+    "name": "canary_hit",
+    "data": {
+     "detail": "AWS_ACCESS_KEY_ID",
+     "ref": "pr"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 46,
+    "ts": "2026-11-07T19:12:27.123344Z",
+    "type": "span_end",
+    "name": "sandbox.destroy",
+    "data": {
+     "duration_ms": 0.0,
+     "error": null,
+     "sandboxes_alive": 0
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 47,
+    "ts": "2026-11-07T19:12:27.124887Z",
+    "type": "span_start",
+    "name": "agent.analyst",
+    "data": {}
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 48,
+    "ts": "2026-11-07T19:12:28.857468Z",
+    "type": "span_end",
+    "name": "agent.analyst",
+    "data": {
+     "duration_ms": 1732.6,
+     "error": null,
+     "intent": "data_theft"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 49,
+    "ts": "2026-11-07T19:12:28.857540Z",
+    "type": "span_start",
+    "name": "agent.reporter",
+    "data": {}
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 50,
+    "ts": "2026-11-07T19:12:29.802351Z",
+    "type": "span_end",
+    "name": "agent.reporter",
+    "data": {
+     "duration_ms": 944.8,
+     "error": null,
+     "model": "vultr"
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 51,
+    "ts": "2026-11-07T19:12:29.802443Z",
+    "type": "verdict",
+    "name": "suspicious",
+    "data": {
+     "confidence": 0.9,
+     "route": "human_review",
+     "summary": "Verdict: suspicious (confidence 0.9; route: human_review). [F1] Install failed on PR after self-heal attempts (low severity). [F2] Code read or leaked planted canary secrets (critical severity).",
+     "reasons": [
+      "secret_access found (F2)"
+     ],
+     "cited": [
+      "F1",
+      "F2"
+     ]
+    }
+   },
+   {
+    "run_id": "run_a61c29564b61",
+    "seq": 52,
+    "ts": "2026-11-07T19:12:29.802450Z",
     "type": "status",
     "name": "completed",
     "data": {}
