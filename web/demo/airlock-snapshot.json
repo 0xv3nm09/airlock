@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-05T06:45:06.080057+00:00",
+ "generated_at": "2026-11-07T18:29:13.671872+00:00",
  "readyz": {
   "status": "ok",
   "llm": "vultr",
@@ -9,21 +9,21 @@
   "kill_switch": false
  },
  "stats": {
-  "runs_total": 20,
-  "runs_completed": 19,
-  "suspicious": 7,
+  "runs_total": 21,
+  "runs_completed": 20,
+  "suspicious": 8,
   "needs_changes": 5,
   "safe_to_merge": 5,
   "inconclusive": 2,
-  "attacks_contained": 6,
-  "tokens_total": 159067,
-  "llm_calls_total": 103,
-  "avg_tokens_per_run": 7953,
+  "attacks_contained": 7,
+  "tokens_total": 172070,
+  "llm_calls_total": 112,
+  "avg_tokens_per_run": 8194,
   "policy_version": "2026-11-01.v1",
   "llm": "vultr",
   "sandbox": "docker",
-  "sandboxes_created": 36,
-  "uptime_s": 1132
+  "sandboxes_created": 38,
+  "uptime_s": 216174
  },
  "runs": [
   {
@@ -1197,9 +1197,119 @@
    "decided_at": null,
    "created_at": "2026-11-05T06:43:40.533401Z",
    "finished_at": "2026-11-05T06:44:21.137286Z"
+  },
+  {
+   "id": "run_3b0be3337fdb",
+   "owner_id": "demo",
+   "is_demo": true,
+   "status": "completed",
+   "pr_url": "https://github.com/0xv3nm09/setup-py-exfil/pull/7",
+   "policy_version": "2026-11-01.v1",
+   "verdict": {
+    "label": "suspicious",
+    "confidence": 0.9,
+    "route": "human_review",
+    "summary": "Verdict: suspicious (0.9 confidence), routed to human review. [F1] Install failed on the PR after self-heal attempts (low severity). [F2] Code read or leaked planted canary secrets (critical severity).",
+    "reasons": [
+     "secret_access found (F2)"
+    ],
+    "cited_findings": [
+     "F1",
+     "F2"
+    ]
+   },
+   "intent": {
+    "intent": "data_theft",
+    "explanation": "F2 reports that the code read or leaked planted canary secrets, directly supporting secret-collection or exfiltration intent. The setup.py network-access signal is consistent with transmitting collected data, although it is static and does not prove transmission. F1 shows installation failure after self-heal attempts, which may indicate recovery behavior but does not independently establish malicious intent. Because no code snippets were provided, the exact collection mechanism and destination are not verified.",
+    "cited_evidence": [
+     "F2",
+     "F1"
+    ],
+    "confidence": 0.78
+   },
+   "findings": [
+    {
+     "id": "F1",
+     "category": "setup_failure",
+     "severity": "low",
+     "title": "Install failed on pr after self-heal attempts",
+     "proven": true,
+     "confidence": 0.9,
+     "evidence": [
+      {
+       "kind": "exec",
+       "step_id": null,
+       "excerpt": "non-zero exit",
+       "command": "python -m pip install --no-deps .",
+       "exit_code": null
+      }
+     ]
+    },
+    {
+     "id": "F2",
+     "category": "secret_access",
+     "severity": "critical",
+     "title": "Code read or leaked planted canary secrets",
+     "proven": true,
+     "confidence": 0.9,
+     "evidence": [
+      {
+       "kind": "behaviour",
+       "step_id": "sandbox.behaviour",
+       "excerpt": "canary AWS_ACCESS_KEY_ID seen",
+       "command": null,
+       "exit_code": null
+      }
+     ]
+    }
+   ],
+   "counters": {
+    "network_blocked": 0,
+    "canary_hits": 1,
+    "writes_denied": 0,
+    "limits_hit": 0
+   },
+   "usage": {
+    "prompt_tokens": 6036,
+    "completion_tokens": 6967,
+    "llm_calls": 9
+   },
+   "error": null,
+   "human_decision": null,
+   "human_note": "",
+   "decided_by": null,
+   "decided_at": null,
+   "created_at": "2026-11-06T08:14:28.157525Z",
+   "finished_at": "2026-11-06T08:15:18.306048Z"
   }
  ],
  "recent": [
+  {
+   "id": "run_3b0be3337fdb",
+   "pr_url": "https://github.com/0xv3nm09/setup-py-exfil/pull/7",
+   "status": "completed",
+   "verdict": "suspicious",
+   "confidence": 0.9,
+   "counters": {
+    "network_blocked": 0,
+    "canary_hits": 1,
+    "writes_denied": 0,
+    "limits_hit": 0
+   },
+   "usage": {
+    "prompt_tokens": 6036,
+    "completion_tokens": 6967,
+    "llm_calls": 9
+   },
+   "created_at": "2026-11-06T08:14:28.157525+00:00",
+   "containment": [
+    {
+     "name": "canary_hit",
+     "detail": "AWS_ACCESS_KEY_ID",
+     "ts": "2026-11-06T08:15:14.725484+00:00"
+    }
+   ]
+  },
   {
    "id": "run_3049b41544ff",
    "pr_url": "https://github.com/0xv3nm09/setup-py-exfil/pull/7",
@@ -11490,6 +11600,722 @@
     "run_id": "run_3049b41544ff",
     "seq": 47,
     "ts": "2026-11-05T06:44:21.137303Z",
+    "type": "status",
+    "name": "completed",
+    "data": {}
+   }
+  ],
+  "run_3b0be3337fdb": [
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 1,
+    "ts": "2026-11-06T08:14:28.157963Z",
+    "type": "status",
+    "name": "running",
+    "data": {}
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 2,
+    "ts": "2026-11-06T08:14:28.157993Z",
+    "type": "span_start",
+    "name": "github.fetch_pr",
+    "data": {}
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 3,
+    "ts": "2026-11-06T08:14:29.469895Z",
+    "type": "span_end",
+    "name": "github.fetch_pr",
+    "data": {
+     "duration_ms": 1311.9,
+     "error": null,
+     "language": "python",
+     "files": 1
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 4,
+    "ts": "2026-11-06T08:14:29.469936Z",
+    "type": "span_start",
+    "name": "preflight.static",
+    "data": {}
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 5,
+    "ts": "2026-11-06T08:14:29.470153Z",
+    "type": "span_end",
+    "name": "preflight.static",
+    "data": {
+     "duration_ms": 0.2,
+     "error": null,
+     "signals": 2,
+     "ranked": [
+      "setup.py"
+     ]
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 6,
+    "ts": "2026-11-06T08:14:29.470161Z",
+    "type": "span_start",
+    "name": "preflight.osv",
+    "data": {}
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 7,
+    "ts": "2026-11-06T08:14:29.470173Z",
+    "type": "span_end",
+    "name": "preflight.osv",
+    "data": {
+     "duration_ms": 0.0,
+     "error": null,
+     "mal_hits": 0,
+     "young": 0
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 8,
+    "ts": "2026-11-06T08:14:29.470184Z",
+    "type": "span_start",
+    "name": "agent.planner",
+    "data": {}
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 9,
+    "ts": "2026-11-06T08:14:41.869311Z",
+    "type": "span_end",
+    "name": "agent.planner",
+    "data": {
+     "duration_ms": 12399.1,
+     "error": null,
+     "model": "vultr",
+     "fallback": false,
+     "targets": [
+      "setup.py"
+     ],
+     "language": "python"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 10,
+    "ts": "2026-11-06T08:14:41.869357Z",
+    "type": "span_start",
+    "name": "sandbox.create",
+    "data": {}
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 11,
+    "ts": "2026-11-06T08:14:42.115215Z",
+    "type": "span_end",
+    "name": "sandbox.create",
+    "data": {
+     "duration_ms": 245.8,
+     "error": null,
+     "sandboxes": 2,
+     "backend": "docker"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 12,
+    "ts": "2026-11-06T08:14:44.650333Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:1",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 13,
+    "ts": "2026-11-06T08:14:47.721585Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3071.2,
+     "error": null,
+     "span_key": "base:install:1",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 14,
+    "ts": "2026-11-06T08:14:47.721678Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 15,
+    "ts": "2026-11-06T08:14:47.721696Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:2",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 16,
+    "ts": "2026-11-06T08:14:48.616159Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 894.4,
+     "error": null,
+     "span_key": "base:install:2",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m pip install --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 17,
+    "ts": "2026-11-06T08:14:48.616221Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 18,
+    "ts": "2026-11-06T08:14:48.616240Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 19,
+    "ts": "2026-11-06T08:14:50.783866Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 2167.6,
+     "error": null,
+     "command": "python -m pip install setuptools && python -m pip install --no-deps --no-build-isolation ."
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 20,
+    "ts": "2026-11-06T08:14:50.783937Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": "fixer command denied by policy"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 21,
+    "ts": "2026-11-06T08:14:50.783952Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:3",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 22,
+    "ts": "2026-11-06T08:14:51.775478Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 991.5,
+     "error": null,
+     "span_key": "base:install:3",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m pip install --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 23,
+    "ts": "2026-11-06T08:14:51.775538Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 24,
+    "ts": "2026-11-06T08:14:51.775557Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 25,
+    "ts": "2026-11-06T08:14:53.989162Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 2213.6,
+     "error": null,
+     "command": "python -m pip install --no-deps ."
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 26,
+    "ts": "2026-11-06T08:14:53.989263Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:4",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 27,
+    "ts": "2026-11-06T08:14:58.011539Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 4022.3,
+     "error": null,
+     "span_key": "base:install:4",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m pip install --no-deps .",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 28,
+    "ts": "2026-11-06T08:14:58.011588Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": "not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.\n\n[notice] A new release of pip is available: 25.0.1 -> 26.3\n[notice] To update, run: pip install --upgrade pip\n"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 29,
+    "ts": "2026-11-06T08:14:58.011607Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "base:install:5",
+     "ref": "base",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 30,
+    "ts": "2026-11-06T08:15:00.096517Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 2084.9,
+     "error": null,
+     "span_key": "base:install:5",
+     "ref": "base",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 31,
+    "ts": "2026-11-06T08:15:00.096580Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "base",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 32,
+    "ts": "2026-11-06T08:15:00.096598Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:6",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 33,
+    "ts": "2026-11-06T08:15:03.411267Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3314.7,
+     "error": null,
+     "span_key": "pr:install:6",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m venv --system-site-packages /workspace/.venv",
+     "exit_code": 0,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 34,
+    "ts": "2026-11-06T08:15:03.411313Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": ""
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 35,
+    "ts": "2026-11-06T08:15:03.411331Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:7",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 36,
+    "ts": "2026-11-06T08:15:04.388413Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 977.1,
+     "error": null,
+     "span_key": "pr:install:7",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m pip install --no-deps --no-build-isolation .",
+     "exit_code": 2,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 37,
+    "ts": "2026-11-06T08:15:04.388457Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": "heel\n    return self._call_hook(\n           ^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py\", line 402, in _call_hook\n    raise BackendUnavailable(\npip._vendor.pyproject_hooks._impl.BackendUnavailable: Cannot import 'setuptools.build_meta'\n"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 38,
+    "ts": "2026-11-06T08:15:04.388473Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 39,
+    "ts": "2026-11-06T08:15:06.935339Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 2546.9,
+     "error": null,
+     "command": "python -m pip install --no-deps ."
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 40,
+    "ts": "2026-11-06T08:15:06.935424Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:8",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 41,
+    "ts": "2026-11-06T08:15:10.025294Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3089.9,
+     "error": null,
+     "span_key": "pr:install:8",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m pip install --no-deps .",
+     "exit_code": 1,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 42,
+    "ts": "2026-11-06T08:15:10.025342Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": "able: 25.0.1 -> 26.3\n[notice] To update, run: pip install --upgrade pip\nerror: subprocess-exited-with-error\n\n\u00d7 Getting requirements to build wheel did not run successfully.\n\u2502 exit code: 1\n\u2570\u2500> See above for output.\n\nnote: This error originates from a subprocess, and is likely not a problem with pip.\n"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 43,
+    "ts": "2026-11-06T08:15:10.025358Z",
+    "type": "span_start",
+    "name": "agent.fixer",
+    "data": {}
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 44,
+    "ts": "2026-11-06T08:15:11.108552Z",
+    "type": "span_end",
+    "name": "agent.fixer",
+    "data": {
+     "duration_ms": 1083.2,
+     "error": null,
+     "command": "python -m pip install --no-deps ."
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 45,
+    "ts": "2026-11-06T08:15:11.108642Z",
+    "type": "span_start",
+    "name": "sandbox.exec",
+    "data": {
+     "span_key": "pr:install:9",
+     "ref": "pr",
+     "step": "install"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 46,
+    "ts": "2026-11-06T08:15:14.320119Z",
+    "type": "span_end",
+    "name": "sandbox.exec",
+    "data": {
+     "duration_ms": 3211.5,
+     "error": null,
+     "span_key": "pr:install:9",
+     "ref": "pr",
+     "step": "install",
+     "cmd": "python -m pip install --no-deps .",
+     "exit_code": 1,
+     "timed_out": false
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 47,
+    "ts": "2026-11-06T08:15:14.320180Z",
+    "type": "log",
+    "name": "install",
+    "data": {
+     "ref": "pr",
+     "tail": "able: 25.0.1 -> 26.3\n[notice] To update, run: pip install --upgrade pip\nerror: subprocess-exited-with-error\n\n\u00d7 Getting requirements to build wheel did not run successfully.\n\u2502 exit code: 1\n\u2570\u2500> See above for output.\n\nnote: This error originates from a subprocess, and is likely not a problem with pip.\n"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 48,
+    "ts": "2026-11-06T08:15:14.320255Z",
+    "type": "finding",
+    "name": "setup_failure",
+    "data": {
+     "id": "F1",
+     "title": "Install failed on pr after self-heal attempts",
+     "confidence": 0.9,
+     "severity": "low",
+     "evidence": [
+      {
+       "kind": "exec",
+       "step_id": null,
+       "excerpt": "non-zero exit",
+       "command": "python -m pip install --no-deps .",
+       "exit_code": null
+      }
+     ]
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 49,
+    "ts": "2026-11-06T08:15:14.391999Z",
+    "type": "log",
+    "name": "tests",
+    "data": {
+     "tail": "install failed; skipping tests so the run cannot read as safe"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 50,
+    "ts": "2026-11-06T08:15:14.725451Z",
+    "type": "finding",
+    "name": "secret_access",
+    "data": {
+     "id": "F2",
+     "title": "Code read or leaked planted canary secrets",
+     "confidence": 0.9,
+     "severity": "critical",
+     "evidence": [
+      {
+       "kind": "behaviour",
+       "step_id": "sandbox.behaviour",
+       "excerpt": "canary AWS_ACCESS_KEY_ID seen",
+       "command": null,
+       "exit_code": null
+      }
+     ]
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 51,
+    "ts": "2026-11-06T08:15:14.725484Z",
+    "type": "containment",
+    "name": "canary_hit",
+    "data": {
+     "detail": "AWS_ACCESS_KEY_ID",
+     "ref": "pr"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 52,
+    "ts": "2026-11-06T08:15:15.297078Z",
+    "type": "span_end",
+    "name": "sandbox.destroy",
+    "data": {
+     "duration_ms": 0.0,
+     "error": null,
+     "sandboxes_alive": 0
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 53,
+    "ts": "2026-11-06T08:15:15.298766Z",
+    "type": "span_start",
+    "name": "agent.analyst",
+    "data": {}
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 54,
+    "ts": "2026-11-06T08:15:17.356861Z",
+    "type": "span_end",
+    "name": "agent.analyst",
+    "data": {
+     "duration_ms": 2058.1,
+     "error": null,
+     "intent": "data_theft"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 55,
+    "ts": "2026-11-06T08:15:17.356922Z",
+    "type": "span_start",
+    "name": "agent.reporter",
+    "data": {}
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 56,
+    "ts": "2026-11-06T08:15:18.305968Z",
+    "type": "span_end",
+    "name": "agent.reporter",
+    "data": {
+     "duration_ms": 949.0,
+     "error": null,
+     "model": "vultr"
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 57,
+    "ts": "2026-11-06T08:15:18.306056Z",
+    "type": "verdict",
+    "name": "suspicious",
+    "data": {
+     "confidence": 0.9,
+     "route": "human_review",
+     "summary": "Verdict: suspicious (0.9 confidence), routed to human review. [F1] Install failed on the PR after self-heal attempts (low severity). [F2] Code read or leaked planted canary secrets (critical severity).",
+     "reasons": [
+      "secret_access found (F2)"
+     ],
+     "cited": [
+      "F1",
+      "F2"
+     ]
+    }
+   },
+   {
+    "run_id": "run_3b0be3337fdb",
+    "seq": 58,
+    "ts": "2026-11-06T08:15:18.306063Z",
     "type": "status",
     "name": "completed",
     "data": {}

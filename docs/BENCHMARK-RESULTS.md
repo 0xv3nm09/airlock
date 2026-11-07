@@ -1,6 +1,6 @@
 # Live benchmark results — real runs on the Vultr stack
 
-_Generated 2026-11-05 06:44 UTC. Every number below is machine-collected from the running
+_Generated 2026-11-07 18:29 UTC. Every number below is machine-collected from the running
 deployment by [`scripts/collect_live_results.py`](../scripts/collect_live_results.py)
 — expected verdicts come from [`eval_cases/cases.yaml`](../eval_cases/cases.yaml),
 observed ones from the runs' actual API records. Nothing is hand-written._
@@ -24,21 +24,21 @@ observed ones from the runs' actual API records. Nothing is hand-written._
   },
   "sandbox": "Docker + gVisor (runsc), read-only rootfs, per-run venv, registry-only egress",
   "stats_after_sweep": {
-    "runs_total": 20,
-    "runs_completed": 19,
-    "suspicious": 7,
+    "runs_total": 21,
+    "runs_completed": 20,
+    "suspicious": 8,
     "needs_changes": 5,
     "safe_to_merge": 5,
     "inconclusive": 2,
-    "attacks_contained": 6,
-    "tokens_total": 159067,
-    "llm_calls_total": 103,
-    "avg_tokens_per_run": 7953,
+    "attacks_contained": 7,
+    "tokens_total": 172070,
+    "llm_calls_total": 112,
+    "avg_tokens_per_run": 8194,
     "policy_version": "2026-11-01.v1",
     "llm": "vultr",
     "sandbox": "docker",
-    "sandboxes_created": 36,
-    "uptime_s": 1128
+    "sandboxes_created": 38,
+    "uptime_s": 216202
   }
 }
 ```
@@ -117,8 +117,6 @@ Destroy sandboxes ──── on every path; the trace + SQLite record survive
 | install-broken | [pull/20](https://github.com/0xv3nm09/install-broken/pull/20) | inconclusive | **inconclusive** | ✓ | 4,720 | 5 | 33.6s | 0 |
 
 **Verdict mix:** {"safe_to_merge": 5, "needs_changes": 5, "suspicious": 7, "inconclusive": 2} · **Totals:** 159,067 tokens · 103 real LLM calls across 19 runs
-
-![Suspicious verdict with canary finding — the run page for `run_3049b41544ff`](screenshots/run-suspicious.png)
 
 ## Per-case evidence (real API output)
 
