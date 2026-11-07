@@ -18,10 +18,10 @@ repository, so a judge can verify every claim in minutes.
 | Deliverable (per rules) | Status | Where |
 | --- | --- | --- |
 | Public GitHub repo with setup + documentation | ✅ ready — repo flips public at submission; setup in [README](../README.md#quickstart) | this repo |
-| Backend deployed on a Vultr VM (control layer) | 🔨 build week — `deploy/` has compose, Caddy, squid egress proxy, sandbox images and the step-by-step runbook | [`deploy/`](../deploy/README.md), [`deploy/GO-LIVE.md`](../deploy/GO-LIVE.md) |
-| LLM calls via Vultr Serverless Inference | ✅ adapter written + config-gated; the flip is env vars only (`deploy/GO-LIVE.md` §3) | [`app/llm/vultr.py`](../app/llm/vultr.py) |
-| Public demo URL, product-style experience | ✅ static demo site (recorded real runs, works with no backend) + live VM URL once deployed | Pages workflow [`.github/workflows/pages.yml`](../.github/workflows/pages.yml) |
-| Recorded video with a "containment moment" | 🔨 pending — scripted moment: the `setup-py-exfil` attack PR passes its tests, then the timeline shows the egress block (`evil.example`) and the canary hit, verdict **suspicious → human**, sandboxes destroyed | demo scenario in `app/sources/dummy.py`, demo video TBD |
+| Backend deployed on a Vultr VM (control layer) | ✅ **live** — api + web + Postgres + squid egress + Caddy under compose on vc2-4c-8gb (Delhi NCR); `/readyz` reads `vultr llm · docker sandbox` | [`deploy/`](../deploy/README.md), [`deploy/GO-LIVE.md`](../deploy/GO-LIVE.md) |
+| LLM calls via Vultr Serverless Inference | ✅ **live** — every agent call goes through `api.vultrinference.com/v1`; model + tokens stamped per span in the trace inspector | [`app/llm/vultr.py`](../app/llm/vultr.py) |
+| Public demo URL, product-style experience | ✅ **live** — http://139.84.176.16 (demo buttons execute fresh runs on the real stack); static Pages demo (recorded runs, no backend) deploys when the repo flips public | Pages workflow [`.github/workflows/pages.yml`](../.github/workflows/pages.yml) |
+| Recorded video with a "containment moment" | ✅ **recorded** — the `setup-py-exfil` attack: tests pass, then the timeline shows the egress block (`evil.example`), the canary hit and `suspicious → human`, sandboxes destroyed | submitted with the lablab.ai form |
 | Clear architecture + use case explanation | ✅ | [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) |
 
 ## Rules' containment focus areas → implemented mechanisms
