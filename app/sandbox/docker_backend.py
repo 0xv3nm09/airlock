@@ -12,7 +12,7 @@ Containment model (fixed in the Oct 29 audit):
   silently, with an emptiness check so an empty sandbox can't look like a successful run.
 - Python dependencies install into a per-run venv on /workspace (the root filesystem is
   read-only; PATH is ordered so venv binaries win).
-- behaviour() reports per-run signals only: canary values (printed OR written to files),
+- behaviour() reports per-run signals only — differentially attributed: signals the base sandbox produced too are baseline, not the PR's; canary values (printed OR written to files),
   denied writes from stderr, limits from exit codes, connection-error hosts from stderr.
   The shared squid access log is deliberately NOT parsed — its lines can't be attributed
   to one run. A per-run proxy container is the VM-week follow-up (T12).
@@ -235,11 +235,22 @@ class DockerSandboxSession:
     def _hosts_from_stderr(raw: str) -> list[str]:
         hosts: list[str] = []
         for m in re.finditer(
-            r"(?:could not (?:connect|resolve)[^:\n]*[:\s])((?:\d{1,3}\.){3}\d{1,3}|[a-z0-9.\-]+\.[a-z]{2,})",
+            r"(?:could not (?:connect|resolve)[^:\n]*[:\s]\s*)((?:\d{1,3}\.){3}\d{1,3}|[a-z0-9.\-]+\.[a-z]{2,})",
             raw,
             re.I,
         ):
             hosts.append(m.group(1))
+        # proxy denials print differently: pip/npm surface HTTP 403 (Forbidden, E403)
+        # with the target URL — the old pattern missed every one of those (Nov 7 fix).
+        # 404s are deliberately NOT matched: an uninstallable package 404s the registry
+        # on every run and that is not an attack (the install-broken case depends on it).
+        for m in re.finditer(
+            r"""(?im)^(?=.*(?:\b403\b|forbidden|E403)).*?(?:https?://)?((?:[a-z0-9-]+\.)+[a-z]{2,})(?:[/:\s]|$)""",
+            raw,
+        ):
+            h = m.group(1).lower()
+            if h not in hosts and "localhost" not in h:
+                hosts.append(m.group(1))
         return hosts
 
     async def destroy(self) -> None:

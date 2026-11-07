@@ -55,6 +55,11 @@ export default function AboutPage() {
           <li>Encrypted exfiltration over allowed hosts during the install phase.</li>
           <li>Private repositories, non-Python/Node stacks, and browser-side behaviour.</li>
           <li>Prompt-injection patterns are text heuristics — flagged, never proven.</li>
+          <li>
+            Network attempts are read from sandbox stderr — blocked calls that print
+            nothing (silent drops) are invisible; denied connections that surface an HTTP
+            403 or a resolution error are caught.
+          </li>
         </ul>
       </Card>
 

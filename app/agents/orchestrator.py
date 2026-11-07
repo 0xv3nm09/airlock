@@ -214,10 +214,12 @@ class _Orchestrator:
                 await self.trace.log(
                     "tests", tail="install failed; skipping tests so the run cannot read as safe"
                 )
-            # Findings are attributed to the PR sandbox only; the base sandbox is our own
-            # baseline — its signals are logged, never blamed on the PR.
-            findings += await self._observe([pr_s])
-            await self._log_base_behaviour(base_s)
+            # Findings are attributed to the PR sandbox, DIFFERENTIALLY: signals that the
+            # baseline sandbox also produced (a repo whose own tests phone home) are
+            # baseline behaviour, not the change's — logged, never blamed on the PR.
+            base_report = await base_s.behaviour()
+            await self._log_base_behaviour(base_s, base_report)
+            findings += await self._observe([pr_s], baseline=base_report)
         finally:
             await self._destroy_all()
         return findings
@@ -407,10 +409,10 @@ class _Orchestrator:
         ]
 
     # ------------------------------------------------------------- observe
-    async def _log_base_behaviour(self, base_s: SandboxSession) -> None:
+    async def _log_base_behaviour(self, base_s: SandboxSession, rep) -> None:
         """The base sandbox is our own baseline. Its signals are recorded for the trace but
-        never turned into findings against the PR (Oct 29 audit fix)."""
-        rep = await base_s.behaviour()
+        never turned into findings against the PR (Oct 29 audit fix; Nov 7: the report is
+        also used to suppress baseline-matched signals on the PR side)."""
         noisy = rep.network_attempts or rep.canary_hits or rep.fs_denied or rep.limits_hit
         if noisy:
             await self.trace.log(
@@ -419,11 +421,20 @@ class _Orchestrator:
                 tail="baseline sandbox showed unexpected signals; logged, not attributed to the PR",
             )
 
-    async def _observe(self, sessions: list[SandboxSession]) -> list[Finding]:
+    async def _observe(self, sessions: list[SandboxSession], baseline=None) -> list[Finding]:
+        """Signals from the PR sandbox become findings — except those the BASELINE sandbox
+        produced too: a repo that phones home on main would otherwise flag every PR."""
         findings: list[Finding] = []
         for session in sessions:
             rep = await session.behaviour()
             for host in rep.network_attempts:
+                if baseline is not None and host in baseline.network_attempts:
+                    await self.trace.log(
+                        "behaviour",
+                        ref=session.which,
+                        tail=f"host {host} also attempted on base — baseline behaviour, not attributed",
+                    )
+                    continue
                 severity = Severity.critical if "169.254.169.254" in host else Severity.high
                 findings.append(
                     await self._add_finding(
@@ -439,7 +450,11 @@ class _Orchestrator:
                 )
                 self.counters.network_blocked += 1
                 await self.trace.containment("network_blocked", detail=host, ref=session.which)
-            if rep.canary_hits:
+            canary_hits = [
+                h for h in rep.canary_hits
+                if baseline is None or h not in baseline.canary_hits
+            ]
+            if canary_hits:
                 findings.append(
                     await self._add_finding(
                         Finding(
@@ -457,9 +472,16 @@ class _Orchestrator:
                         )
                     )
                 )
-                self.counters.canary_hits += len(rep.canary_hits)
-                await self.trace.containment("canary_hit", detail=", ".join(rep.canary_hits), ref=session.which)
+                self.counters.canary_hits += len(canary_hits)
+                await self.trace.containment("canary_hit", detail=", ".join(canary_hits), ref=session.which)
             for denied in rep.fs_denied:
+                if baseline is not None and baseline.fs_denied:
+                    await self.trace.log(
+                        "behaviour",
+                        ref=session.which,
+                        tail="write denial also seen on base — baseline behaviour, not attributed",
+                    )
+                    continue
                 findings.append(
                     await self._add_finding(
                         Finding(

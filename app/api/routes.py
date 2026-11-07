@@ -2,6 +2,7 @@
 decisions, benchmark results, cookie sessions, public stats."""
 from __future__ import annotations
 
+import asyncio
 import hmac
 import json
 import time
@@ -51,20 +52,26 @@ async def readyz(svc: Annotated[Services, Depends(get_services)]) -> dict:
 
 @router.post("/v1/auth/session")
 async def create_session(
-    body: SessionCreate, svc: Annotated[Services, Depends(get_services)]
+    request: Request, body: SessionCreate, svc: Annotated[Services, Depends(get_services)]
 ) -> JSONResponse:
     """Exchange an API key for an HttpOnly cookie session (60 min). EventSource cannot send
-    headers, so the live timeline for owner runs depends on this cookie."""
+    headers, so the live timeline for owner runs depends on this cookie. The Secure flag
+    follows the ACTUAL request scheme (Caddy's X-Forwarded-Proto included): on the plain-
+    HTTP VM demo a Secure cookie would be dropped by the browser and owner timelines would
+    stall on "queued" (Nov 7 fix)."""
     if not hmac.compare_digest(body.api_key, svc.dev_admin_key):
         raise Unauthorized("invalid API key")
     response = JSONResponse({"ok": True})
+    https = request.url.scheme == "https" or (
+        request.headers.get("x-forwarded-proto", "").split(",")[0].strip() == "https"
+    )
     response.set_cookie(
         SESSION_COOKIE,
         body.api_key,
         httponly=True,
         samesite="strict",
         max_age=3600,
-        secure=svc.settings.env == "prod",
+        secure=https,
     )
     return response
 
@@ -250,7 +257,14 @@ async def stream_events(
             if terminal_seen:
                 return  # finished run: the replay closes the stream, no live wait
             while True:
-                event = await q.get()
+                # SSE comment heartbeat every 15 s: proxies in the chain (the Next rewrite
+                # times an idle stream out at ~30 s) see traffic during long quiet spans
+                # like a 60-90 s install, so the live timeline never stalls.
+                try:
+                    event = await asyncio.wait_for(q.get(), timeout=15.0)
+                except asyncio.TimeoutError:
+                    yield ": keepalive\n\n"
+                    continue
                 if event.seq <= last_seq:
                     continue
                 yield _sse(event)
