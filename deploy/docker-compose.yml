@@ -1,4 +1,4 @@
-# Airlock on one Vultr VM (workbook: Deployment runbook). The API container gets the
+# Airlock on one Vultr VM. The API container gets the
 # Docker socket because it runs OUR code, never PR code — say this in the README.
 services:
   api:

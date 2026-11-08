@@ -1,5 +1,5 @@
 """Static risk scan of the changed files (cheap rules, GuardDog-style) and the high-ROI
-risk ranking that feeds the Planner (workbook: High-ROI strategic planning)."""
+risk ranking that feeds the Planner."""
 from __future__ import annotations
 
 import re

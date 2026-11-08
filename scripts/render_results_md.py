@@ -3,7 +3,7 @@
 
 Reads eval_results/live-benchmark.json (scripts/collect_live_results.py output) plus the
 running stack's /readyz + /v1/stats, and writes a results document with: real stack
-facts, the pipeline & containment diagrams (from the engineering workbook), the full
+facts, the pipeline & containment diagrams, the full
 expected-vs-got table with real tokens/durations, verdict JSON blocks per case, and
 trace excerpts for the containment moments. Nothing is invented — every number comes
 from the collected bundle; missing cases render as "not collected".
@@ -105,8 +105,8 @@ def main() -> None:
     add("```")
     add("")
 
-    # ---- diagrams (workbook) ----
-    add("## Pipeline (cheap checks first — workbook §\"Upgraded pipeline\")")
+    # ---- diagrams ----
+    add("## Pipeline (cheap checks first)")
     add("")
     add("```text")
     add("""PR URL
@@ -137,7 +137,7 @@ def main() -> None:
 Destroy sandboxes ──── on every path; the trace + SQLite record survive""")
     add("```")
     add("")
-    add("## Containment model (workbook \"What a judge checks\")")
+    add("## Containment model")
     add("")
     add("```text")
     add("""┌─────────────────────────── sandbox (per run, ×2: base + PR) ──────────────────────────┐
@@ -241,7 +241,7 @@ Destroy sandboxes ──── on every path; the trace + SQLite record survive"
         " install/`-e .` path behaves differently than on stock Docker. The run therefore"
         " reports `safe_to_merge` — a false negative for this crafted case. Root cause"
         " chain is understood and the fix is scheduled with the per-run proxy attribution"
-        " work (workbook T12): fs-denial evidence belongs in the sandbox record, not in"
+        " work: fs-denial evidence belongs in the sandbox record, not in"
         " pytest's capture. We ship the miss in the results rather than quietly editing"
         " the expectation.")
     add("")

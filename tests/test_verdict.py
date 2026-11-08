@@ -53,7 +53,7 @@ def test_safe_and_inconclusive():
 
 
 def test_setup_failure_cannot_read_safe():
-    """Oct 29 audit regression: install failed → tests meaningless → inconclusive, human."""
+    """Regression: install failed → tests meaningless → inconclusive, human."""
     label, conf, _ = verdict_from_findings([make("setup_failure", 0.90)], tests_ran=False)
     assert label is VerdictLabel.inconclusive
     assert route_for(label, conf, _policy()) is Route.human_review

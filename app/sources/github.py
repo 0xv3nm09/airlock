@@ -1,5 +1,5 @@
 """Real GitHub source for public PRs. Lifts the 60 req/h anonymous limit with a read-only
-token; private repos are out of scope (workbook: Scope)."""
+token; private repos are out of scope."""
 from __future__ import annotations
 
 import re

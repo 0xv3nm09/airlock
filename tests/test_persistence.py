@@ -1,5 +1,5 @@
 """Persistence across restarts: runs, findings, events and API keys must survive the
-backend process dying and coming back — the permanent fix for "data vanishes" (Oct 31)."""
+backend process dying and coming back — the permanent fix for "data vanishes"."""
 import time
 
 from fastapi.testclient import TestClient

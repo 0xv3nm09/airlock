@@ -58,7 +58,7 @@ async def create_session(
     headers, so the live timeline for owner runs depends on this cookie. The Secure flag
     follows the ACTUAL request scheme (Caddy's X-Forwarded-Proto included): on the plain-
     HTTP VM demo a Secure cookie would be dropped by the browser and owner timelines would
-    stall on "queued" (Nov 7 fix)."""
+    stall on "queued"."""
     if not hmac.compare_digest(body.api_key, svc.dev_admin_key):
         raise Unauthorized("invalid API key")
     response = JSONResponse({"ok": True})
@@ -89,7 +89,7 @@ def _is_trusted_proxy(host: str) -> bool:
 def _client_ip_for_limit(request: Request) -> str:
     """Rate-limit key. X-Forwarded-For is honored ONLY when the direct peer is our own
     proxy (loopback/private), and we take the LAST hop — the one our proxy appended.
-    A client-supplied first hop is spoofable and resets nothing (Oct 29 audit fix)."""
+    A client-supplied first hop is spoofable and resets nothing."""
     direct = request.client.host if request.client else "anonymous"
     forwarded = request.headers.get("x-forwarded-for")
     if forwarded and _is_trusted_proxy(direct):

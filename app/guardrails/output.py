@@ -50,7 +50,7 @@ def redact_with_canaries(text: str, canary_values: dict[str, str]) -> str:
 
 
 def check_command(command: str, policy: Policy) -> None:
-    """Gate 4 of the tool registry, hardened (Oct 28 audit):
+    """Gate 4 of the tool registry, hardened:
     1. metacharacters rejected (kills `;`, `&&`, `|`, `$()`, backticks, redirects, newlines),
     2. deny patterns,
     3. allow-list by TOKEN boundary — `pytestx` is not `pytest` (startswith() was bypassable),

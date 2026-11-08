@@ -1,6 +1,6 @@
 "use client";
 
-/* Live run state: a reducer over the SSE event stream (workbook: "Live run state").
+/* Live run state: a reducer over the SSE event stream.
  * Replaying a run's events rebuilds exactly what was shown live — the trace is the truth.
  * Every event is applied once, keyed by its seq: EventSource auto-reconnects replay the
  * history after a reconnect, and double-applying would duplicate findings and counters. */

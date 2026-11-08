@@ -182,7 +182,7 @@ export function LiveValueCard() {
   );
 }
 
-/** A real recorded run (dummy mode), rendered as the judges will see it. */
+/** A real recorded run (dummy mode), rendered as it appears in the run view. */
 export function SampleVerdict() {
   return (
     <Reveal className="h-full">
@@ -228,10 +228,10 @@ curl: (6) Could not resolve host: evil.example   ← blocked`}
 
 export function StatBand() {
   const stats = [
-    // Honest labels (Oct 29 audit): 8 of the 17 library cases are attacks; tests run
+    // Honest labels: 8 of the 17 library cases are attacks; tests run
     // locally, CI lands with the repo.
     { value: 8, suffix: "/8", label: "attack cases caught (17-case library)" },
-    // Keep in sync with the suite (92 as of Oct 29) — bump when tests are added.
+    // Keep in sync with the suite — bump when tests are added.
     { value: 92, suffix: "", label: "tests green" },
     { value: 5, suffix: "", label: "agents, code-owned" },
     { value: 2, suffix: "", label: "sandboxes per run" },

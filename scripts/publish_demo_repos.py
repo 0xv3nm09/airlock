@@ -8,8 +8,7 @@ sandbox: install-time setup.py exfil with a canary echo, postinstall curl, rm -r
 metadata probes, fork/memory/loop bombs (killed by the sandbox limits), prompt
 injections (body and code comment), obfuscated exec, broken baselines and installs.
 
-The demo targets live in THIS repo (blind-run pattern: demo-shop/ ships with the
-project) so judges can read the exact attack payloads and watch the sandbox catch them.
+The demo targets live in THIS repo so anyone can read the exact attack payloads and watch the sandbox catch them.
 
 Usage:
   python scripts/publish_demo_repos.py            # create everything under airlock-demo
@@ -32,7 +31,7 @@ from pathlib import Path
 
 # Demo repos live under the maintainer account and are PRIVATE: the VM authenticates
 # every GitHub fetch with AIRLOCK_GITHUB_TOKEN, so public visibility is not required.
-# Flip public only if judges should browse the raw PRs (payloads also live in THIS file).
+# Flip public only if reviewers should browse the raw PRs (payloads also live in THIS file).
 ORG = "airlock-demo"
 REPO_ROOT = Path(__file__).resolve().parent.parent
 

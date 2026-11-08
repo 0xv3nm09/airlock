@@ -1,7 +1,6 @@
 /* Static-demo data source for the GitHub Pages build (AIRLOCK_STATIC_BUILD=1 +
  * NEXT_PUBLIC_DEMO_MODE=1). The snapshot holds real recorded runs exported from the
- * live store by scripts/export_demo_snapshot.py — the same pattern as blind-run's
- * bundled data.js. In demo mode no backend call ever happens, so the site can't go
+ * live store by scripts/export_demo_snapshot.py. In demo mode no backend call ever happens, so the site can't go
  * empty or show "backend offline". */
 
 import snapshotJson from "@/demo/airlock-snapshot.json";

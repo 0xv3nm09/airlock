@@ -231,7 +231,7 @@ def test_public_stats_and_recent_feed():
 
 def test_demo_rate_limit_ignores_spoofed_first_hop():
     """A client-supplied first XFF hop must not reset the limit; only the LAST hop —
-    the one our own proxy appended — keys the limiter (Oct 29 audit fix)."""
+    the one our own proxy appended — keys the limiter."""
     with TestClient(create_app()) as client:
         codes = []
         for i in range(12):
@@ -260,7 +260,7 @@ def test_verdict_event_carries_summary_and_reasons():
 
 def test_benchmark_cases_are_openable_as_live_runs():
     """Every library case can be run live (public, demo-scope) and then opened at /runs/{id}
-    with verdict, receipts and token usage — Oct 29 request from the benchmark table."""
+    with verdict, receipts and token usage."""
     with TestClient(create_app()) as client:
         cases = client.get("/v1/benchmark/cases").json()
         assert len(cases) == 19
@@ -284,7 +284,7 @@ def test_benchmark_cases_are_openable_as_live_runs():
 
 
 def test_team_api_key_lifecycle():
-    """Oct 29: team keys — create (admin) → use (owner-scoped) → isolate → revoke."""
+    """Team keys — create (admin) → use (owner-scoped) → isolate → revoke."""
     with TestClient(create_app()) as client:
         admin_key = client.app.state.services.dev_admin_key
         # create a key for a team

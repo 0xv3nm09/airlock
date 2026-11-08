@@ -45,7 +45,7 @@ AIRLOCK_SESSION_SECRET=<32+ random bytes>
 | Stage | LLM | Sandbox | Where |
 | --- | --- | --- | --- |
 | Mac (optional, after key exists) | vultr | dummy | gVisor doesn't run on macOS — sandbox stays dummy locally, everything else works |
-| Vultr VM (the real thing) | vultr | docker/runsc | deploy per `deploy/README.md` + workbook runbook |
+| Vultr VM (the real thing) | vultr | docker/runsc | deploy per `deploy/README.md` |
 
 ## 5. Verify (10 min)
 
@@ -72,9 +72,9 @@ curl -s localhost:8000/readyz             # must read: llm vultr · sandbox dock
 - `/readyz` lies about nothing: if it says dummy, it is dummy.
 - Keep the dummy `.env` values commented in the file so demo-day fallback is instant.
 
-## 7. Public demo site on GitHub Pages (like blind-run)
+## 7. Public demo site on GitHub Pages
 
-The same pattern as `0xv3nm09.github.io/blind-run`: a static build of the web app that
+A static build of the web app that
 needs **no backend** — every page reads a committed snapshot of real recorded runs
 (`web/demo/airlock-snapshot.json`), so the public site can never go empty or show
 "backend offline". Nav shows "public demo · recorded runs"; writes return a clear

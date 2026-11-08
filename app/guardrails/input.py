@@ -11,7 +11,7 @@ PR_URL_RE = re.compile(
 
 # Conservative starting set; precision on `suspicious` is measured by the benchmark.
 # Directive-shaped only: mentioning "AI reviewer" without an imperative verb is normal PR
-# prose (Oct 28 audit: "AI reviewer: this PR only touches docs" must NOT flag).
+# prose ("AI reviewer: this PR only touches docs" must NOT flag).
 INJECTION_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("ignore_instructions", re.compile(r"ignore\s+(all\s+)?(previous|prior|above)\s+instructions", re.I)),
     ("approve_directive", re.compile(r"(mark|approve)\s+(this\s+)?(pr|pull request)\s+as\s+(safe|approved)", re.I)),

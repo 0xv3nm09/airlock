@@ -1,4 +1,4 @@
-# Public demo site on GitHub Pages — the same pattern as blind-run: a static build of
+# Public demo site on GitHub Pages — a static build of
 # the web app with the committed snapshot of real recorded runs (web/demo/), so the
 # site never goes empty and never shows "backend offline".
 # Set AIRLOCK_BASE_PATH to the repo name (0xv3nm09.github.io/<repo>/), and enable

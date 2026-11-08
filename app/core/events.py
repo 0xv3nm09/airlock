@@ -1,5 +1,5 @@
 """Trace bus + per-run emitter. Every step emits span/log/finding/containment/verdict/status
-events (workbook: Event catalogue). The bus fans out to live SSE subscribers; the full trace
+events. The bus fans out to live SSE subscribers; the full trace
 lives in the repository for replay."""
 from __future__ import annotations
 

@@ -1,5 +1,5 @@
 /* Hand-written mirrors of the backend contracts (app/schemas.py, Event catalogue).
- * Swap to openapi-typescript generation when the API surface settles (workbook FE spec). */
+ * Swap to openapi-typescript generation when the API surface settles. */
 
 export type RunStatus = "queued" | "running" | "completed" | "failed" | "cancelled";
 export type VerdictLabel = "safe_to_merge" | "needs_changes" | "suspicious" | "inconclusive";

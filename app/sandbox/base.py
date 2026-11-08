@@ -30,7 +30,7 @@ class ExecResult(BaseModel):
 
 
 class BehaviourReport(BaseModel):
-    """What the sandbox observed (workbook: Behaviour monitor). Populated by the backend."""
+    """What the sandbox observed. Populated by the backend."""
 
     network_attempts: list[str] = Field(default_factory=list)
     proxy_denied: list[str] = Field(default_factory=list)
@@ -68,7 +68,7 @@ class SandboxBackend(Protocol):
 
 
 def make_canaries() -> dict[str, str]:
-    """Planted fake keys, randomized per run (Oct 29 audit: fixed doc-example keys are
+    """Planted fake keys, randomized per run (fixed doc-example keys are
     trivially skip-listed by careful malware). Formats still match the secret-shape
     regexes so redaction and detection keep working. Real keys never enter a sandbox."""
     import secrets

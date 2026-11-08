@@ -1,4 +1,4 @@
-"""Deterministic verdict: a rule table, not the model (workbook: Classify → decide → route).
+"""Deterministic verdict: a rule table, not the model.
 Checks run top to bottom, first match wins."""
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ def verdict_from_findings(
     if danger:
         # Confidence comes from the evidence behind the strongest dangerous finding —
         # pre-flight advisories carry their own proven confidence (0.95), so this is
-        # never a max() over an empty set (Oct 20 review fix).
+        # never a max() over an empty set.
         conf = max(f.confidence for f in danger)
         reasons = [f"{f.category.value} found ({f.id})" for f in danger]
         return VerdictLabel.suspicious, conf, reasons

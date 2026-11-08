@@ -1,4 +1,4 @@
-"""API dependencies: principal from X-API-Key (session JWTs come with ticket T09),
+"""API dependencies: principal from X-API-Key (plus an HttpOnly cookie session for the browser),
 scope enforcement, and the services accessor."""
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from app.services import Services
 ALL_SCOPES = {"runs:read", "runs:write", "runs:approve", "admin"}
 
 # HttpOnly cookie set by POST /v1/auth/session so the browser's EventSource (which cannot
-# send headers) can stream owner runs — workbook FE spec "Backend changes the frontend needs".
+# send headers) can stream owner runs.
 SESSION_COOKIE = "airlock_session"
 
 

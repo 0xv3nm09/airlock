@@ -1,7 +1,6 @@
 # Deployment assets (Vultr VM)
 
-Everything the VM needs beyond the app code. Full steps: the **Deployment runbook** section
-of `../Airlock Engineering Workbook.md`.
+Everything the VM needs beyond the app code. Switch-over steps: [`GO-LIVE.md`](GO-LIVE.md).
 
 ## Contents
 
@@ -38,5 +37,5 @@ docker compose -f deploy/docker-compose.yml up -d --build
 - PATH inside the container puts `/workspace/.venv/bin` first (Python).
 
 If `docker network connect` on a running gVisor container ever misbehaves on the VM, the
-documented fallback is the workbook's install→commit→fresh-none-container variant (requires
+documented fallback is an install→commit→fresh-none-container variant (requires
 a writable rootfs — rejected for containment; only revisit with strong justification).

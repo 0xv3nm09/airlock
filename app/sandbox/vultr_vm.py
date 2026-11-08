@@ -1,4 +1,4 @@
-"""Throwaway Vultr VM per run — the stretch isolation boundary (workbook: Optional VM per run).
+"""Throwaway Vultr VM per run — the stretch isolation boundary.
 
 Plan: POST /v2/instances with a prepared snapshot + cloud-init user_data, DELETE in finally,
 janitor tags every instance `airlock`. Vultr API v2 allows ~20 req/s (verified Oct 27) —
@@ -12,4 +12,4 @@ class VultrVMSandbox:
     name = "vultr_vm"
 
     def __init__(self, *args, **kwargs):
-        raise NotImplementedError("VM-per-run is a stretch goal; implement on the VM (workbook T27)")
+        raise NotImplementedError("VM-per-run is a stretch goal; implement on the VM")

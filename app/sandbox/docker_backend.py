@@ -1,11 +1,11 @@
-"""Docker + gVisor (runsc) sandbox backend. Runs on the Vultr VM (tickets T11/T12).
+"""Docker + gVisor (runsc) sandbox backend. Runs on the Vultr VM.
 
-Containment model (fixed in the Oct 29 audit):
+Containment model:
 - Containers are created with network_mode="none" — no internet by default, ever. The
   registry-only egress network is attached for the install phase and detached before
   tests. Attaching to a running container is a supported Docker operation; if it fails
   we RAISE so the problem is loud on the VM on day 1 (fallback design, if ever needed:
-  the workbook's install→commit→fresh-none-container variant, which requires a writable
+  an install→commit→fresh-none-container variant, which requires a writable
   rootfs and was rejected for containment).
 - The orchestrator (trusted code) fetches the repo tarball and materializes it into
   /workspace (the writable tmpfs) — NOT /tmp, and failures raise instead of passing
@@ -15,7 +15,7 @@ Containment model (fixed in the Oct 29 audit):
 - behaviour() reports per-run signals only — differentially attributed: signals the base sandbox produced too are baseline, not the PR's; canary values (printed OR written to files),
   denied writes from stderr, limits from exit codes, connection-error hosts from stderr.
   The shared squid access log is deliberately NOT parsed — its lines can't be attributed
-  to one run. A per-run proxy container is the VM-week follow-up (T12).
+  to one run. A per-run proxy container is the planned follow-up.
 """
 from __future__ import annotations
 
@@ -241,7 +241,7 @@ class DockerSandboxSession:
         ):
             hosts.append(m.group(1))
         # proxy denials print differently: pip/npm surface HTTP 403 (Forbidden, E403)
-        # with the target URL — the old pattern missed every one of those (Nov 7 fix).
+        # with the target URL — the old pattern missed every one of those.
         # 404s are deliberately NOT matched: an uninstallable package 404s the registry
         # on every run and that is not an attack (the install-broken case depends on it).
         for m in re.finditer(

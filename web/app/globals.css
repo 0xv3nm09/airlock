@@ -135,7 +135,7 @@
   body {
     background: var(--bg);
     color: var(--fg);
-    font-size: 16px; /* workbook UI rule: 16 px minimum body text, readable in a video */
+    font-size: 16px; /* UI rule: 16 px minimum body text, readable in a video */
   }
   :focus-visible {
     outline: 2px solid var(--focus);

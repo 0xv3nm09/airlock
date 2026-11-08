@@ -1,6 +1,6 @@
 """LLM client interface + structured-output helper with the self-correction loop.
 
-Hardened (Oct 28 audit): transport/rate-limit errors from the provider are retried here so
+Hardened: transport/rate-limit errors from the provider are retried here so
 the callers' deterministic fallbacks actually engage instead of failing the run; the schema
 instruction is merged into the FIRST system message (many open models reject a second
 system message after user content); and reasoning-model `<think>` blocks plus markdown

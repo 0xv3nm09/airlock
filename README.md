@@ -15,8 +15,11 @@ via Vultr Serverless Inference (`minimax-m3.1-flash`), PR execution in Docker + 
 execute fresh runs on that stack; offline **dummy mode** remains the zero-credit fallback
 and what CI tests.
 
+**Try it:** live stack at http://139.84.176.16 (demo buttons execute fresh runs) ·
+static demo of recorded runs at https://0xv3nm09.github.io/airlock/
+
 **Docs:** [Live benchmark results](docs/BENCHMARK-RESULTS.md) ·
-[Architecture & use case](docs/ARCHITECTURE.md) · [Judging map](docs/JUDGING.md)
+[Architecture & use case](docs/ARCHITECTURE.md) · [Evidence map](docs/EVIDENCE.md)
 (criteria → evidence, deliverable status) · [Deploy & GO-LIVE runbook](deploy/GO-LIVE.md)
 
 ## Results — 19-case attack library, executed live (Nov 2026)
@@ -104,24 +107,25 @@ nothing but its own runs, and revocation is instant from the Dashboard.
 
 ## Shipped during build week
 
-- Vultr VM deployment: FastAPI + web + Postgres + squid egress + Caddy behind compose;
-  Docker + gVisor (`runsc`) sandboxes validated live (T11/T12).
+- Vultr VM deployment: FastAPI + Next.js + squid egress proxy + Caddy behind compose;
+  Docker + gVisor (`runsc`) sandboxes validated live.
 - `VultrLLM` end-to-end against the live model catalog — models picked by testing
-  (`minimax-m3.1-flash` for every agent role), never hardcoded (T07).
+  (`minimax-m3.1-flash` for every agent role), never hardcoded.
 - SQLite write-through persistence, team API keys, static Pages demo, 18/19 live benchmark.
+- Host exposure kept minimal: only SSH (:22) and Caddy (:80/:443) are reachable.
 
-## Remaining before submission (Nov 8)
+## Roadmap
 
-- Repo goes public + Pages enabled (the static demo deploys on the flip — workflow ready).
-- Containment-moment video, recorded on the live deployment (checklist in
-  [`docs/JUDGING.md`](docs/JUDGING.md)).
-- Cloud firewall rule verification needs the account's API IP allowlist updated; host-level
-  exposure is already minimal (only sshd :22 and Caddy :80/:443 are reachable).
+- GitHub App: runs on every PR without a workflow file, covers private repos, posts the
+  verdict back as a check.
+- Per-run egress proxy so denied connections are attributed from the proxy log, not only
+  from sandbox output (closes the `rm-rf-test`-style evidence gaps).
+- Postgres-backed store and a benchmark on real-world repositories and more models.
+- Per-team policies and multi-region Vultr runs.
 
 ## Public demo site (GitHub Pages)
 
-A static build of `web/` that serves recorded runs with no backend — the same pattern as
-blind-run's Pages site. The snapshot (`web/demo/airlock-snapshot.json`) is regenerated
+A static build of `web/` that serves recorded runs with no backend. The snapshot (`web/demo/airlock-snapshot.json`) is regenerated
 from the real store with `python scripts/export_demo_snapshot.py`; `.github/workflows/pages.yml`
 builds and deploys it on push. Setup steps and build notes: [`deploy/GO-LIVE.md` §7](deploy/GO-LIVE.md).
 
@@ -142,7 +146,7 @@ app/
   eval/         benchmark runner
 policies/       policy_v1.yaml (versioned; stamped on every run)
 eval_cases/     19 seeded cases with expected verdicts
-docs/           architecture + judging map
+docs/           architecture, evidence map, results, model card
 ```
 
 Full architecture and data flow: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
@@ -153,7 +157,7 @@ Full architecture and data flow: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 | --- | --- |
 | [`docs/BENCHMARK-RESULTS.md`](docs/BENCHMARK-RESULTS.md) | **Live results** — expected-vs-got table, per-case verdict JSON, containment counters, trace excerpts, pipeline + containment diagrams, known gaps. Rendered from `eval_results/live-benchmark.json` by `scripts/render_results_md.py`. |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Use case, full data-flow diagram, twin-sandbox rationale, trust boundaries, challenge stack mapping. |
-| [`docs/JUDGING.md`](docs/JUDGING.md) | The four judging criteria mapped to evidence, deliverables checklist with status, containment focus areas → mechanisms, the 60-second judge path. |
+| [`docs/EVIDENCE.md`](docs/EVIDENCE.md) | Challenge criteria mapped to evidence, deliverables with status, containment focus areas → mechanisms, a 60-second tour. |
 | [`docs/MODEL_CARD.md`](docs/MODEL_CARD.md) | Which models the five agents use, what each may/may not do, evaluation + limitations. |
 | [`deploy/GO-LIVE.md`](deploy/GO-LIVE.md) | Dummy→Vultr switch-over runbook (env vars, model selection, verification) + GitHub Pages demo setup (§7). |
 | [`deploy/README.md`](deploy/README.md) | Compose stack, Caddy, squid egress proxy, sandbox images — how the VM deployment fits together. |
@@ -162,6 +166,3 @@ Full architecture and data flow: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 | [`eval_cases/cases.yaml`](eval_cases/cases.yaml) | The 19-case seeded attack library: URL + expected verdict per case — the benchmark's source of truth. |
 | [`eval_results/live-benchmark.json`](eval_results/live-benchmark.json) | Raw machine bundle of the live sweep (runs, verdicts, counters, usage, full traces). |
 | [`policies/policy_v1.yaml`](policies/policy_v1.yaml) | Versioned runtime policy — egress allow-list, command policy, limits; stamped on every run. |
-
-Reference repos (same builder, same demo pattern): [blind-run](https://github.com/0xv3nm09/blind-run)
-(Nebius × NVIDIA hackathon winner entry — the static-demo pattern Airlock's Pages site follows).

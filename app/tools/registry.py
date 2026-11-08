@@ -1,4 +1,4 @@
-"""Tool registry with per-agent allow-lists (workbook: Flowchart — one tool call).
+"""Tool registry with per-agent allow-lists.
 A model's tool call is untrusted input: four gates before anything executes."""
 from __future__ import annotations
 

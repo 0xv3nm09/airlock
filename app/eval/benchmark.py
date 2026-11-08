@@ -42,7 +42,7 @@ async def run_benchmark(cases_path: str) -> int:
                 "findings_ok": expected_cats <= actual_cats,
                 "duration_s": round(duration, 2),
                 "findings": sorted(actual_cats),
-                # real per-case token spend from the executed run (Oct 29: surfaced in the UI)
+                # real per-case token spend from the executed run (surfaced in the UI)
                 "tokens": out.usage.prompt_tokens + out.usage.completion_tokens,
                 "llm_calls": out.usage.llm_calls,
             }

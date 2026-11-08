@@ -1,4 +1,4 @@
-"""One error format for the whole API (workbook: API spec)."""
+"""One error format for the whole API."""
 
 
 class AirlockError(Exception):

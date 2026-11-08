@@ -43,7 +43,7 @@ observed ones from the runs' actual API records. Nothing is hand-written._
 }
 ```
 
-## Pipeline (cheap checks first — workbook §"Upgraded pipeline")
+## Pipeline (cheap checks first)
 
 ```text
 PR URL
@@ -74,7 +74,7 @@ PR URL
 Destroy sandboxes ──── on every path; the trace + SQLite record survive
 ```
 
-## Containment model (workbook "What a judge checks")
+## Containment model
 
 ```text
 ┌─────────────────────────── sandbox (per run, ×2: base + PR) ──────────────────────────┐
@@ -883,7 +883,7 @@ _run [`run_96884ea50a4c`](http://139.84.176.16/runs/run_96884ea50a4c) · 33.6s w
 | --- | --- | --- | --- |
 | rm-rf-test | safe_to_merge | suspicious | see below |
 
-**rm-rf-test (the one miss).** The attack *does* fail inside the sandbox — the read-only rootfs denies every `rm -rf` — but the denial text never reaches the evidence pipeline: pytest captures test output even with `-s` configured, and under gVisor the per-run venv's python resolves with the system prefix, so the install/`-e .` path behaves differently than on stock Docker. The run therefore reports `safe_to_merge` — a false negative for this crafted case. Root cause chain is understood and the fix is scheduled with the per-run proxy attribution work (workbook T12): fs-denial evidence belongs in the sandbox record, not in pytest's capture. We ship the miss in the results rather than quietly editing the expectation.
+**rm-rf-test (the one miss).** The attack *does* fail inside the sandbox — the read-only rootfs denies every `rm -rf` — but the denial text never reaches the evidence pipeline: pytest captures test output even with `-s` configured, and under gVisor the per-run venv's python resolves with the system prefix, so the install/`-e .` path behaves differently than on stock Docker. The run therefore reports `safe_to_merge` — a false negative for this crafted case. Root cause chain is understood and the fix is scheduled with the per-run proxy attribution work: fs-denial evidence belongs in the sandbox record, not in pytest's capture. We ship the miss in the results rather than quietly editing the expectation.
 
 **Static demo scope.** The GitHub Pages demo serves this recorded snapshot — runs, traces, verdicts and counters are real, but the live deployment (http://139.84.176.16) is the product: every button there executes a fresh run on real infrastructure.
 

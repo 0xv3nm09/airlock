@@ -1,5 +1,5 @@
 """Pydantic contracts shared by API, agents, store and tests. Enum values are part of the
-data contract (workbook: Data contracts) — never rename once the UI uses them."""
+data contract — never rename once the UI uses them."""
 from __future__ import annotations
 
 from datetime import datetime, timezone

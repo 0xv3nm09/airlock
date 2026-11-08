@@ -41,7 +41,7 @@ export default function ReviewPage() {
   }, [reloadTick]);
 
   // Poll every 5 s: suspicious verdicts land while you're watching — a one-shot load
-  // showed an empty queue that only "came back" on manual reload (Oct 31 fix).
+  // showed an empty queue that only "came back" on manual reload.
   useEffect(() => {
     const id = window.setInterval(() => setReloadTick((t) => t + 1), 5000);
     return () => window.clearInterval(id);

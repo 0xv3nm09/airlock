@@ -122,7 +122,7 @@ async def test_events_form_a_replayable_trace(svc):
 
 
 async def test_broken_baseline_is_inconclusive_not_safe(svc):
-    """Oct 29 audit regression: tests failing on BOTH base and PR must never read safe."""
+    """Regression: tests failing on BOTH base and PR must never read safe."""
     record = await _run(svc, "https://github.com/0xv3nm09/broken-baseline/pull/18")
     assert record.out.verdict is not None
     assert record.out.verdict.label is VerdictLabel.inconclusive

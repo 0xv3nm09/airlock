@@ -94,4 +94,4 @@ behaviour finding to the PR sandbox only when the base sandbox did not do the sa
 | Vultr VM as control/orchestration | FastAPI + orchestrator + queue run on the VM; `deploy/docker-compose.yml` is the unit |
 | Vultr Serverless Inference for agent LLM calls | `app/llm/vultr.py` against `api.vultrinference.com/v1`; provider set via env, models picked from the live catalog |
 | Sandbox boundary outside the app process | Docker + gVisor containers; optional throwaway VM-per-run path stubbed in `app/sandbox/vultr_vm.py` (post-event roadmap) |
-| Containment focus (isolation, secrets, limits, lifecycle) | See [`JUDGING.md`](JUDGING.md) — each focus area maps to implemented mechanisms |
+| Containment focus (isolation, secrets, limits, lifecycle) | See [`EVIDENCE.md`](EVIDENCE.md) — each focus area maps to implemented mechanisms |

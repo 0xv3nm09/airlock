@@ -15,7 +15,7 @@ from app.guardrails.input import scan_prompt_injection
 from app.guardrails.output import check_command, redact
 from app.preflight.osv import check_known_malicious, check_package_age
 from app.preflight.static_scan import rank_files, scan_diff
-from app.sandbox.base import RepoSpec, SandboxSession
+from app.sandbox.base import RepoSpec, SandboxSession, make_canaries
 from app.schemas import (
     ContainmentCounters,
     Evidence,
@@ -168,11 +168,7 @@ class _Orchestrator:
     # ------------------------------------------------------------ detonate
     async def _detonate(self, pr, plan) -> list[Finding]:
         svc = self.svc
-        self.canaries = {
-            "AWS_ACCESS_KEY_ID": "AKIAIOSFODNN7EXAMPLE",
-            "GITHUB_TOKEN": "ghp_" + "C" * 36,
-            "OPENAI_API_KEY": "sk-canary-" + "X" * 24,
-        }
+        self.canaries = make_canaries()  # fresh, format-valid decoys per run
         await self.trace.span_start("sandbox.create")
 
         async def _create(ref: Literal["base", "pr"]) -> SandboxSession:
@@ -194,7 +190,7 @@ class _Orchestrator:
             if tarball:
                 await session.materialize(tarball)
 
-        # Two-phase network (workbook): registry-only egress during install, none for tests.
+        # Two-phase network: registry-only egress during install, none for tests.
         # Containers are created network-less; this attaches the proxy network temporarily.
         await asyncio.gather(base_s.use_network(True), pr_s.use_network(True))
 
@@ -411,7 +407,7 @@ class _Orchestrator:
     # ------------------------------------------------------------- observe
     async def _log_base_behaviour(self, base_s: SandboxSession, rep) -> None:
         """The base sandbox is our own baseline. Its signals are recorded for the trace but
-        never turned into findings against the PR (Oct 29 audit fix; Nov 7: the report is
+        never turned into findings against the PR (the report is
         also used to suppress baseline-matched signals on the PR side)."""
         noisy = rep.network_attempts or rep.canary_hits or rep.fs_denied or rep.limits_hit
         if noisy:

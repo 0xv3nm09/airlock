@@ -73,7 +73,7 @@ export default function DashboardPage() {
 
   const refresh = useCallback(async () => {
     // A failed poll keeps the last good numbers on screen (only the indicator changes) —
-    // blanking to zero on a transient hiccup read as "everything disappeared" (Oct 29 fix).
+    // blanking to zero on a transient hiccup read as "everything disappeared".
     api.stats()
       .then((s) => {
         setStats(s);
@@ -605,7 +605,7 @@ export default function DashboardPage() {
   );
 }
 
-/* ---- Automate card: team API keys + CI integration (Oct 29) ---- */
+/* ---- Automate card: team API keys + CI integration ---- */
 function AutomateCard({ onKeysChanged }: { onKeysChanged: () => void }) {
   const [keys, setKeys] = useState<ApiKeyInfo[] | null>(null);
   const [owner, setOwner] = useState("");
@@ -737,7 +737,7 @@ function AutomateCard({ onKeysChanged }: { onKeysChanged: () => void }) {
             </ul>
           )}
           <p className="mt-2 text-xs text-muted">
-            Keys live in this instance&apos;s memory (SQL persistence is T08). Team keys never
+            Keys persist in this instance&apos;s store (only the hash is kept). Team keys never
             see another owner&apos;s runs, and real cloud credentials never enter a sandbox —
             only planted canaries do.
           </p>

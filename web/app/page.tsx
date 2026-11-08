@@ -18,7 +18,7 @@ import {
 import { Button, Card, CardTitle } from "@/components/ui";
 import { Reveal } from "@/components/motion";
 
-/* Hero coverage chips — the concrete answer to "what are we covering?" (Oct 30). */
+/* Hero coverage chips — the concrete answer to "what are we covering?". */
 const COVERAGE = [
   { icon: <IconGlobe width={13} height={13} />, tone: "text-c-net", label: "network egress" },
   { icon: <IconKey width={13} height={13} />, tone: "text-c-canary", label: "canary secrets" },
@@ -190,7 +190,7 @@ export default function Landing() {
         </div>
       ) : null}
 
-      {/* ---- demo PRs (directly under the hero: judges try it first) ---- */}
+      {/* ---- demo PRs (directly under the hero: try it first) ---- */}
       <section aria-label="Demo PRs">
         <Reveal>
           <h2 className="mb-2 text-center text-2xl font-bold tracking-tight">Try it in 60 seconds</h2>

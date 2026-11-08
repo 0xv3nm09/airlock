@@ -3,9 +3,9 @@
 broken object-level authorisation. Demo runs are public-read; other users' runs return
 not_found so IDs don't leak.
 
-Persistence (Oct 31): runs, findings, events and API keys survive backend restarts via a
+Persistence: runs, findings, events and API keys survive backend restarts via a
 coalesced write-through snapshot — the permanent fix for "data vanishes between runs".
-Ticket T08 later swaps this engine for Postgres via SQLAlchemy; the repository API stays.
+A later step swaps this engine for Postgres via SQLAlchemy; the repository API stays.
 """
 from __future__ import annotations
 
@@ -142,7 +142,7 @@ class InMemoryRepository:
     def list_all(self) -> list[RunOut]:
         return [r.out for r in self._runs.values()]
 
-    # --- API keys (workbook spec: POST /v1/admin/keys) — hash stored, plain shown once ---
+    # --- API keys — hash stored, plain shown once ---
     def create_api_key(self, key_id: str, owner_id: str, secret_hash: str, scopes: list[str]) -> None:
         self._keys[key_id] = {
             "owner_id": owner_id,

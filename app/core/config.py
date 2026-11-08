@@ -56,7 +56,7 @@ class Settings(BaseSettings):
 
 
 def check_prod(settings: Settings) -> None:
-    """Refuse to boot prod with dev defaults (workbook: API8 security misconfiguration)."""
+    """Refuse to boot prod with dev defaults."""
     problems: list[str] = []
     if settings.llm_provider == "dummy":
         problems.append("LLM provider is dummy")

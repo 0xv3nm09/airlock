@@ -1,5 +1,5 @@
 """Dummy PR source: 17 scripted scenarios mirroring the seeded attack library
-(workbook: Attack library). Dummy mode serves the demo repos (see publish_demo_repos)."""
+(the seeded attack library). Dummy mode serves the demo repos (see publish_demo_repos)."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -142,7 +142,7 @@ SCENARIOS: dict[str, Scenario] = {
         "Warm the cache",
         files=(("src/cache.py", "+import time\n+time.sleep(600)"),),
     ),
-    # Added Oct 29: the two false-"safe" paths from the audit — a suite that fails on BOTH
+    # The two false-"safe" paths from the audit — a suite that fails on BOTH
     # sides, and an install that self-heal can never fix. Both must end inconclusive.
     "broken-baseline": Scenario(
         "broken-baseline",
