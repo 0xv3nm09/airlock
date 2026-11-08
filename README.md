@@ -1,7 +1,7 @@
 # Airlock
 
 <p align="center">
-  <img src="docs/screenshots/demo.gif" alt="Airlock live demo: the dashboard's real numbers and containment feed, a malicious PR caught red-handed (suspicious, 90% confidence, canary finding), and the full trace inspector" width="820">
+  <img src="docs/screenshots/demo.gif" alt="Airlock on the live stack: the dashboard's real numbers and containment feed, a malicious PR caught red-handed (suspicious, 90% confidence, canary finding), and the full trace inspector" width="820">
 </p>
 
 **Run the PR before you trust it.** Airlock runs a stranger's pull request inside a throwaway
@@ -11,12 +11,12 @@ execution).
 
 **Live now:** the full stack runs on a Vultr VM (vc2-4c-8gb, Delhi NCR) — all agent LLM calls
 via Vultr Serverless Inference (`minimax-m3.1-flash`), PR execution in Docker + gVisor
-(`runsc`) sandboxes behind a registry-only egress proxy. Demo buttons on the live site
-execute fresh runs on that stack; offline **dummy mode** remains the zero-credit fallback
+(`runsc`) sandboxes behind a registry-only egress proxy. Run buttons on the live site
+execute fresh runs on that stack; an offline mode (scripted model and sandbox) remains the zero-credit fallback
 and what CI tests.
 
-**Try it:** live stack at http://139.84.176.16 (demo buttons execute fresh runs) ·
-static demo of recorded runs at https://0xv3nm09.github.io/airlock/
+**Try it:** live stack at http://139.84.176.16 (run buttons execute fresh runs) ·
+read-only site of recorded runs at https://0xv3nm09.github.io/airlock/
 
 **Docs:** [Live benchmark results](docs/BENCHMARK-RESULTS.md) ·
 [Architecture & use case](docs/ARCHITECTURE.md) · [Evidence map](docs/EVIDENCE.md)
@@ -51,10 +51,10 @@ Reproduce with `make bench` (offline) or the collector script (live).
 cd airlock
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt -r requirements-dev.txt
-cp .env.example .env          # dev defaults: dummy LLM, dummy sandbox, offline
+cp .env.example .env          # dev defaults: offline LLM + sandbox, no credits
 make check                    # ruff + pytest
 make dev                      # API on :8000 (prints a dev admin API key)
-make bench                    # 19-case seeded benchmark in dummy mode
+make bench                    # 19-case seeded benchmark, offline
 ```
 
 Try it:
@@ -68,7 +68,7 @@ curl -s localhost:8000/v1/runs/<run_id>
 curl -N localhost:8000/v1/runs/<run_id>/events   # live SSE timeline
 ```
 
-## What works today (verified offline in dummy mode, live on Vultr)
+## What works today (verified offline and live on Vultr)
 
 - Full review pipeline: screen → pre-flight (OSV MAL- check, injection scan, static risk) →
   plan → two sandboxes (base vs PR) → install with self-heal → tests → generated tests →
@@ -76,7 +76,7 @@ curl -N localhost:8000/v1/runs/<run_id>/events   # live SSE timeline
 - 19 scripted scenarios mirroring the seeded attack library (`eval_cases/cases.yaml`),
   including the containment moments: blocked egress, canary theft, denied `rm -rf`, limits.
 - Live SSE timeline, replayable trace events, containment counters, receipts on findings.
-- Demo endpoint (`POST /v1/demo/runs`) with no login; owner-filtered API for real runs.
+- Public sample-run endpoint (`POST /v1/demo/runs`) with no login; owner-filtered API for your own PRs.
 - Deterministic rule-table verdict; the LLM never decides the verdict.
 - Run records persist across backend restarts (SQLite write-through: runs, findings,
   traces, API keys) — the trace outlives the sandbox.
@@ -111,7 +111,7 @@ nothing but its own runs, and revocation is instant from the Dashboard.
   Docker + gVisor (`runsc`) sandboxes validated live.
 - `VultrLLM` end-to-end against the live model catalog — models picked by testing
   (`minimax-m3.1-flash` for every agent role), never hardcoded.
-- SQLite write-through persistence, team API keys, static Pages demo, 18/19 live benchmark.
+- SQLite write-through persistence, team API keys, read-only Pages site, 18/19 live benchmark.
 - Host exposure kept minimal: only SSH (:22) and Caddy (:80/:443) are reachable.
 
 ## Roadmap
@@ -123,7 +123,7 @@ nothing but its own runs, and revocation is instant from the Dashboard.
 - Postgres-backed store and a benchmark on real-world repositories and more models.
 - Per-team policies and multi-region Vultr runs.
 
-## Public demo site (GitHub Pages)
+## Read-only site of recorded runs (GitHub Pages)
 
 A static build of `web/` that serves recorded runs with no backend. The snapshot (`web/demo/airlock-snapshot.json`) is regenerated
 from the real store with `python scripts/export_demo_snapshot.py`; `.github/workflows/pages.yml`
@@ -139,8 +139,8 @@ app/
   guardrails/   policy file, input (URL/injection), output (redaction/command policy)
   preflight/    OSV MAL- + package age + static risk scan
   scoring/      verdict rule table + routing
-  sandbox/      base + dummy + docker(runsc) + vultr_vm stub
-  sources/      dummy scenarios + GitHub PR fetch
+  sandbox/      base + offline (dummy.py) + docker(runsc) + vultr_vm stub
+  sources/      offline scenarios + GitHub PR fetch
   store/        repository (owner-filtered; SQLite write-through persistence)
   workers/      in-process queue
   eval/         benchmark runner
@@ -168,10 +168,10 @@ ESLint warnings this repo keeps on purpose. Feedback matters; the failures are
 | [`docs/EVIDENCE.md`](docs/EVIDENCE.md) | Challenge criteria mapped to evidence, deliverables with status, containment focus areas → mechanisms, a 60-second tour. |
 | [`docs/MODEL_CARD.md`](docs/MODEL_CARD.md) | Which models the five agents use, what each may/may not do, evaluation + limitations. |
 | [`docs/FEEDBACK.md`](docs/FEEDBACK.md) | Build-week retrospective: every issue faced and its fix, what worked well, and why the repo keeps three ESLint warnings on purpose. |
-| [`deploy/GO-LIVE.md`](deploy/GO-LIVE.md) | Dummy→Vultr switch-over runbook (env vars, model selection, verification) + GitHub Pages demo setup (§7). |
+| [`deploy/GO-LIVE.md`](deploy/GO-LIVE.md) | Offline→Vultr switch-over runbook (env vars, model selection, verification) + GitHub Pages site setup (§7). |
 | [`deploy/README.md`](deploy/README.md) | Compose stack, Caddy, squid egress proxy, sandbox images — how the VM deployment fits together. |
 | [`deploy/examples/README.md`](deploy/examples/README.md) | GitHub Actions workflow to review every push to your own repo (team-key integration). |
-| [`web/README.md`](web/README.md) | Frontend: pages, demo mode (static Pages build), env vars. |
+| [`web/README.md`](web/README.md) | Frontend: pages, read-only mode (static Pages build), env vars. |
 | [`eval_cases/cases.yaml`](eval_cases/cases.yaml) | The 19-case seeded attack library: URL + expected verdict per case — the benchmark's source of truth. |
 | [`eval_results/live-benchmark.json`](eval_results/live-benchmark.json) | Raw machine bundle of the live sweep (runs, verdicts, counters, usage, full traces). |
 | [`policies/policy_v1.yaml`](policies/policy_v1.yaml) | Versioned runtime policy — egress allow-list, command policy, limits; stamped on every run. |

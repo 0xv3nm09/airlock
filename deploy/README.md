@@ -14,7 +14,7 @@ Everything the VM needs beyond the app code. Switch-over steps: [`GO-LIVE.md`](G
 
 ## Quick order (day 1 on the VM)
 
-Also read `GO-LIVE.md` — the Nov 3 switch-over checklist from dummy to real.
+Also read `GO-LIVE.md` — the switch-over checklist from offline mode to the live stack.
 
 ```bash
 # 1. Docker + gVisor, then the sandbox images

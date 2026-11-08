@@ -66,11 +66,11 @@ behaviour finding to the PR sandbox only when the base sandbox did not do the sa
 | `app/guardrails/` | Input (URL/injection), output (log redaction, command policy), versioned policy file |
 | `app/preflight/` | OSV known-malware, package age, static risk scan |
 | `app/scoring/` | The verdict rule table + routing |
-| `app/sandbox/` | Backend interface + dummy (offline), docker/runsc, vultr_vm (throwaway-instance stub) |
+| `app/sandbox/` | Backend interface + offline (scripted), docker/runsc, vultr_vm (throwaway-instance stub) |
 | `app/store/` | Repository: owner-filtered runs, SQLite write-through persistence, survives restarts |
 | `app/eval/` | Benchmark runner over the 19-case attack library |
 | `web/` | Next.js app: dashboard, run timeline, trace inspector, benchmark, review queue |
-| `web/demo/` | Committed snapshot of recorded real runs → static GitHub Pages demo |
+| `web/demo/` | Committed snapshot of recorded real runs → read-only GitHub Pages site |
 | `policies/` | `policy_v1.yaml` — versioned, stamped on every run and every verdict |
 | `deploy/` | Compose stack, Caddy, squid egress proxy, sandbox images, GO-LIVE runbook |
 

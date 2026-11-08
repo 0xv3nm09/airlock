@@ -245,7 +245,7 @@ Destroy sandboxes ──── on every path; the trace + SQLite record survive"
         " pytest's capture. We ship the miss in the results rather than quietly editing"
         " the expectation.")
     add("")
-    add("**Static demo scope.** The GitHub Pages demo serves this recorded snapshot —"
+    add("**Read-only site scope.** The GitHub Pages site serves this recorded snapshot —"
         " runs, traces, verdicts and counters are real, but the live deployment"
         " (http://139.84.176.16) is the product: every button there executes a fresh run"
         " on real infrastructure.")
