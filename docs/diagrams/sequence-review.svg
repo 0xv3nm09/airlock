@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 860" font-family="ui-monospace,Menlo,Consolas,monospace">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#53d1ff"/>
+    </marker>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ff7a7a"/>
+    </marker>
+    <marker id="ay" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#f0c674"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="860" fill="#0b0e17"/>
+  <text x="600" y="36" text-anchor="middle" fill="#e8ecf5" font-size="20" font-weight="bold">Airlock — review sequence (every run)</text>
+
+  <!-- lifelines -->
+  <g stroke="#3d4a6b" stroke-width="1.4">
+    <line x1="90"  y1="70" x2="90"  y2="810"/>
+    <line x1="330" y1="70" x2="330" y2="810"/>
+    <line x1="540" y1="70" x2="540" y2="810"/>
+    <line x1="740" y1="70" x2="740" y2="810"/>
+    <line x1="940" y1="70" x2="940" y2="810"/>
+    <line x1="1120" y1="70" x2="1120" y2="810"/>
+  </g>
+
+  <!-- actor heads -->
+  <g>
+    <rect x="24"  y="38" width="132" height="34" rx="8" fill="#141a2b" stroke="#53d1ff" stroke-width="1.5"/>
+    <text x="90"  y="60" text-anchor="middle" fill="#e8ecf5" font-size="13" font-weight="bold">client</text>
+    <rect x="262" y="38" width="136" height="34" rx="8" fill="#141a2b" stroke="#53d1ff" stroke-width="1.5"/>
+    <text x="330" y="60" text-anchor="middle" fill="#e8ecf5" font-size="13" font-weight="bold">orchestrator</text>
+    <rect x="468" y="38" width="144" height="34" rx="8" fill="#141a2b" stroke="#9d7bff" stroke-width="1.5"/>
+    <text x="540" y="60" text-anchor="middle" fill="#c9b8ff" font-size="13" font-weight="bold">Vultr Inference</text>
+    <rect x="668" y="38" width="144" height="34" rx="8" fill="#141a2b" stroke="#53d1ff" stroke-width="1.5"/>
+    <text x="740" y="60" text-anchor="middle" fill="#e8ecf5" font-size="13" font-weight="bold">sandbox base</text>
+    <rect x="868" y="38" width="144" height="34" rx="8" fill="#141a2b" stroke="#ff7a7a" stroke-width="1.5"/>
+    <text x="940" y="60" text-anchor="middle" fill="#e8ecf5" font-size="13" font-weight="bold">sandbox PR</text>
+    <rect x="1062" y="38" width="116" height="34" rx="8" fill="#141a2b" stroke="#3d4a6b" stroke-width="1.5"/>
+    <text x="1120" y="60" text-anchor="middle" fill="#e8ecf5" font-size="13" font-weight="bold">store / trace</text>
+  </g>
+
+  <!-- 1 -->
+  <text x="110" y="96" fill="#8b96b5" font-size="12">1</text>
+  <line x1="90" y1="100" x2="322" y2="100" stroke="#53d1ff" stroke-width="1.8" marker-end="url(#a)"/>
+  <text x="210" y="94" text-anchor="middle" fill="#cfe6ff" font-size="12">POST /v1/runs (PR url) — or one-click demo</text>
+  <!-- 2 -->
+  <text x="345" y="126" fill="#8b96b5" font-size="12">2</text>
+  <line x1="330" y1="130" x2="330" y2="150" stroke="#53d1ff" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="342" y="146" fill="#cfe6ff" font-size="12">fetch PR + diff (GitHub)</text>
+  <!-- 3 -->
+  <text x="110" y="170" fill="#8b96b5" font-size="12">3</text>
+  <line x1="330" y1="174" x2="98" y2="174" stroke="#53d1ff" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#a)"/>
+  <text x="214" y="168" text-anchor="middle" fill="#cfe6ff" font-size="12">202 accepted → live SSE timeline (heartbeat 15 s)</text>
+  <!-- 4 preflight -->
+  <text x="345" y="196" fill="#8b96b5" font-size="12">4</text>
+  <line x1="330" y1="200" x2="330" y2="214" stroke="#53d1ff" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="342" y="212" fill="#cfe6ff" font-size="12">pre-flight: injection screen · OSV malware · package age · static risk</text>
+  <!-- branch: MAL stop -->
+  <text x="110" y="240" fill="#8b96b5" font-size="12">5</text>
+  <line x1="330" y1="244" x2="98" y2="244" stroke="#ff7a7a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+  <text x="260" y="238" text-anchor="middle" fill="#ff7a7a" font-size="12">MAL-* hit → suspicious NOW — no sandbox created (12.1 s)</text>
+  <!-- 6 plan -->
+  <text x="345" y="270" fill="#8b96b5" font-size="12">6</text>
+  <line x1="330" y1="274" x2="532" y2="274" stroke="#9d7bff" stroke-width="1.8" marker-end="url(#a)"/>
+  <text x="436" y="268" text-anchor="middle" fill="#c9b8ff" font-size="12">plan (fixed before untrusted content — structured JSON)</text>
+  <!-- 7 sandboxes -->
+  <text x="345" y="300" fill="#8b96b5" font-size="12">7</text>
+  <line x1="330" y1="304" x2="732" y2="304" stroke="#53d1ff" stroke-width="1.8" marker-end="url(#a)"/>
+  <text x="540" y="298" text-anchor="middle" fill="#cfe6ff" font-size="12">gVisor sandbox: read-only rootfs · tmpfs · caps dropped · canaries planted</text>
+  <line x1="330" y1="322" x2="932" y2="322" stroke="#53d1ff" stroke-width="1.8" marker-end="url(#a)"/>
+  <text x="636" y="316" text-anchor="middle" fill="#cfe6ff" font-size="12">same for PR head (twins, same limits)</text>
+  <!-- 8 materialize -->
+  <text x="345" y="348" fill="#8b96b5" font-size="12">8</text>
+  <line x1="330" y1="352" x2="732" y2="352" stroke="#53d1ff" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="540" y="346" text-anchor="middle" fill="#cfe6ff" font-size="12">materialize tarball into tmpfs workspace (exec-stdin)</text>
+  <!-- 9 install -->
+  <text x="345" y="396" fill="#8b96b5" font-size="12">9</text>
+  <line x1="330" y1="400" x2="732" y2="400" stroke="#f0c674" stroke-width="1.8" marker-end="url(#ay)"/>
+  <text x="540" y="394" text-anchor="middle" fill="#f0c674" font-size="12">install via registry-only squid proxy — egress attempts logged</text>
+  <line x1="330" y1="418" x2="932" y2="418" stroke="#f0c674" stroke-width="1.8" marker-end="url(#ay)"/>
+  <text x="636" y="412" text-anchor="middle" fill="#f0c674" font-size="12">self-heal: fixer proposes one allow-listed command (max 3 attempts)</text>
+  <!-- 10 tests -->
+  <text x="345" y="444" fill="#8b96b5" font-size="12">10</text>
+  <line x1="330" y1="448" x2="732" y2="448" stroke="#53d1ff" stroke-width="1.8" marker-end="url(#a)"/>
+  <text x="540" y="442" text-anchor="middle" fill="#cfe6ff" font-size="12">tests — NO network (egress detached)</text>
+  <line x1="330" y1="466" x2="932" y2="466" stroke="#53d1ff" stroke-width="1.8" marker-end="url(#a)"/>
+  <text x="636" y="460" text-anchor="middle" fill="#cfe6ff" font-size="12">generated regression tests — kept only if they run on base</text>
+  <!-- 11 behaviour -->
+  <text x="345" y="492" fill="#8b96b5" font-size="12">11</text>
+  <line x1="330" y1="496" x2="732" y2="496" stroke="#53d1ff" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="540" y="490" text-anchor="middle" fill="#cfe6ff" font-size="12">behaviour scan: egress blocks · canary touches · denied writes · limits</text>
+  <line x1="330" y1="514" x2="932" y2="514" stroke="#53d1ff" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="636" y="508" text-anchor="middle" fill="#cfe6ff" font-size="12">differential: signals the base sandbox produced too are baseline, not the PR</text>
+  <!-- 12 verdict -->
+  <text x="345" y="540" fill="#8b96b5" font-size="12">12</text>
+  <line x1="330" y1="544" x2="330" y2="558" stroke="#53d1ff" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="342" y="556" fill="#cfe6ff" font-size="12">rule table over observed facts → verdict · LLM summary cite-checked</text>
+  <!-- 13 stream -->
+  <text x="110" y="584" fill="#8b96b5" font-size="12">13</text>
+  <line x1="330" y1="588" x2="98" y2="588" stroke="#53d1ff" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#a)"/>
+  <text x="214" y="582" text-anchor="middle" fill="#cfe6ff" font-size="12">stream: spans · findings · containment · verdict (client watches live)</text>
+  <!-- 14 destroy -->
+  <text x="345" y="614" fill="#8b96b5" font-size="12">14</text>
+  <line x1="330" y1="618" x2="732" y2="618" stroke="#ff7a7a" stroke-width="1.8" marker-end="url(#ar)"/>
+  <text x="540" y="612" text-anchor="middle" fill="#ff7a7a" font-size="12">sandbox destroyed ✓</text>
+  <line x1="330" y1="636" x2="932" y2="636" stroke="#ff7a7a" stroke-width="1.8" marker-end="url(#ar)"/>
+  <text x="636" y="630" text-anchor="middle" fill="#ff7a7a" font-size="12">destroyed ✓ — recorded as the last span, on every path</text>
+  <!-- 15 store -->
+  <text x="345" y="662" fill="#8b96b5" font-size="12">15</text>
+  <line x1="330" y1="666" x2="1112" y2="666" stroke="#53d1ff" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="726" y="660" text-anchor="middle" fill="#cfe6ff" font-size="12">trace + findings + verdict persisted (SQLite write-through) — receipts outlive sandboxes</text>
+
+  <!-- example strip: the malicious run -->
+  <rect x="60" y="704" width="1080" height="130" rx="12" fill="#101728" stroke="#ff7a7a" stroke-width="1.5"/>
+  <text x="600" y="730" text-anchor="middle" fill="#ff7a7a" font-size="13" font-weight="bold">worked example — setup-py-exfil (run_3049b41544ff)</text>
+  <text x="600" y="754" text-anchor="middle" fill="#cfe6ff" font-size="12">tests PASS on the PR — that is not the story. install hook: echo planted AWS key → write /tmp → GET evil.example</text>
+  <text x="600" y="778" text-anchor="middle" fill="#cfe6ff" font-size="12">canary_hit (critical, 0.90) · network_attempt BLOCKED · verdict: suspicious → human review · sandboxes destroyed</text>
+  <text x="600" y="808" text-anchor="middle" fill="#5b6480" font-size="11">rule table decides — the LLM never does · secrets redacted, canaries randomized per run · trace replayable from seq 1</text>
+</svg>

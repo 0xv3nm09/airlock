@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" font-family="ui-monospace,Menlo,Consolas,monospace">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#53d1ff"/>
+    </marker>
+    <marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8b96b5"/>
+    </marker>
+    <marker id="arrr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ff7a7a"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="700" fill="#0b0e17"/>
+  <text x="600" y="38" text-anchor="middle" fill="#e8ecf5" font-size="20" font-weight="bold">Airlock — how a review works on Vultr</text>
+
+  <!-- client -->
+  <rect x="24" y="300" width="128" height="64" rx="10" fill="#141a2b" stroke="#3d4a6b" stroke-width="1.5"/>
+  <text x="88" y="326" text-anchor="middle" fill="#e8ecf5" font-size="14" font-weight="bold">Browser</text>
+  <text x="88" y="346" text-anchor="middle" fill="#8b96b5" font-size="11">team / judge</text>
+
+  <!-- VULTR VM frame -->
+  <rect x="196" y="70" width="680" height="590" rx="14" fill="none" stroke="#53d1ff" stroke-width="1.6" stroke-dasharray="7 5"/>
+  <text x="216" y="96" fill="#53d1ff" font-size="13" font-weight="bold">VULTR VM · vc2-4c-8gb (Delhi NCR)</text>
+
+  <!-- caddy -->
+  <rect x="216" y="300" width="120" height="64" rx="10" fill="#101728" stroke="#53d1ff" stroke-width="1.5"/>
+  <text x="276" y="326" text-anchor="middle" fill="#e8ecf5" font-size="13" font-weight="bold">Caddy</text>
+  <text x="276" y="346" text-anchor="middle" fill="#8b96b5" font-size="11">:80/:443 · SSE flush</text>
+
+  <!-- web -->
+  <rect x="380" y="300" width="120" height="64" rx="10" fill="#101728" stroke="#3d4a6b" stroke-width="1.5"/>
+  <text x="440" y="326" text-anchor="middle" fill="#e8ecf5" font-size="13" font-weight="bold">Next.js web</text>
+  <text x="440" y="346" text-anchor="middle" fill="#8b96b5" font-size="11">dashboard · runs</text>
+
+  <!-- fastapi -->
+  <rect x="380" y="120" width="230" height="128" rx="10" fill="#101728" stroke="#53d1ff" stroke-width="1.5"/>
+  <text x="495" y="146" text-anchor="middle" fill="#e8ecf5" font-size="14" font-weight="bold">FastAPI orchestrator</text>
+  <text x="495" y="168" text-anchor="middle" fill="#8b96b5" font-size="11">queue · policy · rule-table verdict</text>
+  <text x="495" y="188" text-anchor="middle" fill="#8b96b5" font-size="11">trace bus · SSE · redaction</text>
+  <text x="495" y="208" text-anchor="middle" fill="#8b96b5" font-size="11">SQLite write-through store</text>
+  <text x="495" y="228" text-anchor="middle" fill="#8b96b5" font-size="11">scoped API keys (hashed)</text>
+
+  <!-- agents -->
+  <rect x="700" y="96" width="220" height="120" rx="10" fill="#101728" stroke="#9d7bff" stroke-width="1.5"/>
+  <text x="810" y="122" text-anchor="middle" fill="#c9b8ff" font-size="13" font-weight="bold">Vultr Serverless Inference</text>
+  <text x="810" y="142" text-anchor="middle" fill="#8b96b5" font-size="11">api.vultrinference.com/v1</text>
+  <text x="810" y="162" text-anchor="middle" fill="#c9b8ff" font-size="12">planner · fixer · test-writer</text>
+  <text x="810" y="180" text-anchor="middle" fill="#c9b8ff" font-size="12">analyst · reporter</text>
+  <text x="810" y="200" text-anchor="middle" fill="#8b96b5" font-size="11">structured JSON · never the verdict</text>
+
+  <!-- docker + sandboxes -->
+  <rect x="226" y="440" width="620" height="196" rx="12" fill="none" stroke="#3d4a6b" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="246" y="464" fill="#8b96b5" font-size="12" font-weight="bold">Docker daemon → gVisor (runsc) · read-only rootfs · caps dropped · tmpfs /workspace</text>
+
+  <rect x="246" y="478" width="270" height="140" rx="10" fill="#101728" stroke="#53d1ff" stroke-width="1.5"/>
+  <text x="381" y="500" text-anchor="middle" fill="#e8ecf5" font-size="13" font-weight="bold">Sandbox — BASE</text>
+  <text x="381" y="520" text-anchor="middle" fill="#8b96b5" font-size="11">per-run venv · 1 GB / 1 CPU / 128 pids</text>
+  <text x="381" y="538" text-anchor="middle" fill="#8b96b5" font-size="11">planted canaries (random per run)</text>
+  <text x="381" y="556" text-anchor="middle" fill="#8b96b5" font-size="11">baseline signals — never blamed</text>
+  <text x="381" y="590" text-anchor="middle" fill="#53d1ff" font-size="11">destroyed on every path ✓</text>
+
+  <rect x="556" y="478" width="270" height="140" rx="10" fill="#101728" stroke="#ff7a7a" stroke-width="1.5"/>
+  <text x="691" y="500" text-anchor="middle" fill="#e8ecf5" font-size="13" font-weight="bold">Sandbox — PULL REQUEST</text>
+  <text x="691" y="520" text-anchor="middle" fill="#8b96b5" font-size="11">same limits · same canary seeds</text>
+  <text x="691" y="538" text-anchor="middle" fill="#8b96b5" font-size="11">behaviour attributed to the change</text>
+  <text x="691" y="556" text-anchor="middle" fill="#8b96b5" font-size="11">findings → receipts (cmd · exit · output)</text>
+  <text x="691" y="590" text-anchor="middle" fill="#ff7a7a" font-size="11">destroyed on every path ✓</text>
+
+  <!-- squid -->
+  <rect x="920" y="478" width="150" height="70" rx="10" fill="#101728" stroke="#f0c674" stroke-width="1.5"/>
+  <text x="995" y="502" text-anchor="middle" fill="#f0c674" font-size="13" font-weight="bold">squid egress</text>
+  <text x="995" y="520" text-anchor="middle" fill="#8b96b5" font-size="11">registries only</text>
+  <text x="995" y="536" text-anchor="middle" fill="#8b96b5" font-size="11">install phase</text>
+
+  <!-- internet -->
+  <rect x="920" y="596" width="150" height="52" rx="10" fill="#101728" stroke="#3d4a6b" stroke-width="1.5"/>
+  <text x="995" y="618" text-anchor="middle" fill="#8b96b5" font-size="12">PyPI · npm registries</text>
+  <text x="995" y="636" text-anchor="middle" fill="#ff7a7a" font-size="11">evil.example → DENIED</text>
+
+  <!-- flows -->
+  <line x1="152" y1="332" x2="212" y2="332" stroke="#53d1ff" stroke-width="1.8" marker-end="url(#arr)"/>
+  <text x="182" y="322" text-anchor="middle" fill="#8b96b5" font-size="10">HTTPS</text>
+  <line x1="336" y1="332" x2="376" y2="332" stroke="#53d1ff" stroke-width="1.8" marker-end="url(#arr)"/>
+  <line x1="440" y1="296" x2="440" y2="252" stroke="#53d1ff" stroke-width="1.8" marker-end="url(#arr)"/>
+  <text x="452" y="276" fill="#8b96b5" font-size="10">POST /v1/runs · /api/*</text>
+  <line x1="440" y1="296" x2="440" y2="296" stroke="none"/>
+
+  <!-- api -> inference -->
+  <line x1="610" y1="160" x2="696" y2="152" stroke="#9d7bff" stroke-width="1.8" marker-end="url(#arr)"/>
+  <text x="648" y="136" text-anchor="middle" fill="#9d7bff" font-size="10">5 agents · JSON</text>
+
+  <!-- api -> sandboxes -->
+  <line x1="440" y1="248" x2="381" y2="438" stroke="#8b96b5" stroke-width="1.5" marker-end="url(#arrg)"/>
+  <line x1="520" y1="248" x2="640" y2="474" stroke="#8b96b5" stroke-width="1.5" marker-end="url(#arrg)"/>
+  <text x="560" y="392" fill="#8b96b5" font-size="10">create · materialize · exec · destroy</text>
+
+  <!-- sandbox -> squid -> internet -->
+  <path d="M 846 548 L 880 548 L 880 513 L 916 513" stroke="#f0c674" stroke-width="1.8" fill="none" marker-end="url(#arr)"/>
+  <text x="880" y="574" text-anchor="middle" fill="#f0c674" font-size="10">egress (install phase only)</text>
+  <line x1="995" y1="548" x2="995" y2="592" stroke="#8b96b5" stroke-width="1.5" marker-end="url(#arrg)"/>
+  <line x1="1060" y1="478" x2="1060" y2="448" stroke="#ff7a7a" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="1064" y="466" fill="#ff7a7a" font-size="10">DENIED ✕</text>
+
+  <!-- receipts back -->
+  <path d="M 691 618 L 691 648 L 500 648" stroke="#53d1ff" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+  <text x="590" y="662" text-anchor="middle" fill="#53d1ff" font-size="10">receipts · counters · events → trace → SQLite</text>
+
+  <!-- SSE back to browser -->
+  <path d="M 380 196 L 300 196 L 88 296" stroke="#53d1ff" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+  <text x="196" y="186" text-anchor="middle" fill="#53d1ff" font-size="10">live SSE timeline + 15 s heartbeat</text>
+
+  <!-- footer note -->
+  <text x="600" y="688" text-anchor="middle" fill="#5b6480" font-size="11">rule table decides — the LLM explains and is cite-checked, never decides · secrets redacted · canaries randomized per run</text>
+</svg>

@@ -8,6 +8,16 @@ with receipts for every claim.
 
 ## Data flow
 
+<p align="center">
+  <img src="diagrams/how-it-works.svg" alt="Architecture: browser → Caddy → Next.js and FastAPI orchestrator → five agents on Vultr Serverless Inference → twin gVisor sandboxes behind the squid registry-only egress proxy → receipts into SQLite → live SSE timeline" width="820">
+</p>
+
+<p align="center">
+  <img src="diagrams/sequence-review.svg" alt="Review sequence: 15 steps from POST /v1/runs through pre-flight (OSV stop path), planning, twin sandboxes, proxy install, network-less tests, differential behaviour scan, rule-table verdict, SSE stream, destroy, persistence" width="820">
+</p>
+
+(the text version, for terminals)
+
 Rendered diagrams (trust zones, pipeline, rule table, sequences): [`DIAGRAMS.md`](DIAGRAMS.md).
 
 ```

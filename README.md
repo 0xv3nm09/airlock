@@ -34,8 +34,14 @@ read-only site of recorded runs at https://0xv3nm09.github.io/airlock/
 
 How a review executes real work (Pattern A): fetch the PR → pre-flight checks → plan →
 install and run the tests in twin sandboxes (base vs PR) → generated tests → behaviour scan →
-rule-table verdict → sandboxes destroyed. Full diagram: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md);
-containment mapping: [`docs/EVIDENCE.md`](docs/EVIDENCE.md).
+rule-table verdict → sandboxes destroyed.
+
+<p align="center">
+  <img src="docs/diagrams/how-it-works.svg" alt="Architecture on the Vultr VM: browser → Caddy → Next.js and FastAPI orchestrator → five agents on Vultr Serverless Inference → twin gVisor sandboxes behind the squid registry-only egress proxy → receipts into SQLite → live SSE timeline" width="820">
+</p>
+
+Sequence and containment mapping: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) ·
+[`docs/EVIDENCE.md`](docs/EVIDENCE.md).
 
 ## Results — 19-case attack library, executed live (Nov 2026)
 
