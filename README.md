@@ -46,6 +46,16 @@ pipeline and containment diagrams, and the exact stack facts the runs executed o
 machine bundle: [eval_results/live-benchmark.json](eval_results/live-benchmark.json).
 Reproduce with `make bench` (offline) or the collector script (live).
 
+**The 19 attacks are real pull requests.** Each case lives in its own repository — for
+example [`setup-py-exfil/pull/7`](https://github.com/0xv3nm09/setup-py-exfil/pull/7) (a
+`setup.py` install hook that echoes a planted key and phones home) and
+[`setup-fail/pull/6`](https://github.com/0xv3nm09/setup-fail/pull/6). The repositories are
+private during judging; every payload is committed in
+[`scripts/publish_demo_repos.py`](scripts/publish_demo_repos.py). **Every run is a record:**
+timeline, receipts, findings, verdict and the full trace stay browsable on the live
+deployment and in the results document — the evidence outlives the sandboxes that produced
+it.
+
 ## Quickstart
 
 ```bash
@@ -105,6 +115,12 @@ curl -X POST $HOST/v1/runs -H "X-API-Key: ak_xxxxxxxx.<secret>" \
 For auto-run on every push, add the workflow from [`deploy/examples/`](deploy/examples/README.md)
 to the consuming repo — team keys are owner-scoped and owner-isolated, a leaked key sees
 nothing but its own runs, and revocation is instant from the Dashboard.
+
+**Want your own repository reviewed?** Reach out through this repo's
+[issues](https://github.com/0xv3nm09/airlock/issues) or the team page on lablab.ai — we will
+issue a scoped `runs:write` key for your input repository (public PRs during the event), plus
+a `runs:approve` reviewer key so your team can decide the suspicious queue with the full
+evidence open.
 
 ## Shipped during build week
 
