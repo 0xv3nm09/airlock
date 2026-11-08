@@ -1,5 +1,10 @@
 # Airlock
 
+[![CI](https://github.com/0xv3nm09/airlock/actions/workflows/ci.yml/badge.svg)](https://github.com/0xv3nm09/airlock/actions/workflows/ci.yml)
+![live benchmark](https://img.shields.io/badge/live%20benchmark-18%2F19-brightgreen)
+![false safe-to-merge](https://img.shields.io/badge/false%20safe%E2%80%91to%E2%80%91merge-0-success)
+![license](https://img.shields.io/badge/license-MIT-blue)
+
 <p align="center">
   <img src="docs/screenshots/poster.png" alt="Airlock poster: twin gVisor sandboxes (base vs pull request) produce execution receipts and a rule-based verdict" width="820">
 </p>
@@ -71,6 +76,25 @@ table with PR links, verdict JSON for every case, containment counters, trace ex
 pipeline and containment diagrams, and the exact stack facts the runs executed on. Raw
 machine bundle: [eval_results/live-benchmark.json](eval_results/live-benchmark.json).
 Reproduce with `make bench` (offline) or the collector script (live).
+
+**At a glance**
+
+- ✅ **Backend on a Vultr VM** — live, control plane + sandboxes + store
+- ✅ **All agent LLM calls via Vultr Serverless Inference** — model + tokens stamped per span
+- ✅ **gVisor (`runsc`) sandboxes** — read-only rootfs, caps dropped, per-run venv, never in the app process
+- ✅ **Secret hygiene** — no real keys inside; randomized canaries make exfiltration provable
+- ✅ **Resource limits + lifecycle discipline** — mem/CPU/PID caps, timeouts, destroyed on every path
+- ✅ **18/19 expected verdicts** on the live benchmark — **0 false safe-to-merge on any attack**
+- ⚠️ **1 documented miss** (`rm-rf-test`) — containment held; the evidence-visibility gap is written up with its fix
+
+```
+verdict mix (live sweep, 19 runs)
+
+  Safe to merge   ██████████████   5   clean baselines pass honestly
+  Needs changes   ██████████████   5   regressions + resource bombs proven
+  Suspicious      ████████████████████   7   every exfil · injection · probe caught
+  Inconclusive    ████   2   unrunnable repos → human (never guessed)
+```
 
 **The 19 attacks are real pull requests.** Each case lives in its own repository — for
 example `setup-py-exfil/pull/7` (a `setup.py` install hook that echoes a planted key and
