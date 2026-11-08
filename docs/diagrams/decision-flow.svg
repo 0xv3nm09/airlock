@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 2160" font-family="ui-monospace,Menlo,Consolas,monospace">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#53d1ff"/>
+    </marker>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ff7a7a"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="2160" fill="#0b0e17"/>
+  <text x="450" y="34" text-anchor="middle" fill="#e8ecf5" font-size="19" font-weight="bold">Airlock — decision flow of one review</text>
+
+  <!-- main column boxes: x=270 w=360 -->
+  <g font-size="12.5" fill="#cfe6ff" text-anchor="middle">
+    <rect x="270" y="56" width="360" height="64" rx="10" fill="#101728" stroke="#53d1ff" stroke-width="1.5"/>
+    <text x="450" y="80" fill="#e8ecf5" font-weight="bold">PR URL</text>
+    <text x="450" y="100">sample button · benchmark case · team key</text>
+
+    <rect x="270" y="152" width="360" height="64" rx="10" fill="#101728" stroke="#3d4a6b" stroke-width="1.5"/>
+    <text x="450" y="176" fill="#e8ecf5" font-weight="bold">Input guardrail</text>
+    <text x="450" y="196">strict GitHub PR URL · rate limit</text>
+
+    <rect x="270" y="248" width="360" height="64" rx="10" fill="#101728" stroke="#3d4a6b" stroke-width="1.5"/>
+    <text x="450" y="272" fill="#e8ecf5" font-weight="bold">Fetch PR</text>
+    <text x="450" y="292">title · body · diff · added deps</text>
+
+    <rect x="270" y="344" width="360" height="88" rx="10" fill="#101728" stroke="#53d1ff" stroke-width="1.5"/>
+    <text x="450" y="368" fill="#e8ecf5" font-weight="bold">Pre-flight</text>
+    <text x="450" y="388">prompt-injection screen · static risk scan</text>
+    <text x="450" y="406">OSV known-malware · package age</text>
+
+    <rect x="270" y="490" width="360" height="88" rx="10" fill="#101728" stroke="#9d7bff" stroke-width="1.5"/>
+    <text x="450" y="514" fill="#c9b8ff" font-weight="bold">Planner agent (Vultr Serverless Inference)</text>
+    <text x="450" y="534">install + test command from the allow-list</text>
+    <text x="450" y="552">fixed before any untrusted output is read</text>
+
+    <rect x="270" y="636" width="360" height="110" rx="10" fill="#101728" stroke="#53d1ff" stroke-width="1.5"/>
+    <text x="450" y="660" fill="#e8ecf5" font-weight="bold">Create twin sandboxes</text>
+    <text x="450" y="680">base branch + PR head · gVisor · read-only root</text>
+    <text x="450" y="698">tmpfs workspace · random canary keys planted</text>
+
+    <rect x="270" y="778" width="360" height="56" rx="10" fill="#101728" stroke="#3d4a6b" stroke-width="1.5"/>
+    <text x="450" y="800" fill="#e8ecf5" font-weight="bold">Materialize repo tarballs</text>
+    <text x="450" y="820">into /workspace</text>
+
+    <rect x="270" y="866" width="360" height="88" rx="10" fill="#101728" stroke="#f0c674" stroke-width="1.5"/>
+    <text x="450" y="890" fill="#f0c674" font-weight="bold">Install (egress via squid, registries only)</text>
+    <text x="450" y="910">fixer agent self-heals failed commands</text>
+
+    <rect x="270" y="1246" width="360" height="110" rx="10" fill="#101728" stroke="#ff7a7a" stroke-width="1.5"/>
+    <text x="450" y="1270" fill="#e8ecf5" font-weight="bold">Behaviour scan (PR sandbox)</text>
+    <text x="450" y="1290">egress attempts · canary hits · denied writes</text>
+    <text x="450" y="1308">limits — minus anything the base also did</text>
+
+    <rect x="270" y="1404" width="360" height="72" rx="10" fill="#101728" stroke="#ff7a7a" stroke-width="1.5"/>
+    <text x="450" y="1428" fill="#e8ecf5" font-weight="bold">Destroy both sandboxes</text>
+    <text x="450" y="1448">(finally — on every path, including failures)</text>
+
+    <rect x="270" y="1508" width="360" height="64" rx="10" fill="#101728" stroke="#53d1ff" stroke-width="1.5"/>
+    <text x="450" y="1532" fill="#e8ecf5" font-weight="bold">Rule table → verdict + route</text>
+    <text x="450" y="1552">the LLM never decides</text>
+
+    <rect x="270" y="1604" width="360" height="72" rx="10" fill="#101728" stroke="#9d7bff" stroke-width="1.5"/>
+    <text x="450" y="1628" fill="#c9b8ff" font-weight="bold">Security analyst agent</text>
+    <text x="450" y="1648">explains intent, cannot change the verdict</text>
+
+    <rect x="270" y="1708" width="360" height="72" rx="10" fill="#101728" stroke="#9d7bff" stroke-width="1.5"/>
+    <text x="450" y="1732" fill="#c9b8ff" font-weight="bold">Reporter agent</text>
+    <text x="450" y="1752">summary, every claim cited to a finding</text>
+
+    <rect x="270" y="1812" width="360" height="72" rx="10" fill="#101728" stroke="#53d1ff" stroke-width="1.5"/>
+    <text x="450" y="1836" fill="#e8ecf5" font-weight="bold">Persist run + trace · stream final events</text>
+    <text x="450" y="1856">the record outlives the sandboxes</text>
+  </g>
+
+  <!-- side boxes -->
+  <g font-size="12.5" text-anchor="middle">
+    <rect x="40" y="1270" width="190" height="72" rx="10" fill="#1c1420" stroke="#ff7a7a" stroke-width="1.5"/>
+    <text x="135" y="1294" fill="#ff7a7a" font-weight="bold">Stop: no sandbox created</text>
+    <text x="135" y="1314" fill="#cfe6ff">finding: known_malicious_dependency</text>
+
+    <rect x="40" y="1010" width="200" height="64" rx="10" fill="#101728" stroke="#3d4a6b" stroke-width="1.5"/>
+    <text x="140" y="1034" fill="#e8ecf5" font-weight="bold">Detach network</text>
+    <text x="140" y="1054">run tests on base and PR</text>
+
+    <rect x="60" y="1180" width="180" height="56" rx="10" fill="#101728" stroke="#3d4a6b" stroke-width="1.5"/>
+    <text x="150" y="1202" fill="#e8ecf5" font-weight="bold">tests skipped</text>
+    <text x="150" y="1222">— cannot read as safe</text>
+
+    <rect x="660" y="1180" width="200" height="72" rx="10" fill="#101728" stroke="#53d1ff" stroke-width="1.5"/>
+    <text x="760" y="1204" fill="#e8ecf5" font-weight="bold">Test-writer agent</text>
+    <text x="760" y="1224">one generated test, kept</text>
+    <text x="760" y="1242">only if it runs on base</text>
+  </g>
+
+  <!-- main flow arrows -->
+  <g stroke="#53d1ff" stroke-width="1.8" fill="none">
+    <line x1="450" y1="120" x2="450" y2="148" marker-end="url(#a)"/>
+    <line x1="450" y1="216" x2="450" y2="244" marker-end="url(#a)"/>
+    <line x1="450" y1="312" x2="450" y2="340" marker-end="url(#a)"/>
+    <line x1="450" y1="432" x2="450" y2="486" marker-end="url(#a)"/>
+    <line x1="450" y1="578" x2="450" y2="632" marker-end="url(#a)"/>
+    <line x1="450" y1="746" x2="450" y2="774" marker-end="url(#a)"/>
+    <line x1="450" y1="834" x2="450" y2="862" marker-end="url(#a)"/>
+    <line x1="450" y1="954" x2="450" y2="1242" marker-end="url(#a)"/>
+    <line x1="450" y1="1356" x2="450" y2="1400" marker-end="url(#ar)"/>
+    <line x1="450" y1="1476" x2="450" y2="1504" marker-end="url(#a)"/>
+    <line x1="450" y1="1572" x2="450" y2="1600" marker-end="url(#a)"/>
+    <line x1="450" y1="1676" x2="450" y2="1704" marker-end="url(#a)"/>
+    <line x1="450" y1="1780" x2="450" y2="1808" marker-end="url(#a)"/>
+  </g>
+
+  <!-- branches -->
+  <g stroke="#ff7a7a" stroke-width="1.8" fill="none">
+    <path d="M 270 400 C 170 420, 135 700, 135 1266" marker-end="url(#ar)"/>
+  </g>
+  <text x="108" y="958" fill="#ff7a7a" font-size="12">known-malicious dependency</text>
+
+  <g stroke="#f0c674" stroke-width="1.6" fill="none">
+    <path d="M 380 954 C 300 980, 240 990, 190 1006" marker-end="url(#a)"/>
+  </g>
+  <text x="230" y="976" fill="#f0c674" font-size="12" text-anchor="middle">install failed</text>
+
+  <g stroke="#53d1ff" stroke-width="1.6" fill="none">
+    <path d="M 630 954 C 700 970, 730 980, 756 1006" marker-end="url(#a)"/>
+  </g>
+  <text x="672" y="976" fill="#53d1ff" font-size="12" text-anchor="middle">installed</text>
+
+  <g stroke="#8b96b5" stroke-width="1.5" fill="none">
+    <path d="M 668 1042 C 560 1070, 420 1130, 300 1176" marker-end="url(#a)"/>
+    <text x="430" y="1120" fill="#8b96b5" font-size="12">base suite fails</text>
+  </g>
+  <g stroke="#53d1ff" stroke-width="1.6" fill="none">
+    <path d="M 760 1074 L 760 1176" marker-end="url(#a)"/>
+    <text x="778" y="1130" fill="#53d1ff" font-size="12">baseline OK</text>
+  </g>
+  <g stroke="#8b96b5" stroke-width="1.5" fill="none">
+    <path d="M 240 1236 C 300 1258, 340 1268, 400 1276" marker-end="url(#a)"/>
+    <path d="M 660 1252 C 560 1258, 500 1264, 450 1270" marker-end="url(#a)"/>
+  </g>
+
+  <!-- OSV stop back to rule table -->
+  <g stroke="#ff7a7a" stroke-width="1.6" fill="none">
+    <path d="M 135 1342 C 135 1560, 200 1536, 266 1538" marker-end="url(#ar)"/>
+  </g>
+</svg>

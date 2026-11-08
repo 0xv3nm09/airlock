@@ -18,6 +18,12 @@ with receipts for every claim.
 
 (the text version, for terminals)
 
+## Decision flow
+
+<p align="center">
+  <img src="diagrams/decision-flow.svg" alt="Decision flow of one review: pre-flight can stop a known-malicious PR before any sandbox exists; install failure or a broken baseline routes to inconclusive instead of a false safe; the behaviour scan subtracts baseline signals; sandboxes are destroyed on every path before the rule table decides" width="760">
+</p>
+
 Rendered diagrams (trust zones, pipeline, rule table, sequences): [`DIAGRAMS.md`](DIAGRAMS.md).
 
 ```
