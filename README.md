@@ -151,6 +151,14 @@ docs/           architecture, evidence map, results, model card
 
 Full architecture and data flow: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
+## Feedback
+
+Build week was not friction-free. Every issue we hit on Vultr, Docker + gVisor, Next.js and
+GitHub — and how each was resolved — is written up in
+[`docs/FEEDBACK.md`](docs/FEEDBACK.md), together with what worked well and the three
+ESLint warnings this repo keeps on purpose. Feedback matters; the failures are
+ documentation too.
+
 ## Documentation map
 
 | Document | What it covers |
@@ -159,6 +167,7 @@ Full architecture and data flow: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Use case, full data-flow diagram, twin-sandbox rationale, trust boundaries, challenge stack mapping. |
 | [`docs/EVIDENCE.md`](docs/EVIDENCE.md) | Challenge criteria mapped to evidence, deliverables with status, containment focus areas → mechanisms, a 60-second tour. |
 | [`docs/MODEL_CARD.md`](docs/MODEL_CARD.md) | Which models the five agents use, what each may/may not do, evaluation + limitations. |
+| [`docs/FEEDBACK.md`](docs/FEEDBACK.md) | Build-week retrospective: every issue faced and its fix, what worked well, and why the repo keeps three ESLint warnings on purpose. |
 | [`deploy/GO-LIVE.md`](deploy/GO-LIVE.md) | Dummy→Vultr switch-over runbook (env vars, model selection, verification) + GitHub Pages demo setup (§7). |
 | [`deploy/README.md`](deploy/README.md) | Compose stack, Caddy, squid egress proxy, sandbox images — how the VM deployment fits together. |
 | [`deploy/examples/README.md`](deploy/examples/README.md) | GitHub Actions workflow to review every push to your own repo (team-key integration). |
