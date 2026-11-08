@@ -23,6 +23,20 @@ read-only site of recorded runs at https://0xv3nm09.github.io/airlock/
 [Architecture & use case](docs/ARCHITECTURE.md) · [Evidence map](docs/EVIDENCE.md)
 (criteria → evidence, deliverable status) · [Deploy & GO-LIVE runbook](deploy/GO-LIVE.md)
 
+## Vultr services and architecture
+
+| Vultr service | How Airlock uses it |
+| --- | --- |
+| **Cloud Compute (VM)** | One `vc2-4c-8gb` instance (Delhi NCR) is the control and orchestration layer: FastAPI API, Next.js web app, the run queue and SQLite store, Caddy, the squid egress proxy, and the Docker daemon that starts every sandbox. |
+| **Serverless Inference** | Every agent LLM call — planner, fixer, test-writer, security analyst, reporter — goes to `api.vultrinference.com/v1` (OpenAI-compatible, `minimax-m3.1-flash`). Tokens and model are stamped on each span in the trace. |
+| **Vultr API** (optional) | `scripts/vultr_deploy.sh` provisions and configures the VM. |
+| **Sandboxing** | Docker + gVisor (`runsc`) on that VM: read-only rootfs, tmpfs workspace, caps dropped, memory/CPU/PID and time limits, registry-only egress during install, no network for tests, destroyed after every run. |
+
+How a review executes real work (Pattern A): fetch the PR → pre-flight checks → plan →
+install and run the tests in twin sandboxes (base vs PR) → generated tests → behaviour scan →
+rule-table verdict → sandboxes destroyed. Full diagram: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md);
+containment mapping: [`docs/EVIDENCE.md`](docs/EVIDENCE.md).
+
 ## Results — 19-case attack library, executed live (Nov 2026)
 
 **18/19 expected verdicts matched (94.7%)**, machine-collected from the running deployment
@@ -47,10 +61,10 @@ machine bundle: [eval_results/live-benchmark.json](eval_results/live-benchmark.j
 Reproduce with `make bench` (offline) or the collector script (live).
 
 **The 19 attacks are real pull requests.** Each case lives in its own repository — for
-example [`setup-py-exfil/pull/7`](https://github.com/0xv3nm09/setup-py-exfil/pull/7) (a
-`setup.py` install hook that echoes a planted key and phones home) and
-[`setup-fail/pull/6`](https://github.com/0xv3nm09/setup-fail/pull/6). The repositories are
-private during judging; every payload is committed in
+example `setup-py-exfil/pull/7` (a `setup.py` install hook that echoes a planted key and
+phones home) and `setup-fail/pull/6`. The repositories are private during judging (the VM
+fetches them with a read-only token), so their PR links won't open for visitors; every
+payload is committed in
 [`scripts/publish_demo_repos.py`](scripts/publish_demo_repos.py). **Every run is a record:**
 timeline, receipts, findings, verdict and the full trace stay browsable on the live
 deployment and in the results document — the evidence outlives the sandboxes that produced
