@@ -1,14 +1,20 @@
 # Airlock
 
 <p align="center">
-  <img src="docs/screenshots/demo.gif" alt="Airlock on the live stack: the dashboard's real numbers and containment feed, a malicious PR caught red-handed (suspicious, 90% confidence, canary finding), and the full trace inspector" width="820">
   <img src="docs/screenshots/poster.png" alt="Airlock poster: twin gVisor sandboxes (base vs pull request) produce execution receipts and a rule-based verdict" width="820">
 </p>
 
-**Run the PR before you trust it.** Airlock runs a stranger's pull request inside a throwaway
-sandbox on Vultr, watches what it does, and reports only what it proved. Entry for the
-Vultr: Agent Rush Hackathon, Challenge 01 "Blast Radius Zero", Pattern A (sandboxed code
-execution).
+**Airlock reviews pull requests by executing them.** A PR is run in twin gVisor sandboxes
+(base vs PR) on Vultr — **what we watch: the network it tries to reach, the secrets it
+touches, the files it writes, and the resources it burns.** Install goes through a
+registry-only proxy; tests run with no network; randomized canary keys make exfiltration
+intent provable; hard caps bound the damage. A deterministic rule table turns the observed
+facts into the verdict — safe to merge · needs changes · suspicious → human · inconclusive —
+with a receipt (command, exit code, output) behind every finding, and sandboxes destroyed on
+every path.
+
+Entry for the Vultr: Agent Rush Hackathon, Challenge 01 "Blast Radius Zero", Pattern A
+(sandboxed code execution).
 
 **Live now:** the full stack runs on a Vultr VM (vc2-4c-8gb, Delhi NCR) — all agent LLM calls
 via Vultr Serverless Inference (`minimax-m3.1-flash`), PR execution in Docker + gVisor
