@@ -2,6 +2,7 @@
 
 <p align="center">
   <img src="docs/screenshots/demo.gif" alt="Airlock on the live stack: the dashboard's real numbers and containment feed, a malicious PR caught red-handed (suspicious, 90% confidence, canary finding), and the full trace inspector" width="820">
+  <img src="docs/screenshots/poster.png" alt="Airlock poster: twin gVisor sandboxes (base vs pull request) produce execution receipts and a rule-based verdict" width="820">
 </p>
 
 **Run the PR before you trust it.** Airlock runs a stranger's pull request inside a throwaway
