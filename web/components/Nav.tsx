@@ -80,7 +80,7 @@ function Shell({
           {demo ? (
             <span className="hidden items-center gap-2 whitespace-nowrap rounded-full border border-line bg-surface px-3 py-1 text-xs font-medium text-muted lg:inline-flex">
               <span className="live-dot inline-block h-1.5 w-1.5 rounded-full bg-primary" />
-              public demo · recorded runs
+              read-only · recorded runs
             </span>
           ) : mode === undefined ? null : mode ? (
             <span className="hidden items-center gap-2 whitespace-nowrap rounded-full border border-line bg-surface px-3 py-1 text-xs font-medium text-muted lg:inline-flex">

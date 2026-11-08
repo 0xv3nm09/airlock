@@ -77,7 +77,7 @@ export default function AboutPage() {
             <dt className="font-medium">Agents</dt>
             <dd className="text-muted">
               5 small agents (Planner, Fixer, Test-writer, Analyst, Reporter) in a code-owned
-              orchestrator; Vultr Serverless Inference in prod, offline dummy adapter in demo
+              orchestrator; Vultr Serverless Inference in prod, an offline test adapter for local development
             </dd>
           </div>
           <div>
@@ -104,8 +104,8 @@ export default function AboutPage() {
           <div>
             <dt className="font-medium">Everything swaps</dt>
             <dd className="text-muted">
-              LLM provider, sandbox backend, queue and storage are env-driven adapters — the
-              demo runs fully offline, the VM entry runs 100% on Vultr
+              LLM provider, sandbox backend, queue and storage are env-driven adapters — local
+              development runs fully offline, the live entry runs 100% on Vultr
             </dd>
           </div>
         </dl>

@@ -68,7 +68,7 @@ function demoReadOnly(): ApiError {
   return new ApiError(
     403,
     "demo_readonly",
-    "This public demo serves recorded runs — creating runs, benchmark runs and decisions happen on the live deployment.",
+    "This read-only site serves recorded runs — creating runs, benchmark runs and decisions happen on the live deployment.",
   );
 }
 
@@ -98,7 +98,7 @@ export const api = {
       const run = demoRunById(id);
       return run
         ? Promise.resolve(run)
-        : Promise.reject(new ApiError(404, "not_found", "run not found in the recorded demo data"));
+        : Promise.reject(new ApiError(404, "not_found", "run not found in the recorded data"));
     }
     return request<import("./types").RunOut>(`/v1/runs/${id}`);
   },

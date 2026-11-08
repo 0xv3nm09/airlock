@@ -67,7 +67,7 @@ export function RunPageClient() {
       <div className="py-20 text-center">
         <h1 className="text-xl font-semibold">Run not found</h1>
         <p className="mt-2 text-sm text-muted">
-          Demo runs stay available; other runs are only visible to their owner.
+          Sample runs stay public; other runs are only visible to their owner.
         </p>
         <Link href="/" className="mt-4 inline-block text-sm font-medium text-primary underline">
           ← Back to Airlock

@@ -264,7 +264,7 @@ export default function DashboardPage() {
               reconnecting — showing last data
             </span>
           ) : null}
-          <span className="mr-1 text-xs font-medium text-muted">New demo run</span>
+          <span className="mr-1 text-xs font-medium text-muted">Start a live run</span>
           {(["clean", "buggy", "malicious"] as const).map((s) => (
             <Button
               key={s}
@@ -277,7 +277,7 @@ export default function DashboardPage() {
             </Button>
           ))}
           <Button variant="ghost" disabled={busy !== null} onClick={() => seedLibrary()}>
-            {busy === "library" ? "Queuing 19 runs…" : "Run demo library"}
+            {busy === "library" ? "Queuing 19 runs…" : "Run full attack library"}
           </Button>
         </div>
       </div>
@@ -320,7 +320,7 @@ export default function DashboardPage() {
               <CardTitle hint={stats ? `${mixTotal} verdicts` : undefined}>Verdict mix</CardTitle>
               {mixTotal === 0 ? (
                 <p className="text-sm text-muted">
-                  No verdicts yet — start a demo run above and this bar fills in.
+                  No verdicts yet — start a live run above and this bar fills in.
                 </p>
               ) : (
                 <>
@@ -407,7 +407,7 @@ export default function DashboardPage() {
               <CardTitle hint="newest first">Containment feed</CardTitle>
               {feed.length === 0 ? (
                 <p className="flex min-h-20 items-center text-sm text-muted">
-                  Quiet — no containment events yet. Run the malicious demo and this fills up.
+                  Quiet — no containment events yet. Run the malicious PR and this fills up.
                 </p>
               ) : (
                 <div className="flex max-h-80 min-h-20 flex-col gap-2 overflow-y-auto rounded-xl border border-line bg-surface-2 p-3 font-mono text-xs">
@@ -494,7 +494,7 @@ export default function DashboardPage() {
             {shown.length === 0 ? (
               <p className="px-5 py-6 text-sm text-muted">
                 {(rows ?? []).length === 0
-                  ? "No runs yet — use 'Run demo library' above to fill the dashboard with all 19 cases. Runs persist across restarts."
+                  ? "No runs yet — use 'Run full attack library' above to fill the dashboard with all 19 cases. Runs persist across restarts."
                   : "No runs match this filter."}
               </p>
             ) : (
@@ -584,7 +584,7 @@ export default function DashboardPage() {
 
           {needsKey ? (
             <p className="text-sm text-muted">
-              Demo runs are public. To see your own runs here, paste your API key on the{" "}
+              Sample runs are public. To see your own runs here, paste your API key on the{" "}
               <Link href="/" className="text-primary underline">
                 home page
               </Link>

@@ -143,7 +143,7 @@ export default function ReviewPage() {
               }}
               className="mt-3 inline-flex min-h-9 items-center rounded-lg border border-line bg-surface-2 px-3 text-xs font-medium text-muted transition hover:text-fg"
             >
-              Local demo instance — use the dev key
+              Local dev instance — use the dev key
             </button>
           ) : null}
         </Card>
@@ -158,7 +158,7 @@ export default function ReviewPage() {
             {queue.length === 0 ? (
               <p className="text-sm text-muted">
                 Nothing is waiting for a human right now. Suspicious verdicts land here
-                automatically — run the demo library from the Dashboard to see the
+                automatically — run the full attack library from the Dashboard to see the
                 maker-checker flow end to end.
               </p>
             ) : (

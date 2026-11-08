@@ -90,7 +90,7 @@ export default function Landing() {
       router.push(`/runs/${id}`);
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
-        setError("This needs an API key — paste one below, or use a demo PR.");
+        setError("This needs an API key — paste one below, or run one of the sample PRs.");
       } else if (err instanceof ApiError && err.code === "invalid_pr_url") {
         setError("That doesn't look like a GitHub PR URL (https://github.com/<owner>/<repo>/pull/<n>).");
       } else {
@@ -191,7 +191,7 @@ export default function Landing() {
       ) : null}
 
       {/* ---- demo PRs (directly under the hero: try it first) ---- */}
-      <section aria-label="Demo PRs">
+      <section aria-label="Sample PRs">
         <Reveal>
           <h2 className="mb-2 text-center text-2xl font-bold tracking-tight">Try it in 60 seconds</h2>
           <p className="mx-auto mb-8 max-w-xl text-center text-sm text-muted">

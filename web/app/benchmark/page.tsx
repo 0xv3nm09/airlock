@@ -163,7 +163,7 @@ export default function BenchmarkPage() {
         <p className="mb-3 text-sm text-muted">
           Starts a fresh execution of that case against the running instance — you get the live
           timeline, sandbox logs, receipts and this run&apos;s exact token spend. Rate-limited
-          like the demo buttons; costs credits when the backend runs on real models.
+          like the run buttons; costs credits when the backend runs on real models.
         </p>
         <div className="flex flex-wrap gap-2">
           {(cases.length > 0
@@ -192,7 +192,7 @@ export default function BenchmarkPage() {
               result.mode ? ` · mode ${result.mode}` : ""
             }. ${
               result.mode?.startsWith("dummy")
-                ? "Dummy-mode numbers prove the harness, not the product — the same cases run against real repos on the Vultr VM before any result is quoted publicly."
+                ? "Offline-mode numbers prove the harness, not the product — the same cases run against real repos on the Vultr VM before any result is quoted publicly."
                 : "Executed against the live backend — re-run after any model, policy or catalog change, and against real seeded repos before quoting results publicly."
             }`
           : "No recorded results yet — run any case above, or `make bench` to publish the full table."}

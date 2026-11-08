@@ -167,7 +167,7 @@ export function LiveValueCard() {
         </div>
         {stats && stats.runs_completed === 0 ? (
           <p className="mt-3 text-center text-xs text-muted">
-            No runs yet on this instance — start a demo below and watch these move.
+            No runs yet on this instance — start a run below and watch these move.
           </p>
         ) : null}
         <Link
