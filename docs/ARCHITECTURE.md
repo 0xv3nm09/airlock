@@ -8,6 +8,8 @@ with receipts for every claim.
 
 ## Data flow
 
+Rendered diagrams (trust zones, pipeline, rule table, sequences): [`DIAGRAMS.md`](DIAGRAMS.md).
+
 ```
 PR URL
   │

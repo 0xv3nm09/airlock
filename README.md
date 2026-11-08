@@ -20,7 +20,7 @@ and what CI tests.
 read-only site of recorded runs at https://0xv3nm09.github.io/airlock/
 
 **Docs:** [Live benchmark results](docs/BENCHMARK-RESULTS.md) ·
-[Architecture & use case](docs/ARCHITECTURE.md) · [Evidence map](docs/EVIDENCE.md)
+[Architecture & use case](docs/ARCHITECTURE.md) · [Diagrams](docs/DIAGRAMS.md) · [Evidence map](docs/EVIDENCE.md)
 (criteria → evidence, deliverable status) · [Deploy & GO-LIVE runbook](deploy/GO-LIVE.md)
 
 ## Vultr services and architecture
@@ -196,6 +196,7 @@ ESLint warnings this repo keeps on purpose. Feedback matters; the failures are
 | --- | --- |
 | [`docs/BENCHMARK-RESULTS.md`](docs/BENCHMARK-RESULTS.md) | **Live results** — expected-vs-got table, per-case verdict JSON, containment counters, trace excerpts, pipeline + containment diagrams, known gaps. Rendered from `eval_results/live-benchmark.json` by `scripts/render_results_md.py`. |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Use case, full data-flow diagram, twin-sandbox rationale, trust boundaries, challenge stack mapping. |
+| [`docs/DIAGRAMS.md`](docs/DIAGRAMS.md) | Trust zones, review pipeline, verdict rule table, sandbox network phases, and sequence diagrams for a live run and for CI integration (Mermaid). |
 | [`docs/EVIDENCE.md`](docs/EVIDENCE.md) | Challenge criteria mapped to evidence, deliverables with status, containment focus areas → mechanisms, a 60-second tour. |
 | [`docs/MODEL_CARD.md`](docs/MODEL_CARD.md) | Which models the five agents use, what each may/may not do, evaluation + limitations. |
 | [`docs/FEEDBACK.md`](docs/FEEDBACK.md) | Build-week retrospective: every issue faced and its fix, what worked well, and why the repo keeps three ESLint warnings on purpose. |
