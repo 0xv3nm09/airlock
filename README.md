@@ -6,7 +6,7 @@
 ![license](https://img.shields.io/badge/license-MIT-blue)
 
 <p align="center">
-  <img src="docs/screenshots/poster.png" alt="Airlock poster: twin gVisor sandboxes (base vs pull request) produce execution receipts and a rule-based verdict" width="820">
+  <img src="docs/screenshots/poster.png" alt="Airlock poster: base and PR executed in disposable Vultr sandboxes — isolate, observe, decide, escalate — with execution receipts, a rule-based verdict, and the live-run proof so far" width="820">
 </p>
 
 **Airlock reviews pull requests by executing them.** A PR is run in twin gVisor sandboxes
