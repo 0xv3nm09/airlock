@@ -1,4 +1,4 @@
-# Airlock
+# Airlock : Vultr AI Hackathon Winner
 
 [![CI](https://github.com/0xv3nm09/airlock/actions/workflows/ci.yml/badge.svg)](https://github.com/0xv3nm09/airlock/actions/workflows/ci.yml)
 ![live benchmark](https://img.shields.io/badge/live%20benchmark-18%2F19-brightgreen)
