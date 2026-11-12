@@ -38,7 +38,7 @@ jobs:
         env:
           NEXT_PUBLIC_DEMO_MODE: "1"
           AIRLOCK_STATIC_BUILD: "1"
-          AIRLOCK_BASE_PATH: /airlock-vultr-hackathon-winner # must match the repo name
+          AIRLOCK_BASE_PATH: /airlock # must match the repo name
       - uses: actions/upload-pages-artifact@v3
         with:
           path: web/out
