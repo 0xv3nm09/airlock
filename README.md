@@ -21,14 +21,16 @@ every path.
 Entry for the Vultr: Agent Rush Hackathon, Challenge 01 "Blast Radius Zero", Pattern A
 (sandboxed code execution).
 
-**Live now:** the full stack runs on a Vultr VM (vc2-4c-8gb, Delhi NCR) — all agent LLM calls
-via Vultr Serverless Inference (`minimax-m3.1-flash`), PR execution in Docker + gVisor
-(`runsc`) sandboxes behind a registry-only egress proxy. Run buttons on the live site
-execute fresh runs on that stack; an offline mode (scripted model and sandbox) remains the zero-credit fallback
-and what CI tests.
+**Built and run live for the Vultr: Agent Rush Hackathon (Nov 3–8, 2026):** the full stack
+ran on a Vultr VM (vc2-4c-8gb, Delhi NCR) — all agent LLM calls via Vultr Serverless
+Inference (`minimax-m3.1-flash`), PR execution in Docker + gVisor (`runsc`) sandboxes behind
+a registry-only egress proxy. 46 real runs were served during the event. **The live instance
+is now closed (competition over)** — the read-only site below serves the complete recorded
+history, and an offline mode (scripted model and sandbox) remains the zero-credit way to run
+everything locally.
 
-**Try it:** live stack at http://139.84.176.16 (run buttons execute fresh runs) ·
-read-only site of recorded runs at https://0xv3nm09.github.io/airlock/
+**Try it:** recorded runs at https://0xv3nm09.github.io/airlock/ (the live instance at
+http://139.84.176.16 served 46 real runs during the event and is now closed)
 
 **Docs:** [Live benchmark results](docs/BENCHMARK-RESULTS.md) ·
 [Architecture & use case](docs/ARCHITECTURE.md) · [Diagrams](docs/DIAGRAMS.md) · [Evidence map](docs/EVIDENCE.md)

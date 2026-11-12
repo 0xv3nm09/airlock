@@ -18,8 +18,8 @@ behind it.
 | Deliverable | Status | Where |
 | --- | --- | --- |
 | Public GitHub repo with setup + documentation | ✅ public; setup in [README](../README.md#quickstart) | this repo |
-| Backend deployed on a Vultr VM (control layer) | ✅ **live** — api + web + Postgres + squid egress + Caddy under compose on vc2-4c-8gb (Delhi NCR); `/readyz` reads `vultr llm · docker sandbox` | [`deploy/`](../deploy/README.md), [`deploy/GO-LIVE.md`](../deploy/GO-LIVE.md) |
-| LLM calls via Vultr Serverless Inference | ✅ **live** — every agent call goes through `api.vultrinference.com/v1`; model + tokens stamped per span in the trace inspector | [`app/llm/vultr.py`](../app/llm/vultr.py) |
+| Backend deployed on a Vultr VM (control layer) | ✅ **ran live during the event** (instance now closed) — api + web + Postgres + squid egress + Caddy under compose on vc2-4c-8gb (Delhi NCR); `/readyz` read `vultr llm · docker sandbox` | [`deploy/`](../deploy/README.md), [`deploy/GO-LIVE.md`](../deploy/GO-LIVE.md) |
+| LLM calls via Vultr Serverless Inference | ✅ **used for every agent call during the event** — model + tokens stamped per span in the recorded trace inspector | [`app/llm/vultr.py`](../app/llm/vultr.py) |
 | Public URL, product-style experience | ✅ **live** — http://139.84.176.16 (run buttons execute fresh runs on the real stack); read-only site of recorded runs at https://0xv3nm09.github.io/airlock/ | Pages workflow [`.github/workflows/pages.yml`](../.github/workflows/pages.yml) |
 | Recorded video with a "containment moment" | ✅ **recorded** — the `setup-py-exfil` attack: tests pass, then the timeline shows the egress block (`evil.example`), the canary hit and `suspicious → human`, sandboxes destroyed | submitted with the lablab.ai form |
 | Clear architecture + use case explanation | ✅ | [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) |
