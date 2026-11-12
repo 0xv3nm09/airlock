@@ -77,11 +77,12 @@ Per-case evidence in [docs/BENCHMARK-RESULTS.md](docs/BENCHMARK-RESULTS.md): exp
 table with PR links, verdict JSON for every case, containment counters, trace excerpts, the
 pipeline and containment diagrams, and the exact stack facts the runs executed on. Raw
 machine bundle: [eval_results/live-benchmark.json](eval_results/live-benchmark.json).
-Reproduce with `make bench` (offline) or the collector script (live).
+The sweep was collected with [`scripts/collect_live_results.py`](scripts/collect_live_results.py)
+while the instance was live; `make bench` reproduces the same benchmark offline today.
 
 **At a glance**
 
-- ✅ **Backend on a Vultr VM** — live, control plane + sandboxes + store
+- ✅ **Backend on a Vultr VM** — ran live during the event (control plane + sandboxes + store)
 - ✅ **All agent LLM calls via Vultr Serverless Inference** — model + tokens stamped per span
 - ✅ **gVisor (`runsc`) sandboxes** — read-only rootfs, caps dropped, per-run venv, never in the app process
 - ✅ **Secret hygiene** — no real keys inside; randomized canaries make exfiltration provable
@@ -131,7 +132,7 @@ curl -s localhost:8000/v1/runs/<run_id>
 curl -N localhost:8000/v1/runs/<run_id>/events   # live SSE timeline
 ```
 
-## What works today (verified offline and live on Vultr)
+## Capabilities (all verified — offline in CI, and live on Vultr during the event)
 
 - Full review pipeline: screen → pre-flight (OSV MAL- check, injection scan, static risk) →
   plan → two sandboxes (base vs PR) → install with self-heal → tests → generated tests →
