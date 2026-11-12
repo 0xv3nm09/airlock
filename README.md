@@ -29,7 +29,7 @@ is now closed (competition over)** — the read-only site below serves the compl
 history, and an offline mode (scripted model and sandbox) remains the zero-credit way to run
 everything locally.
 
-**Try it:** recorded runs at https://0xv3nm09.github.io/airlock/ (the live instance at
+**Try it:** recorded runs at https://0xv3nm09.github.io/airlock-vultr-hackathon-winner/ (the live instance at
 http://139.84.176.16 served 46 real runs during the event and is now closed)
 
 **Docs:** [Live benchmark results](docs/BENCHMARK-RESULTS.md) ·
