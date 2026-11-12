@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { api, ApiError, type ApiKeyInfo, type LiveStats, type RecentRun } from "@/lib/api";
+import { DEMO } from "@/lib/demo";
 import { CountUp } from "@/components/motion";
 import { Badge, Button, Card, CardTitle, Spinner } from "@/components/ui";
 import { VERDICT_META } from "@/components/run/RunHeader";
@@ -247,8 +248,9 @@ export default function DashboardPage() {
             <span className="grad-text">Dashboard</span>
           </h1>
           <p className="mt-1 text-sm text-muted">
-            Live numbers from the instance serving this page — every figure comes from a real
-            sandbox event. Refreshes every 5 s.
+            {DEMO
+              ? "Recorded results from the live event run (46 real reviews on Vultr) — every figure comes from a real sandbox event. This site is a read-only record; the live instance is closed."
+              : "Live numbers from the instance serving this page — every figure comes from a real sandbox event. Refreshes every 5 s."}
           </p>
           <p className="mt-1 max-w-3xl text-sm text-muted">
             <strong className="text-fg">Integrations:</strong> link your Git provider and CI
@@ -258,27 +260,35 @@ export default function DashboardPage() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {degraded ? (
+          {DEMO ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1 text-xs font-medium text-muted">
+              read-only record — run controls were on the live instance (closed)
+            </span>
+          ) : degraded ? (
             <span className="inline-flex items-center gap-1.5 rounded-full border border-warning-line bg-warning-badge px-3 py-1 text-xs font-medium text-warning-text">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-warning" />
               reconnecting — showing last data
             </span>
           ) : null}
-          <span className="mr-1 text-xs font-medium text-muted">Start a live run</span>
-          {(["clean", "buggy", "malicious"] as const).map((s) => (
-            <Button
-              key={s}
-              variant={s === "malicious" ? "primary" : "ghost"}
-              className="capitalize"
-              disabled={busy !== null}
-              onClick={() => startDemo(s)}
-            >
-              {busy === s ? "Starting…" : s}
-            </Button>
-          ))}
-          <Button variant="ghost" disabled={busy !== null} onClick={() => seedLibrary()}>
-            {busy === "library" ? "Queuing 19 runs…" : "Run full attack library"}
-          </Button>
+          {!DEMO && (
+            <>
+              <span className="mr-1 text-xs font-medium text-muted">Start a live run</span>
+              {(["clean", "buggy", "malicious"] as const).map((s) => (
+                <Button
+                  key={s}
+                  variant={s === "malicious" ? "primary" : "ghost"}
+                  className="capitalize"
+                  disabled={busy !== null}
+                  onClick={() => startDemo(s)}
+                >
+                  {busy === s ? "Starting…" : s}
+                </Button>
+              ))}
+              <Button variant="ghost" disabled={busy !== null} onClick={() => seedLibrary()}>
+                {busy === "library" ? "Queuing 19 runs…" : "Run full attack library"}
+              </Button>
+            </>
+          )}
         </div>
       </div>
 
